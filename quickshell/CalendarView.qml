@@ -86,9 +86,9 @@ Column {
             anchors { right: parent.right; rightMargin: 4; verticalCenter: parent.verticalCenter }
             text: view.midnight.getDate() + ". " + view.monthNames[view.midnight.getMonth()]
                 + " – " + view.rangeEnd.getDate() + ". " + view.monthNames[view.rangeEnd.getMonth()]
-            color: Theme.faint
+            color: Theme.muted
             font.family: Theme.mono
-            font.pixelSize: 10
+            font.pixelSize: 11
         }
     }
 
@@ -102,9 +102,9 @@ Column {
                 width: view.width / 7
                 horizontalAlignment: Text.AlignHCenter
                 text: modelData
-                color: Theme.faint
+                color: Theme.muted
                 font.family: Theme.mono
-                font.pixelSize: 10
+                font.pixelSize: 11
             }
         }
     }
@@ -148,9 +148,9 @@ Column {
                         text: cell.d.getDate() === 1 || index === 0
                             ? cell.d.getDate() + " " + view.monthNames[cell.d.getMonth()]
                             : cell.d.getDate()
-                        color: cell.isToday ? Theme.ink : (cell.past ? Theme.faint : Theme.cream)
+                        color: cell.isToday ? Theme.ink : (cell.past ? Theme.muted : Theme.cream)
                         font.family: Theme.mono
-                        font.pixelSize: 11
+                        font.pixelSize: 12
                         font.bold: cell.isToday
                     }
 
@@ -190,7 +190,7 @@ Column {
             : "nächste termine"
         color: Theme.muted
         font.family: Theme.mono
-        font.pixelSize: 10
+        font.pixelSize: 11
         leftPadding: 2
     }
 
@@ -200,9 +200,9 @@ Column {
         leftPadding: 2
         text: CalendarService.error !== "" ? "kalender nicht erreichbar"
             : (!CalendarService.loaded ? "lade …" : "nichts geplant")
-        color: CalendarService.error !== "" ? Theme.red : Theme.faint
+        color: CalendarService.error !== "" ? Theme.red : Theme.muted
         font.family: Theme.mono
-        font.pixelSize: 11
+        font.pixelSize: 12
         elide: Text.ElideRight
     }
 
@@ -212,7 +212,7 @@ Column {
         Item {
             required property var modelData
             width: view.width
-            height: 22
+            height: 26
 
             Row {
                 anchors { fill: parent; leftMargin: 2 }
@@ -220,21 +220,22 @@ Column {
 
                 Text {
                     visible: view.selected <= 0
-                    width: 66
+                    width: 78
                     anchors.verticalCenter: parent.verticalCenter
                     text: view.dayLabel(modelData.start.getTime() < view.midnight.getTime() ? view.midnight : modelData.start)
-                    color: Theme.faint
+                    color: Theme.cream
                     font.family: Theme.mono
-                    font.pixelSize: 10
+                    font.pixelSize: 12
                     elide: Text.ElideRight
                 }
                 Text {
-                    width: 50
+                    width: 58
                     anchors.verticalCenter: parent.verticalCenter
                     text: view.timeLabel(modelData)
                     color: Theme.accentSoft
                     font.family: Theme.mono
-                    font.pixelSize: 10
+                    font.pixelSize: 12
+                    font.bold: true
                 }
                 Text {
                     width: parent.width - x
@@ -242,7 +243,7 @@ Column {
                     text: modelData.title
                     color: Theme.cream
                     font.family: Theme.mono
-                    font.pixelSize: 11
+                    font.pixelSize: 12
                     elide: Text.ElideRight
                 }
             }
