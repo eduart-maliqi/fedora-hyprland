@@ -9,7 +9,7 @@
 ![Quickshell](https://img.shields.io/badge/Quickshell-0.3-8A63D2)
 ![Konfiguration](https://img.shields.io/badge/Konfiguration-Lua%20%2B%20QML-lightgrey)
 
-<img src="screenshots/desktop.jpg" alt="Desktop mit Leiste, Musik-Panel, Songtext und Uhr" width="900">
+<img src="screenshots/titelbild.jpg" alt="Desktop mit Leiste, Musik-Panel, Songtext und Uhr" width="900">
 
 </div>
 
