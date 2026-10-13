@@ -2,78 +2,80 @@
 
 # Fedora + Hyprland + Quickshell
 
-**Ein persönliches Wayland-Desktop-Setup: Glas-Optik mit Blur, eigene Leiste und Panels, Farbthemen passend zum Wallpaper.**
+**A personal Wayland desktop setup: glass look with blur, a custom bar and panels, and color themes that follow the wallpaper.**
 
 ![Fedora 43](https://img.shields.io/badge/Fedora-43-51A2DA?logo=fedora&logoColor=white)
 ![Hyprland](https://img.shields.io/badge/Hyprland-0.56-58E1FF?logo=hyprland&logoColor=white)
 ![Quickshell](https://img.shields.io/badge/Quickshell-0.3-8A63D2)
-![Konfiguration](https://img.shields.io/badge/Konfiguration-Lua%20%2B%20QML-lightgrey)
+![Config](https://img.shields.io/badge/Config-Lua%20%2B%20QML-lightgrey)
 
-<img src="screenshots/titelbild.jpg" alt="Desktop mit Leiste, Musik-Panel, Songtext und Uhr" width="900">
+<img src="screenshots/titelbild.jpg" alt="Desktop with bar, music panel, lyrics and clock" width="900">
 
 </div>
 
 ---
 
-## Aussehen
+## Look
 
 <table>
   <tr>
-    <td width="50%"><img src="screenshots/fenster.jpg" alt="Gekachelte Fenster mit Glas-Effekt"><br><sub><b>Fenster</b> – Glas, Blur, abgerundete Ecken, passend zum Farbthema</sub></td>
-    <td width="50%"><img src="screenshots/galerie.jpg" alt="Wallpaper-Galerie in Waben"><br><sub><b>Wallpaper-Galerie</b> (Super+W) – das Farbthema wechselt mit dem Bild</sub></td>
+    <td width="50%"><img src="screenshots/fenster.jpg" alt="Tiled windows with glass effect"><br><sub><b>Windows</b>: glass, blur, rounded corners, matching the color theme</sub></td>
+    <td width="50%"><img src="screenshots/galerie.jpg" alt="Wallpaper gallery as a honeycomb"><br><sub><b>Wallpaper gallery</b> (Super+W): the color theme changes with the picture</sub></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="screenshots/tastenkuerzel.jpg" alt="Übersicht aller Tastenkürzel"><br><sub><b>Super+I</b> zeigt alle Tastenkürzel als Spickzettel</sub></td>
+    <td colspan="2"><img src="screenshots/tastenkuerzel.jpg" alt="Overview of all keybindings"><br><sub><b>Super+I</b> shows all keybindings as a cheat sheet</sub></td>
   </tr>
 </table>
 
-## Was drin ist
+> The interface labels are in German.
 
-- **Hyprland mit Lua-Konfiguration** (`hypr/hyprland.lua`, kein hyprlang): Monitore, Autostart, Eingabe, Tastenkürzel, Fenster- und Layer-Regeln.
-- **Quickshell-Oberfläche in QML** (`quickshell/`): obere Leiste mit Taskleiste, Kontrollzentrum (WLAN, Bluetooth, Ton, Nachtmodus), Desktop-Uhr, Lautstärke-Anzeige.
-- **Aufgabenansicht mit Live-Vorschau** (Super+Tab) und Alt+Tab-Fensterwechsler.
-- **Musik-Panel** wie ein kleines Spotify (Web API): Playlists, Suche, Steuerung, dazu **synchronisierte Songtexte** auf dem Desktop.
-- **Sechs Farbthemen** (`golden`, `glut`, `kohle`, `purpur`, `mond`, `silber`): Hyprland, Quickshell, mako, rofi, kitty und hyprlock ziehen die Farben aus dem aktiven Thema.
-- **Lebendiges Wallpaper**: Wolken ziehen, Gras und Bäume im Wind, Wasser glitzert (GLSL-Shader).
-- **Fenstermodus** geordnet ↔ frei (Super+O), Dropdown-Terminal, Fenster verstecken statt minimieren.
-- **Plugins**: eigenes Wackelfenster-Plugin in C++ (`hypr/plugins/wobbly`), dazu [Phantomat](https://github.com/kaolti/phantomat) (unendliche Fensterfläche) und HyprWindowShade (Fenster-Shader).
-- **Sperrbildschirm und Leerlauf** (hyprlock, hypridle), Benachrichtigungen (mako), App-Starter (rofi), Terminal (kitty).
-- **GRUB-Bootmenü und Plymouth-Ladebildschirm** für Dualboot: Generator-Skripte in `hypr/grub-ghost` (die Bilder sind nicht enthalten).
+## What's inside
 
-## Wichtige Tastenkürzel
+- **Hyprland with a Lua configuration** (`hypr/hyprland.lua`, not hyprlang): monitors, autostart, input, keybindings, window and layer rules.
+- **Quickshell UI in QML** (`quickshell/`): top bar with taskbar, control center (Wi-Fi, Bluetooth, sound, night mode), desktop clock, volume OSD.
+- **Task view with live previews** (Super+Tab) and an Alt+Tab window switcher.
+- **Music panel** like a small Spotify (Web API): playlists, search, controls, plus **synced lyrics** on the desktop.
+- **Six color themes** (`golden`, `glut`, `kohle`, `purpur`, `mond`, `silber`): Hyprland, Quickshell, mako, rofi, kitty and hyprlock take their colors from the active theme.
+- **Living wallpaper**: clouds drift, grass and trees move in the wind, water sparkles (GLSL shaders).
+- **Window mode** tiled ↔ free (Super+O), drop-down terminal, hide windows instead of minimizing.
+- **Plugins**: a custom wobbly-windows plugin in C++ (`hypr/plugins/wobbly`), plus [Phantomat](https://github.com/kaolti/phantomat) (infinite window canvas) and HyprWindowShade (window shaders).
+- **Lock screen and idle** (hyprlock, hypridle), notifications (mako), launcher (rofi), terminal (kitty).
+- **GRUB boot menu and Plymouth splash** for dual boot: generator scripts in `hypr/grub-ghost` (images not included).
 
-`Super` = Windows-Taste. Die vollständige Liste zeigt **Super+I**.
+## Key bindings
 
-| Kürzel | Aktion |
+`Super` is the Windows key. The full list is shown by **Super+I**.
+
+| Binding | Action |
 |---|---|
 | `Super+Enter` | Terminal |
-| `Super+Leertaste` | App-Starter |
-| `Super+Tab` / `Alt+Tab` | Aufgabenansicht / Fensterwechsler |
-| `Super+W` | Wallpaper-Galerie |
-| `Super+O` | Fenstermodus geordnet ↔ frei |
-| `Super+P` | Phantom: alle Fenster auf einer unendlichen Fläche |
-| `Super+M` | Musik-Panel |
-| `Super+Shift+V` | Zwischenablage-Verlauf |
-| `Super+1…0` | Workspace wechseln |
-| `Druck` | Screenshot (Bereich) |
+| `Super+Space` | App launcher |
+| `Super+Tab` / `Alt+Tab` | Task view / window switcher |
+| `Super+W` | Wallpaper gallery |
+| `Super+O` | Window mode tiled ↔ free |
+| `Super+P` | Phantom: all windows on one infinite canvas |
+| `Super+M` | Music panel |
+| `Super+Shift+V` | Clipboard history |
+| `Super+1…0` | Switch workspace |
+| `Print` | Screenshot (area) |
 
-## Aufbau
+## Layout
 
 ```
-hypr/          Hyprland-Config (Lua), hypridle, hyprlock, Farbthemen, Skripte, Plugins, Doku
-quickshell/    Leiste, Panels, Aufgabenansicht, Musik, Wallpaper-Shader (QML + GLSL)
-rofi/ mako/ kitty/   Konfiguration der Programme, Farben aus hypr/themen/<name>/
+hypr/          Hyprland config (Lua), hypridle, hyprlock, color themes, scripts, plugins, docs
+quickshell/    bar, panels, task view, music, wallpaper shader (QML + GLSL)
+rofi/ mako/ kitty/   program configs, colors from hypr/themen/<name>/
 ```
 
-Die ausführliche Doku steht in [`hypr/AGENTS.md`](hypr/AGENTS.md) (Überblick, Dateien, Tastenkürzel, Fallstricke) und in [`hypr/docs/`](hypr/docs) (je Thema eine Datei).
+The detailed documentation is in [`hypr/AGENTS.md`](hypr/AGENTS.md) (overview, files, keybindings, pitfalls) and [`hypr/docs/`](hypr/docs) (one file per topic). **The docs are written in German.**
 
-## Hinweise
+## Notes
 
-Das ist **mein persönliches Setup**, kein fertiger Installer. Zum Übernehmen gilt:
+This is **my personal setup**, not a ready-made installer. If you want to borrow from it:
 
-- Getestet nur mit **Fedora 43**; Hyprland-Pakete aus COPR `sdegler/hyprland`, Quickshell aus COPR `errornointernet/quickshell`.
-- `hypr/monitors.lua` ist auf meine Bildschirme zugeschnitten und wird von *nwg-displays* überschrieben.
-- Die **Plugins müssen nach jedem Hyprland-Update neu gebaut werden** (`hypr/plugins/wobbly/build.sh`, `hypr/scripts/phantomat.sh`).
-- **Nicht enthalten**: Wallpapers (`hypr/wallpapers/<thema>-<name>.jpg`), gebaute `*.so`, Spotify-/OpenAI-Zugangsdaten (liegen lokal unter `~/.local/state`).
-- Schriften: Cormorant Garamond, JetBrainsMono Nerd Font, Symbols Nerd Font; Uhr und Songtexte nutzen SF Pro Display (nicht enthalten).
-- Symbole und Cursor: WhiteSur.
+- Only tested on **Fedora 43**; Hyprland packages from the COPR `sdegler/hyprland`, Quickshell from the COPR `errornointernet/quickshell`.
+- `hypr/monitors.lua` is tailored to my displays and gets overwritten by *nwg-displays*.
+- The **plugins must be rebuilt after every Hyprland update** (`hypr/plugins/wobbly/build.sh`, `hypr/scripts/phantomat.sh`).
+- **Not included**: wallpapers (`hypr/wallpapers/<theme>-<name>.jpg`), built `*.so` files, Spotify/OpenAI credentials (they live locally under `~/.local/state`).
+- Fonts: Cormorant Garamond, JetBrainsMono Nerd Font, Symbols Nerd Font; the clock and lyrics use SF Pro Display (not included).
+- Icons and cursor: WhiteSur.
