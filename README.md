@@ -20,7 +20,7 @@
 <table>
   <tr>
     <td width="50%"><img src="screenshots/fenster.jpg" alt="Gekachelte Fenster mit Glas-Effekt"><br><sub><b>Fenster</b> – Glas, Blur, abgerundete Ecken, passend zum Farbthema</sub></td>
-    <td width="50%"><img src="screenshots/wallpaper-galerie.jpg" alt="Wallpaper-Galerie in Waben"><br><sub><b>Wallpaper-Galerie</b> (Super+W) – das Farbthema wechselt mit dem Bild</sub></td>
+    <td width="50%"><img src="screenshots/galerie.jpg" alt="Wallpaper-Galerie in Waben"><br><sub><b>Wallpaper-Galerie</b> (Super+W) – das Farbthema wechselt mit dem Bild</sub></td>
   </tr>
   <tr>
     <td colspan="2"><img src="screenshots/tastenkuerzel.jpg" alt="Übersicht aller Tastenkürzel"><br><sub><b>Super+I</b> zeigt alle Tastenkürzel als Spickzettel</sub></td>
