@@ -1,6 +1,8 @@
 # Nur das Desktop-Setup verfolgen; alles andere in ~/.config (Brave, gh, Tokens …) bleibt aussen vor
 /*
 !/.gitignore
+!/README.md
+!/screenshots/
 !/hypr/
 !/quickshell/
 !/rofi/

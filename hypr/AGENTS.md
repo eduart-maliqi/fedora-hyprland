@@ -21,7 +21,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
    einbinden – sonst werden sie wieder bei jeder Nachricht mitgeladen.
 4. **Git:** `~/.config` ist ein Repo (nur `hypr`, `quickshell`, `rofi`, `mako`, `kitty`; ausgenommen laut `.gitignore`:
    `wallpapers/`, `*.so`, `scripts/noa-start.sh`, `grub-ghost/test/` + Bilder, Symlink `themen/aktiv`). Remote ist **öffentlich**
-   (GitHub `eduart-maliqi/fedora-hyprland`, Push per SSH-Key) → **nie Tokens, Schlüssel, Mailadressen, IDs oder Firmeninternes** in verfolgte Dateien schreiben.
+   (GitHub `eduart-maliqi/fedora-hyprland`, Push per SSH-Key); `README.md` + `screenshots/` liegen in `~/.config` (nicht in `hypr/`) → **nie Tokens, Schlüssel, Mailadressen, IDs oder Firmeninternes** in verfolgte Dateien schreiben.
    Nach abgeschlossener Änderung committen: `git -C ~/.config add -A && git -C ~/.config commit -m "…"` (Push nur auf Wunsch).
    **Vor größeren Änderungen** zusätzlich (Wallpapers & Co. sind nicht im Git):
    `tar czf ~/.cache/golden-backups/vor-<thema>-$(date +%Y%m%d-%H%M).tar.gz -C ~/.config quickshell hypr`
