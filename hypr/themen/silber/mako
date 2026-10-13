@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema silber (eingebunden von mako/config über themen/aktiv)
+background-color=#111316d6
+text-color=#eceef1
+border-color=#cfd6df66
+progress-color=over #cfd6df44

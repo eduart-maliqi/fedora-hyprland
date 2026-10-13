@@ -1,0 +1,22 @@
+# Nur das Desktop-Setup verfolgen; alles andere in ~/.config (Brave, gh, Tokens …) bleibt aussen vor
+/*
+!/.gitignore
+!/hypr/
+!/quickshell/
+!/rofi/
+!/mako/
+!/kitty/
+
+# Bilder sind gross und ändern sich nur durch Hinzufügen/Löschen → ins Backup, nicht in Git
+/hypr/wallpapers/
+# wird von build.sh bzw. phantomat.sh gebaut und ist an die Hyprland-Version gebunden
+*.so
+# Symlink aufs aktive Thema, wechselt bei jedem Wallpaper-Wechsel
+/hypr/themen/aktiv
+# Firmenprojekt-intern bzw. enthält machine-id/UUIDs; Bilder sind aus Spiel-Artwork gebaut (Urheberrecht)
+/hypr/scripts/noa-start.sh
+/hypr/grub-ghost/test/
+/hypr/grub-ghost/**/*.png
+/hypr/grub-ghost/**/*.jpg
+__pycache__/
+*.pyc

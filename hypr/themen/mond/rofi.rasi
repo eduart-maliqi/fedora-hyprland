@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema mond (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #8cc0e4;
+    accent-soft: #cfe3f1;
+    cream:       #e3ebf2;
+    muted:       #a2afbc;
+    faint:       #6e7d8c;
+    ink:         #0b1219;
+    hairline:    #d9ebff17;
+    panel:       #0c1520b8;
+}

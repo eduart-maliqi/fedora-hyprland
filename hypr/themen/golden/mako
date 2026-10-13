@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema golden (eingebunden von mako/config über themen/aktiv)
+background-color=#141a20d6
+text-color=#ede6d6
+border-color=#e3a14266
+progress-color=over #e3a14244

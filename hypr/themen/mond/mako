@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema mond (eingebunden von mako/config über themen/aktiv)
+background-color=#0c1520d6
+text-color=#e3ebf2
+border-color=#8cc0e466
+progress-color=over #8cc0e444

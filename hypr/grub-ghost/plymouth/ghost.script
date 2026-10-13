@@ -1,0 +1,170 @@
+# ★ 8155 – Plymouth-Theme „ghost“: Ladebildschirm im Stil von Ghost of Tsushima – dieselbe Szene wie im GRUB-Menü,
+# blendet aus Schwarz ein (GRUB leert vor dem Start schwarz), Schnee fällt, beim Hochfahren pulsiert „LOADING“.
+# Bewusst ohne bewegtes Gras: die Videobilder waren blockig und das Hin-und-zurück sah schlecht aus.
+# Maße für 2880×1800; auf anderen Auflösungen wird einmal beim Laden skaliert.
+
+W = Window.GetWidth();
+H = Window.GetHeight();
+SX = W / 2880;
+SY = H / 1800;
+FPS = 50;
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+fun bild(name) {
+    local.img = Image(name);
+    if (SX != 1 || SY != 1)
+        local.img = local.img.Scale(Math.Int(local.img.GetWidth() * SX + 0.5), Math.Int(local.img.GetHeight() * SY + 0.5));
+    return local.img;
+}
+
+szene = Sprite(bild("szene.png"));
+szene.SetPosition(0, 0, 0);
+
+flockbild[0] = Image("flocke_1.png");
+flockbild[1] = Image("flocke_2.png");
+flockbild[2] = Image("flocke_3.png");
+FLOCKEN = 45;
+i = 0;
+while (i < FLOCKEN) {
+    k = Math.Int(Math.Random() * 3);
+    if (k > 2)
+        k = 2;
+    flocke[i].sprite = Sprite(flockbild[k]);
+    flocke[i].x = Math.Random() * W;
+    flocke[i].y = Math.Random() * H;
+    flocke[i].vx = (25 + Math.Random() * 60 + k * 20) * SX;           # px/s; größere Flocken = näher = schneller
+    flocke[i].vy = (30 + Math.Random() * 60 + k * 30) * SY;
+    flocke[i].sprite.SetOpacity(0.35 + Math.Random() * 0.55);
+    flocke[i].sprite.SetPosition(flocke[i].x, flocke[i].y, 6);
+    i++;
+}
+
+schwarz = Sprite(Image("schwarz.png").Scale(W, H));
+schwarz.SetPosition(0, 0, 50);
+EINBLENDEN = 0.6;
+hochfahren = (Plymouth.GetMode() == "boot");
+ladenbild = bild("laden.png");
+laden = Sprite(ladenbild);
+laden.SetPosition(W - ladenbild.GetWidth() - 75 * SX, H - ladenbild.GetHeight() - 60 * SY, 12);
+laden.SetOpacity(0);
+
+# ---------------------------------------------------------------- Meldungen, Passwort/Frage, Update-Fortschritt
+meldung = Sprite();
+meldung.SetPosition(179 * SX, H - 170 * SY, 20);
+
+fun nachricht(text) {
+    meldung.SetImage(Image.Text(text + " ", 0.83, 0.85, 0.84, 1, "Sans 26"));
+}
+Plymouth.SetMessageFunction(nachricht);
+
+fun update(fortschritt) {
+    nachricht("UPDATING  " + Math.Int(fortschritt) + " %");
+}
+Plymouth.SetSystemUpdateFunction(update);
+
+boxbild = bild("box.png");
+box = Sprite(boxbild);
+BOX_X = (W - boxbild.GetWidth()) / 2;
+BOX_Y = (H - boxbild.GetHeight()) / 2;
+box.SetPosition(BOX_X, BOX_Y, 30);
+box.SetOpacity(0);
+dlg_text = Sprite();
+dlg_text.SetPosition(BOX_X + 50 * SX, BOX_Y + 45 * SY, 31);
+dlg_eingabe = Sprite();
+dlg_eingabe.SetPosition(BOX_X + 50 * SX, BOX_Y + 140 * SY, 31);
+
+fun dialog(prompt, eingabe) {
+    box.SetOpacity(1);
+    dlg_text.SetImage(Image.Text(prompt + " ", 0.86, 0.88, 0.88, 1, "Sans 28"));
+    dlg_eingabe.SetImage(Image.Text(eingabe + " ", 0.86, 0.88, 0.88, 1, "Sans 34"));
+    dlg_text.SetOpacity(1);
+    dlg_eingabe.SetOpacity(1);
+}
+
+fun passwort(prompt, punkte) {
+    local.s = "";
+    local.j = 0;
+    while (local.j < punkte) {
+        local.s = local.s + "●";
+        local.j++;
+    }
+    dialog(prompt, local.s);
+}
+Plymouth.SetDisplayPasswordFunction(passwort);
+
+fun frage(prompt, eingabe) {
+    dialog(prompt, eingabe);
+}
+Plymouth.SetDisplayQuestionFunction(frage);
+
+fun normal() {
+    box.SetOpacity(0);
+    dlg_text.SetOpacity(0);
+    dlg_eingabe.SetOpacity(0);
+}
+Plymouth.SetDisplayNormalFunction(normal);
+
+# ---------------------------------------------------------------- Animation
+t = 0;
+t_vorher = 0;
+schwarz_fertig = 0;
+uhr = -1;
+uhr0 = -1;
+
+fun fortschritt(zeit, anteil) {
+    global.uhr = zeit;
+}
+Plymouth.SetBootProgressFunction(fortschritt);
+
+fun refresh() {
+    # Plymouth schafft nicht immer 50 Bilder/s → Zeit aus der echten Uhr (Boot-Fortschritt), dazwischen weiterzählen
+    global.t = global.t + 1 / FPS;
+    if (global.uhr >= 0) {
+        if (global.uhr0 < 0)
+            global.uhr0 = global.uhr - global.t;
+        local.ziel = global.uhr - global.uhr0;
+        if (global.t < local.ziel)
+            global.t = local.ziel;
+        if (global.t > local.ziel + 0.15)
+            global.t = local.ziel + 0.15;
+    }
+
+    local.dt = global.t - global.t_vorher;
+    global.t_vorher = global.t;
+    local.i = 0;
+    while (local.i < FLOCKEN) {
+        local.f = global.flocke[local.i];
+        local.f.x = local.f.x + local.f.vx * local.dt;
+        local.f.y = local.f.y + local.f.vy * local.dt;
+        if (local.f.y > H) {
+            local.f.y = -12;
+            local.f.x = Math.Random() * W * 1.2 - W * 0.2;
+        }
+        if (local.f.x > W)
+            local.f.x = local.f.x - W;
+        local.f.sprite.SetPosition(local.f.x, local.f.y, 6);
+        local.i++;
+    }
+
+    # danach das Schwarz nicht mehr anfassen – ein Vollbild-Sprite mit Deckkraft kostet viel
+    if (!global.schwarz_fertig) {
+        local.s = 1 - global.t / EINBLENDEN;
+        if (local.s <= 0) {
+            local.s = 0;
+            global.schwarz_fertig = 1;
+        }
+        schwarz.SetOpacity(local.s * local.s * (3 - 2 * local.s));
+    }
+
+    if (hochfahren) {
+        local.l = (global.t - EINBLENDEN) / 0.5;
+        if (local.l > 1)
+            local.l = 1;
+        if (local.l < 0)
+            local.l = 0;
+        laden.SetOpacity(local.l * (0.45 + 0.3 * (0.5 + 0.5 * Math.Sin(global.t * 2.2))));
+    }
+}
+Plymouth.SetRefreshFunction(refresh);

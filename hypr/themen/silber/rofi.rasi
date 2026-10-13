@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema silber (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #cfd6df;
+    accent-soft: #eef1f5;
+    cream:       #eceef1;
+    muted:       #a6abb2;
+    faint:       #70757c;
+    ink:         #0c0d0f;
+    hairline:    #ffffff17;
+    panel:       #111316b8;
+}

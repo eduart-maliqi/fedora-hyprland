@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema kohle (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #e8a21c;
+    accent-soft: #f5c867;
+    cream:       #e8e6e1;
+    muted:       #a9a8a4;
+    faint:       #74736f;
+    ink:         #121212;
+    hairline:    #ffffff17;
+    panel:       #161616b8;
+}

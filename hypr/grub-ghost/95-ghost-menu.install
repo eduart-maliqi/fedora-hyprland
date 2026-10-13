@@ -1,0 +1,10 @@
+#!/usr/bin/sh
+# ★ 8155 – GRUB-Menü „ghost“: LOAD GAME ist eine feste Liste mit gerenderten Bildern (Schriften gehen unter
+# Secure Boot nicht) → nach jeder Kernel-Installation/-Entfernung grub.cfg neu erzeugen, sonst fehlt der neue Kernel dort.
+# Installiert von ~/.config/hypr/grub-ghost/installieren.sh nach /etc/kernel/install.d/.
+case "$1" in
+	add | remove)
+		grub2-mkconfig -o /boot/grub2/grub.cfg > /dev/null 2>&1 || echo "95-ghost-menu: grub2-mkconfig fehlgeschlagen" >&2
+		;;
+esac
+exit 0

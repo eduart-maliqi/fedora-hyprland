@@ -1,0 +1,44 @@
+# ★ 8155 – GRUB-Theme „ghost“: Untermenü „LOAD GAME“ (alle Kernel, z. B. älterer Kernel oder Rettungssystem).
+# Wird von /etc/grub.d/15_ghost_menu im Untermenü per „set theme=…/load.txt“ gesetzt. Die Kernel-Einträge sind Bilder
+# (icons/ghost-k-<version>.png), die 15_ghost_menu beim grub2-mkconfig rendert – Schriften gehen unter Secure Boot nicht.
+
+title-text: ""
+desktop-image: "background_load.jpg"
+desktop-image-scale-method: "stretch"
+desktop-color: "#0f1514"
+
+terminal-box: "terminal_box_*.png"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+terminal-border: "0"
+
++ image {
+	left = 4%
+	top = 7%
+	file = "load_title.png"
+}
+
++ boot_menu {
+	left = 4%
+	top = 420
+	width = 1500
+	height = 1150
+	item_color = "#00000000"
+	selected_item_color = "#00000000"
+	icon_width = 1400
+	icon_height = 150
+	item_icon_space = 0
+	item_height = 150
+	item_padding = 0
+	item_spacing = 16
+	selected_item_pixmap_style = "load_select_*.png"
+	scrollbar = false
+}
+
++ image {
+	left = 100%-912
+	top = 100%-220
+	file = "load_hints.png"
+}

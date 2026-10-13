@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema glut (eingebunden von mako/config über themen/aktiv)
+background-color=#130e13d6
+text-color=#ece5e3
+border-color=#ef5a5066
+progress-color=over #ef5a5044

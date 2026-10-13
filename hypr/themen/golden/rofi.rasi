@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema golden (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #e3a142;
+    accent-soft: #f2c57c;
+    cream:       #ede6d6;
+    muted:       #aab0aa;
+    faint:       #7d8680;
+    ink:         #12181e;
+    hairline:    #ffffff17;
+    panel:       #141a20b8;
+}

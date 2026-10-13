@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema purpur (eingebunden von mako/config über themen/aktiv)
+background-color=#170a20d6
+text-color=#f0e6ef
+border-color=#f2508a66
+progress-color=over #f2508a44

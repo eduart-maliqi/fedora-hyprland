@@ -1,0 +1,20 @@
+# ★ 8155 – mako
+font=JetBrainsMono Nerd Font 10
+# Farben aus dem aktiven Farbthema (umgeschaltet von ~/.config/hypr/scripts/thema.sh)
+include=~/.config/hypr/themen/aktiv/mako
+border-size=1
+border-radius=12
+padding=12,14
+margin=10,14
+width=340
+max-icon-size=40
+default-timeout=6000
+anchor=top-right
+layer=overlay
+
+[urgency=low]
+border-color=#ffffff1a
+
+[urgency=critical]
+border-color=#e0714f
+default-timeout=0

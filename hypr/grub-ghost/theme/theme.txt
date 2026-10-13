@@ -1,0 +1,47 @@
+# ★ 8155 – GRUB-Theme „ghost“: Hauptmenü wie der Startbildschirm von Ghost of Tsushima.
+# Ausgelegt auf 2880×1800 (GRUB_GFXMODE). Hintergrund = Wallpaper (wallpaper_bild.py), Pinselstrich, Hinweise und die
+# Einträge als Bilder aus bilder.py (alles in ~/.config/hypr/grub-ghost/). Einträge kommen aus /etc/grub.d/15_ghost_menu.
+# Unter Secure Boot lädt GRUB KEINE Schriften → der Text jedes Eintrags ist ein Bild (icons/<klasse>.png, über die
+# --class des Eintrags); der eigentliche Titel ist unsichtbar (Alpha 0), sonst stünde er in GRUBs 8×16-Notschrift da.
+
+title-text: ""
+desktop-image: "background.jpg"
+desktop-image-scale-method: "stretch"
+desktop-color: "#1a2221"
+
+# Konsole (c) und Eintrag bearbeiten (e): ganzer Bildschirm. GRUB leert dieses Fenster vor jedem Start schwarz
+# (nicht abschaltbar; background_image fehlt im signierten GRUB) → wie im Spiel: Auswahl → schwarz → Ladebildschirm.
+terminal-box: "terminal_box_*.png"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+terminal-border: "0"
+
+# Menü links wie im Spiel; der gewählte Eintrag liegt auf dem halb durchscheinenden Pinselstrich (select_c.png).
+# Schrift der Bilder: Cinzel Medium, Versalhöhe 105 px
++ boot_menu {
+	left = 4%
+	top = 200
+	width = 1460
+	height = 1250
+	item_color = "#00000000"
+	selected_item_color = "#00000000"
+	icon_width = 1360
+	icon_height = 210
+	item_icon_space = 0
+	item_height = 210
+	item_padding = 0
+	item_spacing = 22
+	selected_item_pixmap_style = "select_*.png"
+	scrollbar = false
+}
+
+# Kein Countdown: das Menü wartet, bis etwas gewählt wird (GRUB_TIMEOUT=-1, setzt installieren.sh)
+
+# Tastenhinweise unten rechts
++ image {
+	left = 100%-887
+	top = 100%-220
+	file = "hints.png"
+}

@@ -1,0 +1,186 @@
+#!/usr/bin/sh
+set -e
+
+# ★ 8155 – Bootmenü im Stil des Startbildschirms von Ghost of Tsushima (Theme /boot/grub2/themes/ghost).
+# Ersetzt die Einträge von 10_linux, 30_os-prober und 30_uefi-firmware. Dafür sind 10_linux und
+# 30_uefi-firmware nicht ausführbar (chmod -x) und os-prober ist aus (GRUB_DISABLE_OS_PROBER=true).
+#
+#   FEDORA LINUX – startet den Standard-Kernel (saved_entry, wird wie bisher von grubby/kernel-install gepflegt)
+#   WINDOWS      – Windows Boot Manager auf der EFI-Partition (gleiche Id wie bei os-prober → grub2-reboot geht weiter)
+#   LOAD GAME    – alle Kernel aus /boot/loader/entries (älterer Kernel, Rettungssystem), eigenes Theme load.txt
+#   OPTIONS      – UEFI-Firmware-Einstellungen
+#   QUIT GAME    – ausschalten
+#
+# Secure Boot: GRUB lädt keine Schriften → jeder Eintrag zeigt ein Bild (icons/<erste --class>.png), der Titel selbst
+# ist im Theme unsichtbar. Die Bilder der LOAD-GAME-Kernel rendert dieses Skript (python3 + Pillow); damit neue Kernel
+# auftauchen, ruft /etc/kernel/install.d/95-ghost-menu.install nach jeder Kernel-Installation grub2-mkconfig auf.
+# Auflösung: 00_header setzt gfxmode nur, wenn „loadfont“ klappt (unter Secure Boot nie) → installieren.sh legt
+# gfxmode in die grubenv; die lädt GRUB vor dem Start der Grafik (Umschalten console→gfxterm hängt unter SB im Textmodus).
+# Doku: ~/.config/hypr/docs/grub.md
+
+prefix="/usr"
+exec_prefix="/usr"
+datarootdir="/usr/share"
+
+. "$pkgdatadir/grub-mkconfig_lib"
+
+esp=/boot/efi
+win_efi=/EFI/Microsoft/Boot/bootmgfw.efi
+blsdir=/boot/loader/entries
+theme_dir="${GRUB_THEME%/*}"
+
+boot_prep="$(prepare_grub_to_access_device ${GRUB_DEVICE_BOOT})"
+boot_prep_in="$(echo "${boot_prep}" | sed 's/^/\t/')"
+
+# Rückfall-Kernelparameter wie in 10_linux (die BLS-Einträge haben eigene „options“)
+if [ "x${GRUB_DEVICE_UUID}" = "x" ] || [ "x${GRUB_DISABLE_LINUX_UUID}" = "xtrue" ]; then
+	root_dev="${GRUB_DEVICE}"
+else
+	root_dev="UUID=${GRUB_DEVICE_UUID}"
+fi
+cmdline="${GRUB_CMDLINE_LINUX}"
+if [ "x${GRUB_FS}" = "xbtrfs" ]; then
+	rootsubvol="$(make_system_path_relative_to_its_root /)"
+	rootsubvol="${rootsubvol#/}"
+	if [ "x${rootsubvol}" != "x" ]; then
+		cmdline="rootflags=subvol=${rootsubvol} ${cmdline}"
+	fi
+fi
+
+cat << EOF
+${boot_prep}
+if [ -z "\${kernelopts}" ]; then
+  set kernelopts="root=${root_dev} ro ${cmdline} ${GRUB_CMDLINE_LINUX_DEFAULT}"
+fi
+insmod blscfg
+insmod regexp
+
+# Standard-Eintrag: gespeicherter Kernel (BLS-Id in saved_entry) → „FEDORA LINUX“ > dieser Kernel.
+# Windows, OPTIONS usw. (z. B. per grub2-reboot) bleiben, wie sie sind.
+set ghost_kernel=""
+if regexp --set=1:ghost_kernel '^ghost-[a-z]+>(.+)\$' "\${default}"; then
+  true
+elif regexp '^(ghost-[a-z]+|osprober-.*|uefi-firmware|[0-9]*)\$' "\${default}"; then
+  set ghost_kernel=""
+else
+  set ghost_kernel="\${default}"
+fi
+if [ -n "\${ghost_kernel}" ]; then
+  set default="ghost-fedora>\${ghost_kernel}"
+fi
+
+# savedefault (aus 00_header) würde „ghost-fedora>Kernel“ speichern – grubby versteht nur die nackte Kernel-Id
+function savedefault {
+  if [ -z "\${boot_once}" ]; then
+    saved_entry="\${chosen}"
+    regexp --set=1:saved_entry '^ghost-[a-z]+>(.+)\$' "\${chosen}"
+    save_env saved_entry
+  fi
+}
+
+submenu 'FEDORA LINUX' --class ghost-fedora --class fedora --class os --unrestricted --id ghost-fedora {
+	set timeout=0
+${boot_prep_in}
+	blscfg
+}
+EOF
+
+if [ -f "${esp}${win_efi}" ]; then
+	esp_dev="$(${grub_probe} --target=device "${esp}${win_efi}")"
+	esp_uuid="$(${grub_probe} --target=fs_uuid --device ${esp_dev} 2> /dev/null || true)"
+	esp_prep="$(prepare_grub_to_access_device ${esp_dev} | sed 's/^/\t/')"
+	cat << EOF
+
+menuentry 'WINDOWS' --class ghost-windows --class windows --unrestricted --id 'osprober-efi-${esp_uuid}' {
+${esp_prep}
+	chainloader ${win_efi}
+}
+EOF
+fi
+
+# ---------------------------------------------------------------- LOAD GAME: feste Liste aus den BLS-Einträgen
+bls_wert() {
+	sed -n "s/^$2[[:space:]]\{1,\}//p" "$1"
+}
+
+cat << EOF
+
+submenu 'LOAD GAME' --class ghost-load --unrestricted --id ghost-load {
+	regexp --set=1:ghost_theme_dir '^(.*)/[^/]*\$' "\${theme}"
+	set theme="\${ghost_theme_dir}/load.txt"
+	unset timeout
+${boot_prep_in}
+EOF
+
+bilder=""
+for id in $(ls "${blsdir}" 2> /dev/null | sed -n 's/\.conf$//p' | sort -V -r | awk '/-0-rescue-/ { r = r $0 "\n"; next } { print } END { printf "%s", r }'); do
+	f="${blsdir}/${id}.conf"
+	version="$(bls_wert "$f" version | head -1)"
+	linux="$(bls_wert "$f" linux | head -1)"
+	[ -n "${linux}" ] || continue
+	case "${version}" in
+		0-rescue-*) text="FEDORA LINUX RESCUE" ;;
+		*) text="FEDORA LINUX ${version%%-*}" ;;
+	esac
+	klasse="ghost-k-$(echo "${version}" | tr -c 'A-Za-z0-9._\n-' '_')"
+	titel="$(bls_wert "$f" title | head -1 | sed "s/'/'\\\\''/g")"
+	bilder="${bilder}${klasse}	${text}
+"
+	printf "\tmenuentry '%s' --class %s --unrestricted --id '%s' {\n" "${titel}" "${klasse}" "${id}"
+	printf '\t\tif [ "${save_default}" = "true" ]; then savedefault; fi\n'
+	printf '\t\tload_video\n\t\tset gfxpayload=keep\n\t\tinsmod gzio\n'
+	printf '\t\tlinux %s %s\n' "${linux}" "$(bls_wert "$f" options | head -1)"
+	initrd="$(bls_wert "$f" initrd | tr '\n' ' ')"
+	[ -n "${initrd% }" ] && printf '\t\tinitrd %s\n' "${initrd% }"
+	printf '\t}\n'
+done
+echo "}"
+
+# Bilder der Kernel-Einträge – gleiche Darstellung wie textbild() in bilder.py
+if [ -d "${theme_dir}" ] && [ -f "${theme_dir}/schrift.ttf" ]; then
+	mkdir -p "${theme_dir}/icons"
+	rm -f "${theme_dir}/icons"/ghost-k-*.png
+	printf '%s' "${bilder}" | python3 -I -c '
+import sys
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
+d = sys.argv[1]
+f = ImageFont.truetype(d + "/schrift.ttf", 96)
+b = f.getbbox("H")
+for zeile in sys.stdin:
+    klasse, text = zeile.rstrip("\n").split("\t", 1)
+    im = Image.new("RGBA", (1400, 150), (0, 0, 0, 0))
+    ImageDraw.Draw(im).text((90, (150 + b[3] - b[1]) // 2), text, font=f, fill=(240, 240, 234, 255), anchor="ls",
+                            stroke_width=1, stroke_fill=(10, 14, 13, 200))
+    out = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    out.putalpha(im.getchannel("A").filter(ImageFilter.GaussianBlur(6)).point(lambda v: int(v * 0.8)))
+    out.alpha_composite(im)
+    out.save(d + "/icons/" + klasse + ".png")
+' "${theme_dir}" || echo "15_ghost_menu: Bilder für LOAD GAME fehlen (python3 + Pillow?)" >&2
+fi
+
+cat << EOF
+
+# gleiche Prüfung wie Fedoras 30_uefi-firmware (führt fwsetup dabei nicht aus)
+if [ "\$grub_platform" = "efi" ]; then
+	if [ fwsetup --is-supported ]; then
+		menuentry 'OPTIONS' --class ghost-options --unrestricted --id 'uefi-firmware' {
+			fwsetup
+		}
+	fi
+fi
+
+menuentry 'QUIT GAME' --class ghost-quit --unrestricted --id ghost-quit {
+	halt
+}
+EOF
+
+# Dualboot: Menü immer zeigen (wie es 30_os-prober macht, wenn es ein zweites System findet)
+if [ -f "${esp}${win_efi}" ]; then
+	cat << EOF
+
+if [ "\${orig_timeout_style}" -a "\${menu_auto_hide}" != "2" ]; then
+  set timeout_style=\${orig_timeout_style}
+  set timeout=\${orig_timeout}
+fi
+EOF
+fi

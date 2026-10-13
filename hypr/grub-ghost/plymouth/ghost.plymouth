@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Ghost
+Description=★ 8155 – animierter Ladebildschirm im Stil des Hauptmenüs von Ghost of Tsushima (Quellen: ~/.config/hypr/grub-ghost)
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/ghost
+ScriptFile=/usr/share/plymouth/themes/ghost/ghost.script

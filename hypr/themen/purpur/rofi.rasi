@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema purpur (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #f2508a;
+    accent-soft: #f3b0d6;
+    cream:       #f0e6ef;
+    muted:       #b5a3b6;
+    faint:       #7c6b80;
+    ink:         #12071a;
+    hairline:    #ffe6ff17;
+    panel:       #170a20b8;
+}

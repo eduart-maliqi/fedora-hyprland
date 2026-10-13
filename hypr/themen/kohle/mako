@@ -1,0 +1,5 @@
+# ★ 8155 – Farben der Benachrichtigungen, Thema kohle (eingebunden von mako/config über themen/aktiv)
+background-color=#161616d6
+text-color=#e8e6e1
+border-color=#e8a21c66
+progress-color=over #e8a21c44

@@ -1,0 +1,11 @@
+/* ★ 8155 – rofi-Farben, Thema glut (eingebunden von rofi/config.rasi über themen/aktiv) */
+* {
+    accent:      #ef5a50;
+    accent-soft: #fdb59a;
+    cream:       #ece5e3;
+    muted:       #ada4a6;
+    faint:       #776d70;
+    ink:         #0d0b10;
+    hairline:    #ffe6e617;
+    panel:       #130e13b8;
+}
