@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-13** – Songtext für „Cu mbush mali plot me rrush“ (Irini Qirjako) dauerhaft entfernt (`docs/musik.md`): Whisper hielt das albanische Lied
+  für russisch, Text war Kyrillisch/Hebräisch-Kauderwelsch.
 - **2026-10-13** – Git für `~/.config` (hypr, quickshell, rofi, mako, kitty; `.gitignore` mit Ausnahmen), Remote öffentlich auf GitHub – Versionsverlauf statt tar;
   Mailadresse aus `docs/system.md` entfernt, weil öffentlich.
 - **2026-10-13** – Clawd-Hooks (15) aus `~/.claude/settings.json` entfernt, Clawd wird nicht mehr gebraucht – sie starteten bei jedem Werkzeugaufruf `node`.

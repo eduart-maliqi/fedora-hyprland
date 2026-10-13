@@ -75,6 +75,10 @@ Fenster/Ebenen und `Ui.qml`-Zustand: `docs/quickshell.md`.
   - **Befehle:** `lyrics.py key` (Key verdeckt eingeben, muss mit `sk-` beginnen, wird bei OpenAI geprüft, `key --remove` löscht ihn),
     `lyrics.py forget "<Interpret>" "<Titel>"` (falschen Text verwerfen → beim nächsten Abspielen neu),
     `lyrics.py info` (Key/yt-dlp vorhanden?, Anzahl Texte je Quelle, KI-Kosten). Key alternativ per `OPENAI_API_KEY`.
+  - **Lied dauerhaft ohne Songtext** (z. B. Whisper hält ein albanisches Lied für russisch/hebräisch → Kauderwelsch): die Cache-JSON
+    des Lieds (`~/.cache/8155/lyrics/<sha1>.json`) auf `"lrc": ""`, `"ai_tried": true` und `"time"` weit in die Zukunft setzen –
+    sonst sucht die KI nach 30 Tagen neu. Danach Quickshell neu laden (Speicher-Cache), z. B. `touch LyricsService.qml`.
+    Stand 2026-10-13 so gesetzt für „Irini Qirjako – Cu mbush mali plot me rrush“.
   - Bereinigung (im Skript): YouTube-Titel „Interpret - Titel“ zerlegen, „(Official Video)“ usw. weg; für Suchen
     zusätzlich „- Remastered 2011“, „(feat. …)“ weg.
 - `Lyrics.qml`: Stil wie die Instagram-Songtexte, oben links (Rand links 48, oben 92 px, 520 px breit):
