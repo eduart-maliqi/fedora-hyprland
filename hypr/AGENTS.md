@@ -95,6 +95,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── lyrics.py          ← Songtexte suchen (Cache → lrclib → NetEase → KI per YouTube-Audio + OpenAI Whisper):
 │   │                        `find`, `key` (OpenAI-Key speichern), `forget <artist> <titel>`, `info` → docs/musik.md
 │   ├── noa-start.sh       ← NOA-Entwicklungsumgebung hochfahren (Super+Shift+D) → docs/system.md
+│   ├── kalender.py        ← Termine der nächsten 45 Tage als JSON (Evolution-Datenbank, Google-Konto über GNOME-Online-Konten) → docs/quickshell.md
 │   ├── nowplaying.sh      ← aktueller Song als Text (für hyprlock)
 │   ├── powermenu.sh       ← Power-Menü (rofi): sperren, Bereitschaft, abmelden, Neustart, aus
 │   ├── claude-sessions.py ← Claude-Code-Sitzungen: welche sind fertig und ungesehen? (liest ~/.claude/sessions, für die Leiste) → docs/quickshell.md
@@ -123,7 +124,9 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── StarLine.qml           ← Mitte der Leiste: Linie in der Akzentfarbe + Taskleiste (offene Apps)
 ├── Pill.qml               ← Baustein: Glas-Kapsel [Symbol  Text]
 ├── Star.qml               ← Baustein: fünfzackiger Vektor-Stern
-├── ControlCenter.qml      ← aufklappbares Kontrollzentrum oben rechts
+├── ControlCenter.qml      ← aufklappbares Kontrollzentrum oben rechts (mit Kalender)
+├── CalendarView.qml       ← Kalender im Kontrollzentrum: heute + 1 Monat, Termine als Punkte + Liste
+├── CalendarService.qml    ← Singleton: Termine (ruft scripts/kalender.py auf)
 ├── WifiList.qml           ← WLAN-Liste (im Kontrollzentrum)
 ├── BluetoothList.qml      ← Bluetooth-Geräteliste (im Kontrollzentrum)
 ├── MusicWindow.qml        ← Fenster fürs Musik-Panel, pro Bildschirm zwei (Desktop-Ebene / über den Fenstern)

@@ -32,7 +32,7 @@
 ## What's inside
 
 - **Hyprland with a Lua configuration** (`hypr/hyprland.lua`, not hyprlang): monitors, autostart, input, keybindings, window and layer rules.
-- **Quickshell UI in QML** (`quickshell/`): top bar with taskbar, control center (Wi-Fi, Bluetooth, sound, night mode), desktop clock, volume OSD.
+- **Quickshell UI in QML** (`quickshell/`): top bar with taskbar, control center (Wi-Fi, Bluetooth, sound, night mode, rolling one-month calendar with your Google events), desktop clock, volume OSD.
 - **Task view with live previews** (Super+Tab) and an Alt+Tab window switcher.
 - **Music panel** like a small Spotify (Web API): playlists, search, controls, plus **synced lyrics** on the desktop.
 - **Six color themes** (`golden`, `glut`, `kohle`, `purpur`, `mond`, `silber`): Hyprland, Quickshell, mako, rofi, kitty and hyprlock take their colors from the active theme.

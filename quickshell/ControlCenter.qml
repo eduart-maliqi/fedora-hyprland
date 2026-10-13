@@ -12,6 +12,7 @@ import Quickshell.Services.UPower
 //   Stromsparen         Kachel → Energieprofil Stromsparen an/aus,  󰅀 → alle Profile (tuned-ppd)
 //   Nachtmodus          Kachel → Blaulichtfilter an/aus,  󰅀 → Wärme einstellen (NightLight.qml / hyprsunset)
 //   Lautstärke / Hell.  Schieberegler (auch Mausrad), Lautsprecher-Symbol → stumm
+//   Kalender            heute + 1 Monat mit Terminen (CalendarView.qml), Tag anklicken → seine Termine
 //   unten               Akku-Details, sperren, Power-Menü
 //   Schließen: 󰅖, Esc, nochmal auf die Kapsel oder Klick aufs Wallpaper
 PanelWindow {
@@ -568,6 +569,11 @@ PanelWindow {
                 value: root.brightness
                 onMoved: v => root.setBrightness(Math.max(0.01, v))
             }
+
+            Rectangle { width: parent.width; height: 1; color: Theme.hairline }
+
+            // Kalender: heute + 1 Monat, Termine aus dem Google-Kalender
+            CalendarView { width: parent.width }
 
             Rectangle { width: parent.width; height: 1; color: Theme.hairline }
 

@@ -23,7 +23,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 - **Gelöschte Objekte in Listen:** Verschwindet ein Eintrag (WLAN-Netz, Fenster, Gerät), wird das QObject gelöscht und
   `modelData`/`var`-Eigenschaften werden still zu `null` – ohne dass Bindings neu rechnen. In Delegates daher mit `?.`
   lesen (`row.net?.name ?? ""`), ein Platzhalter per `modelData ?? {…}` reicht **nicht**.
-- Singletons (`pragma Singleton`) werden ohne `qmldir` automatisch erkannt (Theme, Ui, Media, LyricsService, Spotify, NightLight, WindowMode).
+- Singletons (`pragma Singleton`) werden ohne `qmldir` automatisch erkannt (Theme, Ui, Media, LyricsService, Spotify, NightLight, WindowMode, CalendarService).
 - **Farben nur aus `Theme.qml`, nie fest eintragen** – es gibt mehrere Farbthemen (golden/glut/kohle/purpur/mond, siehe `docs/wallpaper.md`).
   `Theme.palettes` hält alle Paletten (auch `red` hängt vom Thema ab), `Theme.name` wählt (beim Start aus dem Symlink `~/.config/hypr/themen/aktiv`, danach per
   IPC `theme set`); die Farb-Eigenschaften blenden mit `Behavior` 1,1 s über. Mit Deckkraft: `Theme.accentA(0.45)`,
@@ -115,6 +115,15 @@ Dazu die Funktion `Ui.skipWindow(t)`: `true` für Fenster, die Taskleiste, Alt+T
     Da hyprsunset nicht melden kann, ob der Filter an ist, wird der Zustand in `~/.local/state/8155/nachtmodus.json`
     gespeichert und beim Start von Quickshell wieder angewendet.
 - **Regler:** Lautstärke (Pipewire; Symbol-Klick = stumm) und Helligkeit (`brightnessctl`, wird jede Sekunde nachgelesen, solange offen); Mausrad ±5 %
+- **Kalender** (`CalendarView.qml`, Daten von `CalendarService.qml` ← `scripts/kalender.py`), unter den Reglern:
+  - **rollend**: ab Montag dieser Woche bis heute + 1 Monat (5–6 Zeilen), keine feste Monatsseite; heute = gefüllter Kreis,
+    Punkte = Termine (bis 3), am 1. des Monats steht der Monatsname. Tag anklicken → seine Termine, nochmal → „nächste termine“ (6 Stück)
+  - **Quelle:** Evolution-Datenbank (EDS, `gi.repository.ECal`) – das Google-Konto steckt dort über die GNOME-Online-Konten
+    (`~/.config/goa-1.0`), es braucht **kein eigenes Passwort/Token**. Alle aktiven Kalender (Google, Feiertage Schweiz, Geburtstage, lokal),
+    Wiederholungen werden ausgeklappt. Neuer Google-Kalender in GNOME/Evolution anhaken → erscheint von selbst.
+  - **Abruf:** beim Start, beim Öffnen (frühestens alle 60 s), solange offen alle 10 min; ~1 s. Test: `python3 scripts/kalender.py 45`
+  - **Fallstrick:** `ECal.Client.connect_sync(…, 0, …)` wartet **ewig**; das Skript nimmt 1 s (Daten kommen dann aus dem Zwischenspeicher).
+    Schlägt alles fehl → „kalender nicht erreichbar“. **Nur lesen** – Termine anlegen/ändern geht hier nicht (dafür Google Kalender/Evolution).
 - **Fuß:** Akku-Details (lädt / voll in … / noch …), Knöpfe Sperren und Power-Menü
 - Schließen: ✕, Esc (nach Klick hinein, Tastatur ist `OnDemand`), nochmal auf die Kapsel, Klick aufs Wallpaper
 
