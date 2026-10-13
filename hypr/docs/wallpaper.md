@@ -59,7 +59,9 @@ nächsten Bildwechsel erkannt.
 ## Wallpaper-Galerie (Super+W, `WallpaperGallery.qml`)
 Overlay auf dem Bildschirm mit Fokus: alle Bilder als **Waben** (spitze Sechsecke) in einem Zickzack-Band – das aktive
 (mit Stern) vorne links, dann **zuletzt genutzt** zuerst, nie benutzte hinten nach Name. Ist das Band voll, geht es
-darunter weiter (lückenloses Wabenmuster); die Wabengröße (max. 300 px) passt sich Anzahl und Bildschirm an.
+darunter weiter (lückenloses Wabenmuster); passt der Rest des letzten Bands in eine Reihe, liegt er dort mittig auf
+geraden Plätzen unter dem Band (sonst hinge eine einzelne Wabe im Zickzack weit unten); die Wabengröße (max. 300 px)
+passt sich Anzahl und Bildschirm an.
 - Pfeile ←/→, Tab, Mausrad = vor/zurück (im Band), ↑/↓ = ein Band hoch/runter, Maus drüber = wählen
 - Enter / Leertaste / Klick = übernehmen (`wallpaper.sh <pfad>` → Farbthema wechselt mit), Esc / Super+W / Klick daneben = zu
 - **Strg+Entf = gewähltes Bild löschen** → `wallpaper.sh weg <pfad>`: Bild + `masken/<name>.{png,json}` per `gio trash` in den

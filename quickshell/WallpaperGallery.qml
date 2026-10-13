@@ -129,12 +129,16 @@ PanelWindow {
         const sx = (w + g) / 2, sy = (w + g) * 0.866, cols = Math.min(n, k)
         const pos = []
         for (let i = 0; i < n; i++) {
-            const s = Math.floor(i / k)
-            const slot = i % k + Math.floor((cols - Math.min(k, n - s * k)) / 2)   // letztes Band mittig
+            const s = Math.floor(i / k), m = Math.min(k, n - s * k), j = i % k
+            // passt der Rest in eine Reihe, liegt er nur auf geraden Plätzen (nistet unter dem Band) –
+            // im Zickzack hinge sonst eine einzelne Wabe weit unten
+            const row = s > 0 && m < k && 2 * m - 1 <= k
+            const slot = row ? 2 * (j + Math.round((k - 2 * m + 1) / 4))
+                             : j + Math.floor((cols - m) / 2)                       // letztes Band mittig
             pos.push({ x: slot * sx, y: (2 * s + slot % 2) * sy })
         }
         return { w: w, h: w * 1.1547, k: k, pos: pos,
-                 width: w + (cols - 1) * sx, height: (2 * strips - (cols > 1 ? 1 : 2)) * sy + w * 1.1547 }
+                 width: w + (cols - 1) * sx, height: Math.max(...pos.map(p => p.y)) + w * 1.1547 }
     }
 
     Item {

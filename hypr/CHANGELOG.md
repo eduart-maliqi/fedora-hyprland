@@ -3,6 +3,7 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-13** – Wallpaper-Galerie: Rest des letzten Wabenbands liegt in einer Reihe statt im Zickzack (`WallpaperGallery.qml`) – eine einzelne Wabe hing weit unten.
 - **2026-10-13** – `README.md` + `screenshots/` im Repo-Wurzelverzeichnis (`~/.config`), Repo heisst `fedora-hyprland`. Screenshots nur auf leerem
   Workspace und mit Testfenstern aufnehmen, vorher ansehen – das Repo ist öffentlich.
 - **2026-10-13** – Songtext für „Cu mbush mali plot me rrush“ (Irini Qirjako) dauerhaft entfernt (`docs/musik.md`): Whisper hielt das albanische Lied
