@@ -109,10 +109,14 @@ Dateikonflikten der i686-Pakete mit den alten x86_64-Einträgen. Gelöst mit
 ## iPhone spiegeln & bedienen (UxPlay + Bluetooth-HID)
 
 **Anzeige:** Paket `uxplay` (AirPlay-Mirroring-Empfänger, GPLv3), User-Dienst `~/.config/systemd/user/uxplay.service`
-(`-n 8155-Laptop -pin -reg -vs waylandsink -fps 60`, gestartet über `scripts/iphone-uxplay.sh`: zeilenweise Ausgabe + PIN als Benachrichtigung). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
+(`-n 8155-Laptop -vs waylandsink -fps 60`, gestartet über `scripts/iphone-uxplay.sh`: zeilenweise Ausgabe + Passwort `-pw`). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
 AirPlay-Ziel im Netz. Ein/Aus: **Super+Shift+A**, Kachel „iphone spiegeln“ im Kontrollzentrum (`Iphone.qml`) oder
 `scripts/iphone.sh an|aus|toggle|status`. Verbinden: iPhone → Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“;
-beim ersten Mal erscheint die PIN als Benachrichtigung (auch `journalctl --user -u uxplay`; ohne `stdbuf` kam sie erst beim Beenden), danach merkt `-reg` das Gerät. Firewall: Dienst `mdns` (5353/udp) in
+am iPhone das **Passwort** eingeben (steht in der Benachrichtigung beim Einschalten, später: `scripts/iphone.sh passwort`;
+Datei `~/.local/state/8155/iphone-passwort`, 8 Zeichen, zufällig, nicht im Git). **`-pin` nicht verwenden:** UxPlay 1.73.7 lehnt
+den 20-Byte-SRP-Beweis des iPhones ab (`client_proof_len 20 invalid`, Prüfung auf 64 Byte in `lib/raop_handlers.h`) → PIN-Fenster
+kommt immer wieder; `-pw` nutzt HTTP-Digest und umgeht das. Bei neueren UxPlay-Versionen erneut mit `-pin` probieren.
+Netz: **kein Gast-WLAN mit Client-Isolation** (mDNS erreicht das iPhone nicht) – der Persönliche Hotspot des iPhones geht. Firewall: Dienst `mdns` (5353/udp) in
 der Zone FedoraWorkstation freigegeben (sonst findet das iPhone den Empfänger nicht), die Datenports liegen im offenen Bereich 1025–65535.
 Fensterregel `iphone-spiegel` (Klasse `uxplay`, schwebend 420×910) – Klasse beim ersten echten Spiegeln mit `hyprctl clients -j` prüfen.
 Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei Flackern/Schwarz `-vs glimagesink`.
