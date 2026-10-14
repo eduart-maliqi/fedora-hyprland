@@ -16,7 +16,16 @@ case "${1:-toggle}" in
     toggle) active && exec "$0" aus || exec "$0" an ;;
     passwort) notify -t 60000 "iphone-passwort" "$(<"$pwfile")" ;;
     steuern)
-        systemctl --user start iphone-hid.service
-        exec python3 -I "$(dirname "$0")/iphone-steuern.py" ;;
+        dir=$(dirname "$(readlink -f "$0")")
+        le_only() { local s; s=$(btmgmt --index 0 info 2>/dev/null | grep "current settings:"); [[ $s == *powered* && $s != *br/edr* ]]; }
+        python3 -I "$dir/iphone-steuern.py" & win=$!
+        # Root-Helfer (ein Passwort-Dialog): Bluetooth nur LE, solange das Fenster offen ist – danach wieder Classic + LE
+        pkexec "$dir/iphone-le.sh" "$win" &
+        # HID-Dienst erst danach starten, sonst wirbt er wieder als Dual-Mode-Gerät
+        for _ in $(seq 60); do le_only && break; sleep 1; done
+        le_only || notify -u critical "iphone steuern" "Bluetooth ist nicht im LE-Modus – Passwort-Dialog abgebrochen?"
+        systemctl --user restart iphone-hid.service
+        wait "$win"
+        systemctl --user stop iphone-hid.service ;;
     *)      echo "Aufruf: $0 an|aus|toggle|status|passwort|steuern" >&2; exit 1 ;;
 esac

@@ -98,6 +98,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── iphone.sh          ← iPhone-Spiegelung (UxPlay-Dienst) `an|aus|toggle|status|steuern` → docs/system.md
 │   ├── iphone-uxplay.sh   ← startet UxPlay zeilengepuffert mit Passwort `-pw` (ExecStart von uxplay.service)
 │   ├── iphone-hid.py      ← Bluetooth-LE-Maus/Tastatur (HID over GATT, BlueZ-D-Bus) fürs iPhone, Dienst `iphone-hid.service`
+│   ├── iphone-le.sh       ← (root via pkexec) Bluetooth nur LE + statische Adresse, solange das Steuerfenster offen ist
 │   ├── iphone-steuern.py  ← SDL-Fenster: fängt Maus/Tastatur und schickt sie an iphone-hid.py (Unix-Socket)
 │   ├── kalender.py        ← Termine der nächsten 45 Tage als JSON (Evolution-Datenbank, Google-Konto über GNOME-Online-Konten) → docs/quickshell.md
 │   ├── nowplaying.sh      ← aktueller Song als Text (für hyprlock)
@@ -186,7 +187,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+Shift+Enter | **Dropdown-Terminal**: kitty (Klasse `dropterm`) oben 80 % × 45 %, ein-/ausblenden (Special-Workspace `dropterm`) |
 | Super+Shift+D | **NOA hochfahren** (`scripts/noa-start.sh`): Container `noadb`, Backend + Frontend in kitty-Tabs, IntelliJ |
 | **Super+Shift+A** | **iPhone spiegeln** an/aus (AirPlay-Empfänger UxPlay als User-Dienst, `scripts/iphone.sh`; auch Kachel im Kontrollzentrum). Am iPhone: Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“, Passwort steht in der Meldung beim Einschalten (`iphone.sh passwort`) → docs/system.md |
-| **Super+Alt+A** | **iPhone steuern**: kleines Fenster anklicken → Maus/Tastatur gehören dem iPhone (Bluetooth-LE-HID), **Strg+Alt+G** gibt sie frei |
+| **Super+Alt+A** | **iPhone steuern**: kleines Fenster anklicken → Maus/Tastatur gehören dem iPhone (Bluetooth-LE-HID), **Strg+Alt+G** gibt sie frei. Fragt einmal nach dem Passwort (Bluetooth solange nur LE → Kopfhörer getrennt) |
 | Super+Leertaste / Super+D | App-Starter (`rofi -show drun`) |
 | Super+E | Dateimanager (nautilus) |
 | Super+B | Browser (brave-browser) |

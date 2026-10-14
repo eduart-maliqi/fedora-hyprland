@@ -123,11 +123,17 @@ Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei F
 
 **Bedienung** (AirPlay ist eine Einbahnstrasse, das Bild gibt keine Eingaben zurück): Der Laptop gibt sich per BlueZ als
 Bluetooth-LE-HID-Gerät „8155-Laptop-HID“ aus (HID over GATT, Dienst `iphone-hid.service`, Skript `iphone-hid.py`).
-Der Adapter bleibt **unsichtbar** (`Discoverable: no`), nur die LE-Werbung trägt das Flag „allgemein auffindbar“ (`Discoverable` in
-`LEAdvertisement1`): iOS listet LE-Geräte nur damit; ein sichtbarer Adapter bot dagegen klassisches BR/EDR an → dort fehlt das
-HID-Profil, die Kopplung brach nach ~30 s ab (btmon: Passkey-Abfrage ohne Antwort, `Authentication Failure`). Der Dienst
-registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Works), damit am Laptop nichts bestätigt werden muss.
-Debuggen: `pkexec btmon -T > datei` mitschneiden, dabei am iPhone koppeln.
+**Nur-LE-Modus während der Steuerung:** Der Adapter ist Dual-Mode (Classic + LE auf derselben Adresse). Ein sichtbarer Adapter
+liess das iPhone über Classic koppeln (btmon: BR-ACL, Passkey-Abfrage, nach ~30 s `Authentication Failure`; dort gibt es kein
+HID-Profil); nur die LE-Werbung als auffindbar (Flags 0x06, per btmon geprüft) reichte iOS nicht, das Gerät tauchte gar nicht auf.
+Deshalb ruft `iphone.sh steuern` per **pkexec** (ein Passwort-Dialog) `scripts/iphone-le.sh <pid>` auf: Adapter aus → `bredr off` →
+statische Zufallsadresse `C0:81:55:6A:00:2B` → an; sobald das Steuerfenster zu ist (oder der Helfer beendet wird) zurück auf
+Classic + LE mit der normalen Adresse. **Solange gesteuert wird, gehen klassische Geräte (Kopfhörer WH-CH720N) nicht.**
+Eine polkit-Regel für passwortloses Umschalten wurde bewusst nicht angelegt. Erst danach startet `iphone-hid.service`.
+Der Dienst registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Works), setzt während er läuft den Alias
+„8155-Laptop-HID“ (= GAP-Gerätename) und protokolliert Verbinden/Koppeln/Abonnieren im Journal (`journalctl --user -u iphone-hid`).
+Geräteinformation (PnP-ID) liefert BlueZ selbst (DeviceID in der EIR) – kein eigener 180A-Dienst. Prüfen: `btmgmt info` (ohne Root)
+→ „current settings“ ohne `br/edr`. Debuggen: `pkexec btmon -T > datei` mitschneiden, dabei am iPhone koppeln.
 `iphone-steuern.py` (Super+Alt+A) ist ein SDL-Fenster: Klick hinein → relative Maus + Tastatur gehen ans iPhone,
 **Strg+Alt+G** gibt frei. Gewählt statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.

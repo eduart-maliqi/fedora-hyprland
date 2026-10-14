@@ -94,6 +94,7 @@ class Char(Obj):
     @dbus.service.method("org.bluez.GattCharacteristic1")
     def StartNotify(self):
         self.notifying = True
+        print("iPhone abonniert", self.uuid)
 
     @dbus.service.method("org.bluez.GattCharacteristic1")
     def StopNotify(self):
@@ -168,8 +169,8 @@ class Advert(Obj):
         super().__init__(bus, self.path)
 
     def props(self):
-        # Discoverable nur an der Werbung: iOS listet LE-Geräte nur mit „allgemein auffindbar“-Flag, ein sichtbarer
-        # Adapter würde dagegen auch klassisches BR/EDR anbieten – dort fehlt das HID-Profil, die Kopplung scheitert
+        # iOS listet LE-Geräte nur mit „allgemein auffindbar“-Flag; der Adapter selbst bleibt unsichtbar
+        # (BR/EDR schaltet iphone-le.sh während der Steuerung ganz ab)
         return {"Type": "peripheral", "ServiceUUIDs": dbus.Array(["1812"], signature="s"),
                 "LocalName": NAME, "Appearance": dbus.UInt16(0x03C2), "Discoverable": True,
                 # Standard sind 1,28 s – Apple empfiehlt für HID-Zubehör 20–50 ms, sonst taucht es spät auf
@@ -192,6 +193,9 @@ def main():
     ap = dbus.Interface(adapter, OBJ_PROPS)
     ap.Set("org.bluez.Adapter1", "Powered", True)
     ap.Set("org.bluez.Adapter1", "Pairable", True)
+    # der Alias ist auch der GAP-Gerätename, den iOS nach dem Verbinden liest und anzeigt
+    old_alias = str(ap.Get("org.bluez.Adapter1", "Alias"))
+    ap.Set("org.bluez.Adapter1", "Alias", NAME)
 
     app = App(bus)
     hid = Service(bus, app, "1812")
@@ -199,12 +203,10 @@ def main():
     Char(bus, app, hid, "2A4C", ["write-without-response"])
     Char(bus, app, hid, "2A4E", ["read", "write-without-response"], [1])
     Char(bus, app, hid, "2A4B", ["read"], REPORT_MAP)
-    mouse = Char(bus, app, hid, "2A4D", ["encrypt-read", "notify"], [0, 0, 0, 0], report_ref=[1, 1])
-    kbd = Char(bus, app, hid, "2A4D", ["encrypt-read", "notify"], [0] * 8, report_ref=[2, 1])
-    # iOS erwartet Geräteinformation und Akku, sonst bricht die Kopplung gern ab
-    info = Service(bus, app, "180A")
-    Char(bus, app, info, "2A29", ["read"], b"8155")
-    Char(bus, app, info, "2A50", ["read"], [0x02, 0x6B, 0x1D, 0x46, 0x02, 0x10, 0x01])
+    # verschlüsselt lesen/abonnieren: so stösst iOS die Kopplung selbst an (wie bei echten BLE-Mäusen)
+    mouse = Char(bus, app, hid, "2A4D", ["encrypt-read", "notify", "encrypt-notify"], [0, 0, 0, 0], report_ref=[1, 1])
+    kbd = Char(bus, app, hid, "2A4D", ["encrypt-read", "notify", "encrypt-notify"], [0] * 8, report_ref=[2, 1])
+    # Geräteinformation (PnP-ID) stellt BlueZ schon selbst bereit (DeviceID) – kein zweiter 180A-Dienst
     bat = Service(bus, app, "180F")
     Char(bus, app, bat, "2A19", ["read"], [100])
 
@@ -246,6 +248,14 @@ def main():
 
     GLib.io_add_watch(sock.fileno(), GLib.IO_IN, on_sock)
 
+    def on_device(iface, changed, invalidated, path=None):
+        for k in ("Connected", "Paired", "ServicesResolved"):
+            if k in changed:
+                print(path.rsplit("/", 1)[-1], k, bool(changed[k]))
+
+    bus.add_signal_receiver(on_device, dbus_interface=OBJ_PROPS, signal_name="PropertiesChanged",
+                            arg0="org.bluez.Device1", path_keyword="path")
+
     agent = Agent(bus, APP + "/agent")
     mgr = dbus.Interface(bus.get_object("org.bluez", "/org/bluez"), "org.bluez.AgentManager1")
     mgr.RegisterAgent(dbus.ObjectPath(agent.__dbus_object_path__), "NoInputNoOutput")
@@ -262,6 +272,7 @@ def main():
         loop.run()
     finally:
         mgr.UnregisterAgent(dbus.ObjectPath(agent.__dbus_object_path__))
+        ap.Set("org.bluez.Adapter1", "Alias", old_alias)
         if os.path.exists(SOCK):
             os.unlink(SOCK)
 
