@@ -2,7 +2,7 @@
 # ★ 8155 – iPhone-Spiegelung (AirPlay-Empfänger UxPlay) ein-/ausschalten
 #   iphone.sh an|aus|toggle|status   (status: „an“ oder „aus“, für Quickshell)
 #   iphone.sh passwort              AirPlay-Passwort anzeigen (Benachrichtigung)
-#   iphone.sh steuern               Maus/Tastatur-Fenster (startet bei Bedarf den Bluetooth-HID-Dienst)
+#   iphone.sh steuern               unsichtbares Steuerfenster über dem Spiegelbild (Bluetooth-HID, nur LE solange offen)
 #                                   IPHONE_BTMON=<datei> schneidet die Sitzung mit btmon mit
 unit=uxplay.service
 notify() { notify-send -a iphone "$@"; }
@@ -28,7 +28,7 @@ case "${1:-toggle}" in
         for _ in $(seq 60); do le_only && break; sleep 1; done
         le_only || notify -u critical "iphone steuern" "Bluetooth ist nicht im LE-Modus – Passwort-Dialog abgebrochen?"
         systemctl --user restart iphone-hid.service && le_only &&
-            notify -t 20000 "iphone steuern bereit" "am iPhone unter Bluetooth „8155-Laptop-HID“ koppeln, dann ins Fenster klicken"
+            notify -t 20000 "iphone steuern bereit" "Maus übers Spiegelbild = iPhone bedienen (erstes Mal: unter Bluetooth „8155-Laptop-HID“ koppeln) · Super+Q beendet"
         wait "$win"
         systemctl --user stop iphone-hid.service ;;
     *)      echo "Aufruf: $0 an|aus|toggle|status|passwort|steuern" >&2; exit 1 ;;

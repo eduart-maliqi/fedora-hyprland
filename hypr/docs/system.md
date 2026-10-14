@@ -136,12 +136,17 @@ Der Dienst registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Work
 „8155-Laptop-HID“ (= GAP-Gerätename) und protokolliert Verbinden/Koppeln/Abonnieren im Journal (`journalctl --user -u iphone-hid`).
 Geräteinformation (PnP-ID) liefert BlueZ selbst (DeviceID in der EIR) – kein eigener 180A-Dienst. Prüfen: `btmgmt info` (ohne Root)
 → „current settings“ ohne `br/edr`. Debuggen: `pkexec btmon -T > datei` mitschneiden, dabei am iPhone koppeln.
-`iphone-steuern.py` (Super+Alt+A) ist ein SDL-Fenster: Klick hinein → relative Maus + Tastatur gehen ans iPhone,
-**Strg+Alt+G** gibt frei. Gewählt statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
+`iphone-steuern.py` (Super+Alt+A): **unsichtbares** SDL-Fenster (Fensterregel `iphone-steuern`, Deckkraft 0) liegt genau über dem
+Spiegelfenster (`uxplay`, folgt per `hyprctl` alle 0,3 s; Super+Maus aufs Steuerfenster verschiebt das Spiegelbild mit).
+Maus darüber → Laptop-Zeiger ausgeblendet, der iPhone-Zeiger folgt; Klick, Mausrad, Tastatur gehen ans iPhone; Super+Q beendet.
+iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Hineinfahren wird der Zeiger in die Ecke gedrückt (klemmt dort =
+bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
+nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
+Achtung: der grosse graue Kreis im Spiegelbild ist der AssistiveTouch-Knopf, der Zeiger ist ein kleiner Punkt.
+SDL statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.
-iOS kennt nur **relative** Mäuse: der Zeiger wird wie eine normale Maus geführt, kein „Klick auf die Stelle im Spiegelbild“.
 Protokoll Fenster → Dienst: Unix-Datagramme an `$XDG_RUNTIME_DIR/iphone-hid.sock` (`m dx dy [rad]`, `b maske`, `k mods tasten…`).
-Stand: BlueZ nimmt GATT-Anwendung + Werbung an, Fenster/Socket getestet; **Kopplung mit einem echten iPhone noch nicht erprobt**.
+Stand 2026-10-14: Kopplung mit iPhone 15 Pro Max (iOS 26) klappt, Bewegen und Klicken getestet (Klick per Socket, Spiegelbild per grim geprüft).
 
 ## AirDrop (omdrop + omdrop-owl)
 

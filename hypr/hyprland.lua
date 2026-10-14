@@ -731,18 +731,26 @@ hl.window_rule({
 
 -- iPhone-Spiegelung (UxPlay/waylandsink): schwebend, Hochformat wie das Telefon
 hl.window_rule({
-    name  = "iphone-spiegel",
-    match = { class = "^uxplay$" },
-    float = true,
-    center = true,
-    size  = { 420, 910 },
+    name    = "iphone-spiegel",
+    match   = { class = "^uxplay$" },
+    float   = true,
+    center  = true,
+    size    = { 420, 910 },
+    opacity = "1.0 override 1.0 override",   -- liegt beim Steuern immer unter dem (fokussierten) Steuerfenster → nicht abdunkeln
 })
 
+-- Steuerfenster (scripts/iphone-steuern.py): unsichtbar genau über dem Spiegelbild, fängt Maus und Tastatur fürs iPhone
 hl.window_rule({
-    name  = "iphone-steuern",
-    match = { class = "^iphone-steuern$" },
-    float = true,
-    center = true,
+    name        = "iphone-steuern",
+    match       = { class = "^iphone-steuern$" },
+    float       = true,
+    opacity     = "0.0 override 0.0 override",
+    decorate    = false,
+    no_shadow   = true,
+    no_blur     = true,
+    border_size = 0,
+    rounding    = 0,
+    no_anim     = true,
 })
 
 -- Kleine Tools schwebend und mittig
@@ -815,7 +823,7 @@ for name, shader in pairs({
 }) do
     hl.window_rule({
         name  = "shader-" .. name,
-        match = { class = "negative:^(clawd-on-desk)$", title = "negative:^(Picture-in-Picture|Bild-im-Bild)$" },
+        match = { class = "negative:^(clawd-on-desk|uxplay|iphone-steuern)$", title = "negative:^(Picture-in-Picture|Bild-im-Bild)$" },
         tag   = "+shader_" .. name .. ":" .. shaderDir .. shader,
     })
 end
