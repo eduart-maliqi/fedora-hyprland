@@ -139,10 +139,12 @@ Geräteinformation (PnP-ID) liefert BlueZ selbst (DeviceID in der EIR) – kein 
 `iphone-steuern.py` (Super+Alt+A): **unsichtbares** SDL-Fenster (Fensterregel `iphone-steuern`, Deckkraft 0,02 – **bei 0 bekommt es in
 Hyprland keine Maus**) liegt genau über dem
 Spiegelfenster (`uxplay`, folgt per `hyprctl` alle 0,3 s; Super+Maus aufs Steuerfenster verschiebt das Spiegelbild mit).
-Maus darüber → Laptop-Zeiger ausgeblendet, der iPhone-Zeiger folgt; Klick, Mausrad, Tastatur gehen ans iPhone; Super+Q beendet.
-iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Hineinfahren wird der Zeiger in die Ecke gedrückt (klemmt dort =
-bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
-nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
+**Klick aufs Spiegelbild fängt die Maus ein** (SDL-Relativmodus = Wayland-Pointer-Lock, Hinweis per Benachrichtigung): der iPhone-Zeiger
+springt an die Klickstelle und folgt; Klick, Mausrad, Tastatur gehen ans iPhone. **Strg+Alt** gibt frei (auch Fokusverlust). Der
+Einfang-Klick selbst geht nicht ans iPhone. Nur Darüberfahren tut nichts (Wunsch: nicht aus Versehen rein- oder rausrutschen). Super+Q beendet.
+iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Einfangen wird der Zeiger in die Ecke gedrückt (klemmt dort = bekannte
+Position) und dann zur Klickstelle gefahren (Schritte (4,4) alle 15 ms, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
+nachgeführt (`SPEED`). Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
 Neues oder fokussiertes Spiegelfenster rutscht nach oben → Steuerfenster per `alter_zorder({mode="top"})` wieder darüber. **Kein
 `hl.dsp.focus`**: das setzt den Mauszeiger in die Fenstermitte (Zeiger „teleportierte“ alle 0,3 s zurück, neues Fenster hat focusHistoryID −1).
 Bewegung geht wie bei einer echten Maus in **15-ms-Paketen** raus (`TICK`, `SPEED` Einheiten/Pixel): einzelne Mini-Meldungen pro

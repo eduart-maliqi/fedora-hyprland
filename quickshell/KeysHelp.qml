@@ -52,7 +52,7 @@ PanelWindow {
                 ["super + shift + enter",  "dropdown-terminal"],
                 ["super + shift + d",      "noa hochfahren"],
                 ["super + shift + a",      "iphone spiegeln an/aus"],
-                ["super + alt + a",        "iphone steuern (maus übers spiegelbild)"],
+                ["super + alt + a",        "iphone steuern an/aus (klick = einfangen, strg+alt = frei)"],
                 ["super + leer / d",       "apps starten"],
                 ["super + e",              "dateimanager"],
                 ["super + b",              "browser"],

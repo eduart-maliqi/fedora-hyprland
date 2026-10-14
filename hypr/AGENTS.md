@@ -192,7 +192,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+Shift+Enter | **Dropdown-Terminal**: kitty (Klasse `dropterm`) oben 80 % × 45 %, ein-/ausblenden (Special-Workspace `dropterm`) |
 | Super+Shift+D | **NOA hochfahren** (`scripts/noa-start.sh`): Container `noadb`, Backend + Frontend in kitty-Tabs, IntelliJ |
 | **Super+Shift+A** | **iPhone spiegeln** an/aus (AirPlay-Empfänger UxPlay als User-Dienst, `scripts/iphone.sh`; auch Kachel im Kontrollzentrum). Am iPhone: Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“, Passwort steht in der Meldung beim Einschalten (`iphone.sh passwort`) → docs/system.md |
-| **Super+Alt+A** | **iPhone steuern**: unsichtbares Fenster übers Spiegelbild – Maus darüber = iPhone-Zeiger folgt, Klick/Tastatur gehen ans iPhone (Bluetooth-LE-HID); Super+Q beendet. Fragt einmal nach dem Passwort (Bluetooth solange nur LE → Kopfhörer getrennt) |
+| **Super+Alt+A** | **iPhone steuern** an/aus: unsichtbares Fenster übers Spiegelbild – **Klick hinein fängt die Maus ein**, der iPhone-Zeiger folgt, Klick/Tastatur gehen ans iPhone (Bluetooth-LE-HID); **Strg+Alt** gibt frei, Super+Q beendet. Fragt einmal nach dem Passwort (Bluetooth solange nur LE → Kopfhörer getrennt) |
 | Super+Leertaste / Super+D | App-Starter (`rofi -show drun`) |
 | Super+E | Dateimanager (nautilus) |
 | Super+B | Browser (brave-browser) |

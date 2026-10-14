@@ -5,6 +5,8 @@ Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höc
 
 - **2026-10-14** – AirDrop mit dem iPhone: Kapsel 󰀃 + `AirdropPanel.qml`/`Airdrop.qml` (Dateien hineinziehen, an Geräte senden), Backend omdrop +
   omdrop-owl (OpenDrop-Nachfolger, kann Intel AX211; WLAN ist solange getrennt), Meldungen über `scripts/airdrop-meldung.sh` → docs/system.md.
+- **2026-10-14** – iPhone steuern läuft (iPhone 15 Pro Max): Bewegung in 15-ms-Paketen (Einzelmeldungen bremste iOS auf null), Klick fängt
+  die Maus ein, Strg+Alt gibt frei (Wunsch), nur eine Sitzung (flock), Fenster per SIGUSR1 ohne Passwort neu ladbar.
 - **2026-10-14** – iPhone steuern: Deckkraft 0,02 statt 0 (sonst keine Maus), Ebene per `alter_zorder` statt Fokus (Zeiger sprang zurück),
   ohne Spiegelung versteckt; Hotspot „iPhone (2)“ bevorzugt + Rückverbinden während der Spiegelung (`iphone-uxplay.sh`).
 - **2026-10-14** – iPhone steuern direkt im Spiegelbild: `iphone-steuern.py` ist jetzt ein unsichtbares Fenster über dem UxPlay-Fenster, der
