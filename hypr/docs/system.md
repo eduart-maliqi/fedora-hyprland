@@ -143,10 +143,13 @@ Maus darüber → Laptop-Zeiger ausgeblendet, der iPhone-Zeiger folgt; Klick, Ma
 iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Hineinfahren wird der Zeiger in die Ecke gedrückt (klemmt dort =
 bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
 nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
-Bekommt das Spiegelfenster den Fokus (Klick, neue Spiegelung), rutscht es nach oben → das Steuerfenster holt sich dann den Fokus zurück.
+Neues oder fokussiertes Spiegelfenster rutscht nach oben → Steuerfenster per `alter_zorder({mode="top"})` wieder darüber. **Kein
+`hl.dsp.focus`**: das setzt den Mauszeiger in die Fenstermitte (Zeiger „teleportierte“ alle 0,3 s zurück, neues Fenster hat focusHistoryID −1).
 Ohne Spiegelfenster wandert das Steuerfenster auf den Special-Workspace `iphone-steuern` (sonst finge es unsichtbar Klicks ab).
 **WLAN:** Der Laptop fiel zweimal aus dem iPhone-Hotspot (Kernel: `missed beacons`) zurück ins Gast-WLAN → Spiegelung weg; am iPhone
-Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln.
+Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln. Seit 2026-10-14: „iPhone (2)“ hat
+`autoconnect-priority 10`, und solange `uxplay.service` läuft, verbindet `iphone-uxplay.sh` alle 20 s zurück in den Hotspot, wenn er
+sichtbar ist (NetworkManager wechselt von sich aus nie von einem aktiven Netz weg). Kostet mobile Daten.
 Achtung: der grosse graue Kreis im Spiegelbild ist der AssistiveTouch-Knopf, der Zeiger ist ein kleiner Punkt.
 SDL statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.

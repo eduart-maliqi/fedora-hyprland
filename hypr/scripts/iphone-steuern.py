@@ -81,6 +81,7 @@ def main():
     fx = fy = 0.0                           # Bruchteile von Einheiten, die noch nicht gesendet sind
     wheel = 0.0
     last_me = last_ux = None
+    raised_for = [None, False]              # [Adresse des Spiegelfensters, hatte es den Fokus]
     next_sync = 0.0
 
     def paint():
@@ -150,9 +151,12 @@ def main():
                 place(me["address"], gu)
                 gm = gu
         last_me, last_ux = gm, gu
-        # bekommt das Spiegelfenster den Fokus (Klick, neue Spiegelung), rutscht es nach oben und schluckt die Maus
-        if ux["focusHistoryID"] < me["focusHistoryID"]:
-            dispatch('hl.dsp.focus({window="address:%s"})' % me["address"])
+        # neues oder fokussiertes Spiegelfenster liegt oben und schluckt die Maus → Steuerfenster nur in der Ebene
+        # nach oben holen; kein focus-Dispatch: der setzt den Mauszeiger in die Fenstermitte (Zurück-Teleportieren)
+        raise_now = ux["address"] != raised_for[0] or (ux["focusHistoryID"] == 0) != raised_for[1]
+        if raise_now:
+            dispatch('hl.dsp.window.alter_zorder({mode="top", window="address:%s"})' % me["address"])
+        raised_for[:] = [ux["address"], ux["focusHistoryID"] == 0]
 
     paint()
     ev = sdl2.SDL_Event()
