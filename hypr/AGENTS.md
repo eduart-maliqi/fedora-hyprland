@@ -98,6 +98,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── noa-start.sh       ← NOA-Entwicklungsumgebung hochfahren (Super+Shift+D) → docs/system.md
 │   ├── iphone.sh          ← iPhone-Spiegelung (UxPlay-Dienst) `an|aus|toggle|status|steuern` → docs/system.md
 │   ├── iphone-uxplay.sh   ← startet UxPlay zeilengepuffert mit Passwort `-pw` (ExecStart von uxplay.service)
+│   ├── iphone-fenster.py  ← Spiegelfenster an Bildgrösse anpassen (Hoch-/Querformat), aufgerufen von iphone-uxplay.sh
 │   ├── iphone-hid.py      ← Bluetooth-LE-Maus/Tastatur (HID over GATT, BlueZ-D-Bus) fürs iPhone, Dienst `iphone-hid.service`
 │   ├── iphone-le.sh       ← (root via pkexec) Bluetooth nur LE + LE-Privacy, solange das Steuerfenster offen ist
 │   ├── iphone-steuern.py  ← unsichtbares SDL-Fenster über dem Spiegelbild: Maus/Tastatur → iphone-hid.py (Unix-Socket)

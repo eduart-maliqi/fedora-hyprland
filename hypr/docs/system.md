@@ -109,7 +109,11 @@ Dateikonflikten der i686-Pakete mit den alten x86_64-Einträgen. Gelöst mit
 ## iPhone spiegeln & bedienen (UxPlay + Bluetooth-HID)
 
 **Anzeige:** Paket `uxplay` (AirPlay-Mirroring-Empfänger, GPLv3), User-Dienst `~/.config/systemd/user/uxplay.service`
-(`-n 8155-Laptop -vs waylandsink -fps 60`, gestartet über `scripts/iphone-uxplay.sh`: zeilenweise Ausgabe + Passwort `-pw`). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
+(`-n 8155-Laptop -vs waylandsink -fps 60 -vsync no`, gestartet über `scripts/iphone-uxplay.sh`: zeilenweise Ausgabe + Passwort `-pw` + `-d 1`).
+`-vsync no`: Bild wartet nicht auf den Ton-Abgleich → weniger Verzögerung (Wunsch). **Hoch-/Querformat:** nur im Debug-Log (`-d 1`) meldet
+UxPlay die Bildgrösse (`width_source = … width = … height = …`, bei Start und beim Drehen) → `iphone-uxplay.sh` ruft
+`scripts/iphone-fenster.py <b> <h>` auf: Hochformat 85 % der Bildschirmhöhe, Querformat 80 % der Breite, mittig; das Steuerfenster zieht
+mit und rechnet im Querformat mit 932×430 Punkten. Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
 AirPlay-Ziel im Netz. Ein/Aus: **Super+Shift+A**, Kachel „iphone spiegeln“ im Kontrollzentrum (`Iphone.qml`) oder
 `scripts/iphone.sh an|aus|toggle|status`. Verbinden: iPhone → Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“;
 am iPhone das **Passwort** eingeben (steht in der Benachrichtigung beim Einschalten, später: `scripts/iphone.sh passwort`;
@@ -118,7 +122,7 @@ den 20-Byte-SRP-Beweis des iPhones ab (`client_proof_len 20 invalid`, Prüfung a
 kommt immer wieder; `-pw` nutzt HTTP-Digest und umgeht das. Bei neueren UxPlay-Versionen erneut mit `-pin` probieren.
 Netz: **kein Gast-WLAN mit Client-Isolation** (mDNS erreicht das iPhone nicht) – der Persönliche Hotspot des iPhones geht. Firewall: Dienst `mdns` (5353/udp) in
 der Zone FedoraWorkstation freigegeben (sonst findet das iPhone den Empfänger nicht), die Datenports liegen im offenen Bereich 1025–65535.
-Fensterregel `iphone-spiegel` (Klasse `uxplay`, schwebend 420×910) – Klasse beim ersten echten Spiegeln mit `hyprctl clients -j` prüfen.
+Fensterregel `iphone-spiegel` (Klasse `uxplay`, schwebend, Startgrösse 420×910, Deckkraft fest 1 – nicht abdunkeln).
 Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei Flackern/Schwarz `-vs glimagesink`.
 
 **Bedienung** (AirPlay ist eine Einbahnstrasse, das Bild gibt keine Eingaben zurück): Der Laptop gibt sich per BlueZ als

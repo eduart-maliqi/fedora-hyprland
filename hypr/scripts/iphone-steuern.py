@@ -21,8 +21,9 @@ os.environ.setdefault("SDL_MOUSE_RELATIVE_SYSTEM_SCALE", "1")   # eingefangen: M
 import sdl2
 
 SOCK = os.environ.get("IPHONE_HID_SOCK") or os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "iphone-hid.sock")
-# shortcut: feste Masse des iPhone 15 Pro Max im Hochformat; bei anderem iPhone/Querformat anpassen
-PHONE_W, PHONE_H = 430, 932   # Punkte
+# shortcut: feste Masse des iPhone 15 Pro Max (Punkte, Hochformat); bei anderem iPhone anpassen.
+# Querformat erkennt content() am Seitenverhältnis des Spiegelfensters (iphone-fenster.py passt es beim Drehen an).
+PHONE_W, PHONE_H = 430, 932
 # iOS kennt nur relative Mäuse und beschleunigt stark: kleine Meldungen bewegen den Zeiger kaum. Gemessen
 # (Spiegelbild, 2026-10-14): Meldungen (4,4) alle 15 ms → ~2 Punkte pro Einheit; dieselben alle 8 ms nur halb so viel.
 # Darum: beim Einfangen Zeiger in die Ecke drücken (dort klemmt er, Position bekannt) und mit genau diesem Muster
@@ -31,7 +32,7 @@ PHONE_W, PHONE_H = 430, 932   # Punkte
 GAIN = 2.0          # Punkte pro Einheit beim Hinfahren
 STEP = 4 * math.sqrt(2)
 TICK = 0.015
-SPEED = 1.0
+SPEED = 0.6         # Wunsch 2026-10-14: 1.0 war zu schnell
 SYNC_EVERY = 0.3
 HIDE = "iphone-steuern"   # Special-Workspace, solange keine Spiegelung läuft
 DEBUG = bool(os.environ.get("IPHONE_DEBUG"))   # Ereignisse nach stderr (Fehlersuche)
@@ -107,9 +108,9 @@ def main():
         w, h = sdl2.c_int(), sdl2.c_int()
         sdl2.SDL_GetWindowSize(win, w, h)
         w, h = w.value, h.value
-        s = min(w / PHONE_W, h / PHONE_H)
-        cw, ch = PHONE_W * s, PHONE_H * s
-        return (w - cw) / 2, (h - ch) / 2, s   # Versatz x, y; Pixel pro Punkt
+        pw, ph = (PHONE_H, PHONE_W) if w > h else (PHONE_W, PHONE_H)
+        s = min(w / pw, h / ph)
+        return (w - pw * s) / 2, (h - ph * s) / 2, s, pw, ph   # Versatz x, y; Pixel pro Punkt; Masse in Punkten
 
     def capture(mx, my):
         """iPhone-Zeiger an die Klickstelle fahren, dann Maus einfangen."""
@@ -118,9 +119,9 @@ def main():
             send("m -60 -60")                  # in die Ecke oben links, dort klemmt der Zeiger
             time.sleep(0.006)
         time.sleep(0.05)
-        ox, oy, s = content()
-        px = min(max((mx - ox) / s, 0), PHONE_W)
-        py = min(max((my - oy) / s, 0), PHONE_H)
+        ox, oy, s, pw, ph = content()
+        px = min(max((mx - ox) / s, 0), pw)
+        py = min(max((my - oy) / s, 0), ph)
         glide(round(px / GAIN), round(py / GAIN))
         sdl2.SDL_FlushEvent(sdl2.SDL_MOUSEMOTION)
         sdl2.SDL_SetRelativeMouseMode(sdl2.SDL_TRUE)

@@ -17,5 +17,11 @@ hotspot="iPhone (2)"
     done
 ) &
 
-# stdbuf: ohne Terminal puffert UxPlay seine Ausgabe, das Journal bekäme sie sonst erst beim Beenden
-exec stdbuf -oL -eL uxplay "$@" -pw "$(<"$pwfile")"
+# stdbuf: ohne Terminal puffert UxPlay seine Ausgabe, das Journal bekäme sie sonst erst beim Beenden.
+# -d 1: nur im Debug-Log meldet UxPlay die Bildgrösse (Start, iPhone gedreht) → Spiegelfenster anpassen.
+dir=$(dirname "$(readlink -f "$0")")
+size_re='width_source = [0-9.]+ height_source = [0-9.]+ width = ([0-9.]+) height = ([0-9.]+)'
+stdbuf -oL -eL uxplay "$@" -d 1 -pw "$(<"$pwfile")" 2>&1 | while IFS= read -r line; do
+    [[ $line =~ $size_re ]] && python3 -I "$dir/iphone-fenster.py" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" &
+    echo "$line"
+done
