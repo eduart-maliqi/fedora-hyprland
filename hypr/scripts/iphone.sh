@@ -24,7 +24,8 @@ case "${1:-toggle}" in
         # HID-Dienst erst danach starten, sonst wirbt er wieder als Dual-Mode-Gerät
         for _ in $(seq 60); do le_only && break; sleep 1; done
         le_only || notify -u critical "iphone steuern" "Bluetooth ist nicht im LE-Modus – Passwort-Dialog abgebrochen?"
-        systemctl --user restart iphone-hid.service
+        systemctl --user restart iphone-hid.service && le_only &&
+            notify -t 20000 "iphone steuern bereit" "am iPhone unter Bluetooth „8155-Laptop-HID“ koppeln, dann ins Fenster klicken"
         wait "$win"
         systemctl --user stop iphone-hid.service ;;
     *)      echo "Aufruf: $0 an|aus|toggle|status|passwort|steuern" >&2; exit 1 ;;
