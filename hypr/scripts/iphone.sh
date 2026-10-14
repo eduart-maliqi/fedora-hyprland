@@ -10,11 +10,11 @@ active() { systemctl --user is-active --quiet "$unit"; }
 
 case "${1:-toggle}" in
     status) active && echo an || echo aus ;;
-    an)     active || { systemctl --user start "$unit" && notify "iphone-spiegelung an" "Bildschirmsynchronisierung → 8155-Laptop · Passwort: $(<"$pwfile")"; } ;;
+    an)     active || { systemctl --user start "$unit" && notify -t 60000 "iphone-spiegelung an" "Bildschirmsynchronisierung → 8155-Laptop · Passwort: $(<"$pwfile")"; } ;;
     aus)    systemctl --user stop iphone-hid.service
             active && systemctl --user stop "$unit" && notify "iphone-spiegelung aus" ;;
     toggle) active && exec "$0" aus || exec "$0" an ;;
-    passwort) notify "iphone-passwort" "$(<"$pwfile")" ;;
+    passwort) notify -t 60000 "iphone-passwort" "$(<"$pwfile")" ;;
     steuern)
         systemctl --user start iphone-hid.service
         exec python3 -I "$(dirname "$0")/iphone-steuern.py" ;;
