@@ -33,6 +33,7 @@ TICK = 0.015
 SPEED = 1.0
 SYNC_EVERY = 0.3
 HIDE = "iphone-steuern"   # Special-Workspace, solange keine Spiegelung läuft
+DEBUG = bool(os.environ.get("IPHONE_DEBUG"))   # Ereignisse nach stderr (Fehlersuche)
 BTN_BIT = {sdl2.SDL_BUTTON_LEFT: 1, sdl2.SDL_BUTTON_RIGHT: 2, sdl2.SDL_BUTTON_MIDDLE: 4}
 
 out = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
@@ -185,6 +186,10 @@ def main():
         if not sdl2.SDL_WaitEventTimeout(ev, 5):
             continue
         t = ev.type
+        if DEBUG:
+            print("%.3f" % time.monotonic(), t, ev.window.event if t == sdl2.SDL_WINDOWEVENT else "",
+                  (ev.motion.x, ev.motion.y, ev.motion.xrel, ev.motion.yrel) if t == sdl2.SDL_MOUSEMOTION else "",
+                  "synced" if synced else "-", file=sys.stderr, flush=True)
         if t == sdl2.SDL_QUIT:
             break
         if t == sdl2.SDL_WINDOWEVENT:

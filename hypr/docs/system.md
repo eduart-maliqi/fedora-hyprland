@@ -150,7 +150,8 @@ SDL-Ereignis bremste iOS fast auf null (Zeiger kroch nur). Der Root-Helfer häng
 `kill -USR1 <fenster-pid>` lädt `iphone-steuern.py` neu (Exit 75), ohne Bluetooth umzuschalten oder nach dem Passwort zu fragen.
 **Nur eine Sitzung** (`flock` auf `$XDG_RUNTIME_DIR/iphone-steuern.lock`): zwei Steuerfenster kämpften um die Ebene (Zeiger sprang
 alle ~0,8 s in die Ecke), ein zweiter Helfer trennte das iPhone. Super+Alt+A während einer Sitzung beendet sie. Testen ohne Bluetooth:
-`IPHONE_HID_SOCK=/tmp/x.sock python3 -I scripts/iphone-steuern.py` und dort mitlesen.
+`IPHONE_HID_SOCK=/tmp/x.sock IPHONE_DEBUG=1 python3 -I scripts/iphone-steuern.py` und dort mitlesen (Ereignisse auf stderr).
+**Achtung:** `hyprctl dispatch 'hl.dsp.cursor.move(…)'` erzeugt nur Ein-/Austritt, **keine** Bewegungsereignisse – Bewegung nur mit echter Maus testbar.
 Ohne Spiegelfenster wandert das Steuerfenster auf den Special-Workspace `iphone-steuern` (sonst finge es unsichtbar Klicks ab).
 **WLAN:** Der Laptop fiel zweimal aus dem iPhone-Hotspot (Kernel: `missed beacons`) zurück ins Gast-WLAN → Spiegelung weg; am iPhone
 Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln. Seit 2026-10-14: „iPhone (2)“ hat
