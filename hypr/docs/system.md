@@ -163,6 +163,8 @@ Ohne Spiegelfenster wandert das Steuerfenster auf den Special-Workspace `iphone-
 Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln. Seit 2026-10-14: „iPhone (2)“ hat
 `autoconnect-priority 10`, und solange `uxplay.service` läuft, verbindet `iphone-uxplay.sh` alle 20 s zurück in den Hotspot, wenn er
 sichtbar ist (NetworkManager wechselt von sich aus nie von einem aktiven Netz weg). Kostet mobile Daten.
+**Ursache der Abbrüche:** der Hotspot lief auf **2,4 GHz** (2437 MHz, iPhone-Option „Maximale Kompatibilität“) – dasselbe Band wie
+Bluetooth; mit aktiver BLE-Verbindung (Steuerung) gingen Beacons verloren. Abhilfe: am iPhone „Maximale Kompatibilität“ **aus** → 5 GHz.
 Achtung: der grosse graue Kreis im Spiegelbild ist der AssistiveTouch-Knopf, der Zeiger ist ein kleiner Punkt.
 SDL statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.
