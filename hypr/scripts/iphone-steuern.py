@@ -7,9 +7,12 @@ Klicks, Mausrad und Tastatur gehen ans iPhone. Maus raus → wieder Laptop. Schl
 Verschieben/Grösse ändern mit Super+Maus zieht das Spiegelfenster mit.
 """
 import json
+import math
 import os
+import signal
 import socket
 import subprocess
+import sys
 import time
 
 os.environ.setdefault("SDL_VIDEODRIVER", "wayland")
@@ -19,11 +22,15 @@ import sdl2
 SOCK = os.environ.get("IPHONE_HID_SOCK") or os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "iphone-hid.sock")
 # shortcut: feste Masse des iPhone 15 Pro Max im Hochformat; bei anderem iPhone/Querformat anpassen
 PHONE_W, PHONE_H = 430, 932   # Punkte
-# iOS kennt nur relative Mäuse mit Beschleunigung. Gemessen (Spiegelbild, 2026-10-14): Schritte von 4 Einheiten
-# bewegen den Zeiger ~2 Punkte pro Einheit. Darum: beim Hineinfahren Zeiger in die Ecke drücken (dort klemmt er,
-# Position bekannt), dann zur Maus fahren; danach nur noch relativ nachführen. Abweichungen sieht man nicht,
-# weil der Laptop-Zeiger über dem Fenster ausgeblendet ist – man führt den iPhone-Zeiger nach Sicht.
-GAIN = 2.0
+# iOS kennt nur relative Mäuse und beschleunigt stark: kleine Meldungen bewegen den Zeiger kaum. Gemessen
+# (Spiegelbild, 2026-10-14): Meldungen (4,4) alle 15 ms → ~2 Punkte pro Einheit; dieselben alle 8 ms nur halb so viel.
+# Darum: beim Hineinfahren Zeiger in die Ecke drücken (dort klemmt er, Position bekannt) und mit genau diesem Muster
+# zur Maus fahren; danach Mausbewegung wie eine echte Maus in 15-ms-Paketen weitergeben (SPEED Einheiten pro Pixel).
+# Abweichungen sieht man nicht, weil der Laptop-Zeiger über dem Fenster ausgeblendet ist – man führt nach Sicht.
+GAIN = 2.0          # Punkte pro Einheit beim Hinfahren
+STEP = 4 * math.sqrt(2)
+TICK = 0.015
+SPEED = 1.0
 SYNC_EVERY = 0.3
 HIDE = "iphone-steuern"   # Special-Workspace, solange keine Spiegelung läuft
 BTN_BIT = {sdl2.SDL_BUTTON_LEFT: 1, sdl2.SDL_BUTTON_RIGHT: 2, sdl2.SDL_BUTTON_MIDDLE: 4}
@@ -39,14 +46,14 @@ def send(msg):
 
 
 def glide(ux, uy):
-    """Zeiger um (ux, uy) Einheiten in gleichmässigen Schritten bewegen (gleiche Beschleunigung wie beim Messen)."""
-    n = max(1, int(max(abs(ux), abs(uy)) / 4))
+    """Zeiger um (ux, uy) Einheiten in gleich grossen Schritten bewegen (gleiche Beschleunigung wie beim Messen)."""
+    n = max(1, round(math.hypot(ux, uy) / STEP))
     sx = sy = 0
     for i in range(1, n + 1):
         x, y = round(ux * i / n), round(uy * i / n)
         send("m %d %d" % (x - sx, y - sy))
         sx, sy = x, y
-        time.sleep(0.008)
+        time.sleep(TICK)
 
 
 def hypr_clients():
@@ -83,6 +90,9 @@ def main():
     last_me = last_ux = None
     raised_for = [None, False]              # [Adresse des Spiegelfensters, hatte es den Fokus]
     next_sync = 0.0
+    next_tick = 0.0
+    reload = []
+    signal.signal(signal.SIGUSR1, lambda *_: reload.append(1))   # neu laden, ohne die Sitzung (Bluetooth) zu beenden
 
     def paint():
         sdl2.SDL_SetRenderDrawColor(ren, 0, 0, 0, 255)
@@ -160,11 +170,19 @@ def main():
 
     paint()
     ev = sdl2.SDL_Event()
-    while True:
-        if time.monotonic() >= next_sync:
+    while not reload:
+        now = time.monotonic()
+        if now >= next_sync:
             follow_mirror()
-            next_sync = time.monotonic() + SYNC_EVERY
-        if not sdl2.SDL_WaitEventTimeout(ev, 100):
+            next_sync = now + SYNC_EVERY
+        if now >= next_tick:
+            dx, dy = int(fx), int(fy)
+            if dx or dy:
+                send("m %d %d" % (dx, dy))
+                fx -= dx
+                fy -= dy
+            next_tick = now + TICK
+        if not sdl2.SDL_WaitEventTimeout(ev, 5):
             continue
         t = ev.type
         if t == sdl2.SDL_QUIT:
@@ -183,19 +201,14 @@ def main():
                 sync_pointer()
                 continue
             ox, oy, s = content()
-            fx += ev.motion.xrel / s / GAIN
-            fy += ev.motion.yrel / s / GAIN
+            fx += ev.motion.xrel * SPEED
+            fy += ev.motion.yrel * SPEED
             # am Rand nachdrücken: langsame Bewegungen beschleunigt iOS weniger, sonst käme man nie bis an den Rand
             px, py = (ev.motion.x - ox) / s, (ev.motion.y - oy) / s
             if (px < 4 and ev.motion.xrel < 0) or (px > PHONE_W - 4 and ev.motion.xrel > 0):
                 fx += 8 if ev.motion.xrel > 0 else -8
             if (py < 4 and ev.motion.yrel < 0) or (py > PHONE_H - 4 and ev.motion.yrel > 0):
                 fy += 8 if ev.motion.yrel > 0 else -8
-            dx, dy = int(fx), int(fy)
-            if dx or dy:
-                send("m %d %d" % (dx, dy))
-                fx -= dx
-                fy -= dy
         elif t in (sdl2.SDL_MOUSEBUTTONDOWN, sdl2.SDL_MOUSEBUTTONUP):
             bit = BTN_BIT.get(ev.button.button, 0)
             buttons = buttons | bit if t == sdl2.SDL_MOUSEBUTTONDOWN else buttons & ~bit
@@ -214,6 +227,8 @@ def main():
             send_keys()
     release_all()
     sdl2.SDL_Quit()
+    if reload:
+        sys.exit(75)   # iphone.sh startet das Fenster dann neu
 
 
 if __name__ == "__main__":

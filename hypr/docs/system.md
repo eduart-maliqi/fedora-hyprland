@@ -145,6 +145,9 @@ bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen
 nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
 Neues oder fokussiertes Spiegelfenster rutscht nach oben → Steuerfenster per `alter_zorder({mode="top"})` wieder darüber. **Kein
 `hl.dsp.focus`**: das setzt den Mauszeiger in die Fenstermitte (Zeiger „teleportierte“ alle 0,3 s zurück, neues Fenster hat focusHistoryID −1).
+Bewegung geht wie bei einer echten Maus in **15-ms-Paketen** raus (`TICK`, `SPEED` Einheiten/Pixel): einzelne Mini-Meldungen pro
+SDL-Ereignis bremste iOS fast auf null (Zeiger kroch nur). Der Root-Helfer hängt an der PID von `iphone.sh`, nicht am Fenster:
+`kill -USR1 <fenster-pid>` lädt `iphone-steuern.py` neu (Exit 75), ohne Bluetooth umzuschalten oder nach dem Passwort zu fragen.
 **Nur eine Sitzung** (`flock` auf `$XDG_RUNTIME_DIR/iphone-steuern.lock`): zwei Steuerfenster kämpften um die Ebene (Zeiger sprang
 alle ~0,8 s in die Ecke), ein zweiter Helfer trennte das iPhone. Super+Alt+A während einer Sitzung beendet sie. Testen ohne Bluetooth:
 `IPHONE_HID_SOCK=/tmp/x.sock python3 -I scripts/iphone-steuern.py` und dort mitlesen.
