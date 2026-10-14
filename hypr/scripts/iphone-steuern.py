@@ -59,11 +59,14 @@ def geometry(c):
     return (*c["at"], *c["size"])
 
 
+def dispatch(d):
+    subprocess.run(["hyprctl", "dispatch", d], capture_output=True)
+
+
 def place(addr, g):
     x, y, w, h = g
-    for d in ('hl.dsp.window.resize({x=%d, y=%d, window="address:%s"})' % (w, h, addr),
-              'hl.dsp.window.move({x=%d, y=%d, window="address:%s"})' % (x, y, addr)):
-        subprocess.run(["hyprctl", "dispatch", d], capture_output=True)
+    dispatch('hl.dsp.window.resize({x=%d, y=%d, window="address:%s"})' % (w, h, addr))
+    dispatch('hl.dsp.window.move({x=%d, y=%d, window="address:%s"})' % (x, y, addr))
 
 
 def main():
@@ -138,6 +141,9 @@ def main():
                 place(me["address"], gu)
                 gm = gu
         last_me, last_ux = gm, gu
+        # bekommt das Spiegelfenster den Fokus (Klick, neue Spiegelung), rutscht es nach oben und schluckt die Maus
+        if ux["focusHistoryID"] < me["focusHistoryID"]:
+            dispatch('hl.dsp.focus({window="address:%s"})' % me["address"])
 
     paint()
     ev = sdl2.SDL_Event()

@@ -744,7 +744,7 @@ hl.window_rule({
     name        = "iphone-steuern",
     match       = { class = "^iphone-steuern$" },
     float       = true,
-    opacity     = "0.0 override 0.0 override",
+    opacity     = "0.02 override 0.02 override",   -- nicht 0: Fenster mit Deckkraft 0 bekommen in Hyprland keine Maus
     decorate    = false,
     no_shadow   = true,
     no_blur     = true,

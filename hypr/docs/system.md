@@ -136,12 +136,14 @@ Der Dienst registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Work
 „8155-Laptop-HID“ (= GAP-Gerätename) und protokolliert Verbinden/Koppeln/Abonnieren im Journal (`journalctl --user -u iphone-hid`).
 Geräteinformation (PnP-ID) liefert BlueZ selbst (DeviceID in der EIR) – kein eigener 180A-Dienst. Prüfen: `btmgmt info` (ohne Root)
 → „current settings“ ohne `br/edr`. Debuggen: `pkexec btmon -T > datei` mitschneiden, dabei am iPhone koppeln.
-`iphone-steuern.py` (Super+Alt+A): **unsichtbares** SDL-Fenster (Fensterregel `iphone-steuern`, Deckkraft 0) liegt genau über dem
+`iphone-steuern.py` (Super+Alt+A): **unsichtbares** SDL-Fenster (Fensterregel `iphone-steuern`, Deckkraft 0,02 – **bei 0 bekommt es in
+Hyprland keine Maus**) liegt genau über dem
 Spiegelfenster (`uxplay`, folgt per `hyprctl` alle 0,3 s; Super+Maus aufs Steuerfenster verschiebt das Spiegelbild mit).
 Maus darüber → Laptop-Zeiger ausgeblendet, der iPhone-Zeiger folgt; Klick, Mausrad, Tastatur gehen ans iPhone; Super+Q beendet.
 iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Hineinfahren wird der Zeiger in die Ecke gedrückt (klemmt dort =
 bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
 nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
+Bekommt das Spiegelfenster den Fokus (Klick, neue Spiegelung), rutscht es nach oben → das Steuerfenster holt sich dann den Fokus zurück.
 Achtung: der grosse graue Kreis im Spiegelbild ist der AssistiveTouch-Knopf, der Zeiger ist ein kleiner Punkt.
 SDL statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.
