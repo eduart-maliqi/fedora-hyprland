@@ -25,6 +25,7 @@ PHONE_W, PHONE_H = 430, 932   # Punkte
 # weil der Laptop-Zeiger über dem Fenster ausgeblendet ist – man führt den iPhone-Zeiger nach Sicht.
 GAIN = 2.0
 SYNC_EVERY = 0.3
+HIDE = "iphone-steuern"   # Special-Workspace, solange keine Spiegelung läuft
 BTN_BIT = {sdl2.SDL_BUTTON_LEFT: 1, sdl2.SDL_BUTTON_RIGHT: 2, sdl2.SDL_BUTTON_MIDDLE: 4}
 
 out = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
@@ -130,8 +131,16 @@ def main():
         cl = hypr_clients()
         me = next((c for c in cl if c.get("pid") == os.getpid()), None)
         ux = next((c for c in cl if c.get("class") == "uxplay"), None)
-        if not me or not ux:
+        if not me:
             return
+        hidden = me["workspace"]["name"] == "special:" + HIDE
+        if not ux:
+            # ohne Spiegelbild würde das unsichtbare Fenster irgendwo Klicks abfangen → wegräumen
+            if not hidden:
+                dispatch('hl.dsp.window.move({workspace="special:%s", follow=false, window="address:%s"})' % (HIDE, me["address"]))
+            return
+        if hidden or me["workspace"]["id"] != ux["workspace"]["id"]:
+            dispatch('hl.dsp.window.move({workspace="%s", follow=false, window="address:%s"})' % (ux["workspace"]["name"], me["address"]))
         gm, gu = geometry(me), geometry(ux)
         if gm != gu:
             if last_me is not None and gm != last_me and gu == last_ux:

@@ -144,6 +144,9 @@ iOS kennt nur **relative** Mäuse mit Beschleunigung: beim Hineinfahren wird der
 bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen ~2 Punkte/Einheit, `GAIN`), danach relativ
 nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
 Bekommt das Spiegelfenster den Fokus (Klick, neue Spiegelung), rutscht es nach oben → das Steuerfenster holt sich dann den Fokus zurück.
+Ohne Spiegelfenster wandert das Steuerfenster auf den Special-Workspace `iphone-steuern` (sonst finge es unsichtbar Klicks ab).
+**WLAN:** Der Laptop fiel zweimal aus dem iPhone-Hotspot (Kernel: `missed beacons`) zurück ins Gast-WLAN → Spiegelung weg; am iPhone
+Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln.
 Achtung: der grosse graue Kreis im Spiegelbild ist der AssistiveTouch-Knopf, der Zeiger ist ein kleiner Punkt.
 SDL statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.
