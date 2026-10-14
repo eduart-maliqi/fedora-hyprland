@@ -123,7 +123,11 @@ Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei F
 
 **Bedienung** (AirPlay ist eine Einbahnstrasse, das Bild gibt keine Eingaben zurück): Der Laptop gibt sich per BlueZ als
 Bluetooth-LE-HID-Gerät „8155-Laptop-HID“ aus (HID over GATT, Dienst `iphone-hid.service`, Skript `iphone-hid.py`).
-Solange der Dienst läuft, ist der Adapter sichtbar und heisst „8155-Laptop-HID“ (iOS listet LE-Geräte nur mit „allgemein auffindbar“-Flag; beim Beenden werden Name und Sichtbarkeit zurückgesetzt).
+Der Adapter bleibt **unsichtbar** (`Discoverable: no`), nur die LE-Werbung trägt das Flag „allgemein auffindbar“ (`Discoverable` in
+`LEAdvertisement1`): iOS listet LE-Geräte nur damit; ein sichtbarer Adapter bot dagegen klassisches BR/EDR an → dort fehlt das
+HID-Profil, die Kopplung brach nach ~30 s ab (btmon: Passkey-Abfrage ohne Antwort, `Authentication Failure`). Der Dienst
+registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Works), damit am Laptop nichts bestätigt werden muss.
+Debuggen: `pkexec btmon -T > datei` mitschneiden, dabei am iPhone koppeln.
 `iphone-steuern.py` (Super+Alt+A) ist ein SDL-Fenster: Klick hinein → relative Maus + Tastatur gehen ans iPhone,
 **Strg+Alt+G** gibt frei. Gewählt statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
 Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.

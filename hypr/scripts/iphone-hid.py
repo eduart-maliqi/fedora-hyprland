@@ -135,6 +135,31 @@ class App(dbus.service.Object):
         return {dbus.ObjectPath(o.path): {o.iface: o.props()} for o in self.objs}
 
 
+class Agent(dbus.service.Object):
+    """Nimmt Kopplungen an, solange der Dienst läuft: die Kopplung geht vom iPhone aus, nur dort wird bestätigt."""
+    A = "org.bluez.Agent1"
+
+    @dbus.service.method(A, in_signature="", out_signature="")
+    def Release(self):
+        pass
+
+    @dbus.service.method(A, in_signature="os", out_signature="")
+    def AuthorizeService(self, device, uuid):
+        pass
+
+    @dbus.service.method(A, in_signature="ou", out_signature="")
+    def RequestConfirmation(self, device, passkey):
+        pass
+
+    @dbus.service.method(A, in_signature="o", out_signature="")
+    def RequestAuthorization(self, device):
+        pass
+
+    @dbus.service.method(A, in_signature="", out_signature="")
+    def Cancel(self):
+        pass
+
+
 class Advert(Obj):
     iface = "org.bluez.LEAdvertisement1"
     path = APP + "/adv"
@@ -143,8 +168,10 @@ class Advert(Obj):
         super().__init__(bus, self.path)
 
     def props(self):
+        # Discoverable nur an der Werbung: iOS listet LE-Geräte nur mit „allgemein auffindbar“-Flag, ein sichtbarer
+        # Adapter würde dagegen auch klassisches BR/EDR anbieten – dort fehlt das HID-Profil, die Kopplung scheitert
         return {"Type": "peripheral", "ServiceUUIDs": dbus.Array(["1812"], signature="s"),
-                "LocalName": NAME, "Appearance": dbus.UInt16(0x03C2)}
+                "LocalName": NAME, "Appearance": dbus.UInt16(0x03C2), "Discoverable": True}
 
     @dbus.service.method("org.bluez.LEAdvertisement1")
     def Release(self):
@@ -163,11 +190,6 @@ def main():
     ap = dbus.Interface(adapter, OBJ_PROPS)
     ap.Set("org.bluez.Adapter1", "Powered", True)
     ap.Set("org.bluez.Adapter1", "Pairable", True)
-    # iOS listet unter Bluetooth nur LE-Geräte, die „allgemein auffindbar“ werben (BlueZ setzt das Flag nur bei sichtbarem Adapter)
-    old_alias = str(ap.Get("org.bluez.Adapter1", "Alias"))
-    ap.Set("org.bluez.Adapter1", "DiscoverableTimeout", dbus.UInt32(0))
-    ap.Set("org.bluez.Adapter1", "Discoverable", True)
-    ap.Set("org.bluez.Adapter1", "Alias", NAME)
 
     app = App(bus)
     hid = Service(bus, app, "1812")
@@ -222,6 +244,11 @@ def main():
 
     GLib.io_add_watch(sock.fileno(), GLib.IO_IN, on_sock)
 
+    agent = Agent(bus, APP + "/agent")
+    mgr = dbus.Interface(bus.get_object("org.bluez", "/org/bluez"), "org.bluez.AgentManager1")
+    mgr.RegisterAgent(dbus.ObjectPath(agent.__dbus_object_path__), "NoInputNoOutput")
+    mgr.RequestDefaultAgent(dbus.ObjectPath(agent.__dbus_object_path__))
+
     dbus.Interface(adapter, "org.bluez.GattManager1").RegisterApplication(
         dbus.ObjectPath(APP), {}, reply_handler=lambda: print("GATT-Anwendung registriert"), error_handler=die)
     adv = Advert(bus)
@@ -232,8 +259,7 @@ def main():
     try:
         loop.run()
     finally:
-        ap.Set("org.bluez.Adapter1", "Discoverable", False)
-        ap.Set("org.bluez.Adapter1", "Alias", old_alias)
+        mgr.UnregisterAgent(dbus.ObjectPath(agent.__dbus_object_path__))
         if os.path.exists(SOCK):
             os.unlink(SOCK)
 
