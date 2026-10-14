@@ -171,7 +171,9 @@ class Advert(Obj):
         # Discoverable nur an der Werbung: iOS listet LE-Geräte nur mit „allgemein auffindbar“-Flag, ein sichtbarer
         # Adapter würde dagegen auch klassisches BR/EDR anbieten – dort fehlt das HID-Profil, die Kopplung scheitert
         return {"Type": "peripheral", "ServiceUUIDs": dbus.Array(["1812"], signature="s"),
-                "LocalName": NAME, "Appearance": dbus.UInt16(0x03C2), "Discoverable": True}
+                "LocalName": NAME, "Appearance": dbus.UInt16(0x03C2), "Discoverable": True,
+                # Standard sind 1,28 s – Apple empfiehlt für HID-Zubehör 20–50 ms, sonst taucht es spät auf
+                "MinInterval": dbus.UInt32(30), "MaxInterval": dbus.UInt32(50)}
 
     @dbus.service.method("org.bluez.LEAdvertisement1")
     def Release(self):
