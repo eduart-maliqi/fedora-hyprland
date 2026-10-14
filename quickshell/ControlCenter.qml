@@ -11,6 +11,7 @@ import Quickshell.Services.UPower
 //   WLAN / Bluetooth    Kachel anklicken → an/aus,  󰅀 → Liste aufklappen
 //   Stromsparen         Kachel → Energieprofil Stromsparen an/aus,  󰅀 → alle Profile (tuned-ppd)
 //   Nachtmodus          Kachel → Blaulichtfilter an/aus,  󰅀 → Wärme einstellen (NightLight.qml / hyprsunset)
+//   iPhone spiegeln     Kachel → AirPlay-Empfänger an/aus (Iphone.qml / UxPlay)
 //   Lautstärke / Hell.  Schieberegler (auch Mausrad), Lautsprecher-Symbol → stumm
 //   Kalender            heute + 1 Monat mit Terminen (CalendarView.qml), Tag anklicken → seine Termine
 //   unten               Akku-Details, sperren, Power-Menü
@@ -119,6 +120,7 @@ PanelWindow {
         property string sub: ""
         property bool on: false
         property bool expanded: false
+        property bool expandable: true
         property color iconColor: Theme.accent
         signal toggled()
         signal expand()
@@ -143,7 +145,7 @@ PanelWindow {
         }
 
         Column {
-            anchors { left: tIcon.right; leftMargin: 11; right: sep.left; rightMargin: 6; verticalCenter: parent.verticalCenter }
+            anchors { left: tIcon.right; leftMargin: 11; right: tile.expandable ? sep.left : parent.right; rightMargin: 6; verticalCenter: parent.verticalCenter }
             spacing: 2
             Text {
                 width: parent.width
@@ -165,7 +167,7 @@ PanelWindow {
 
         MouseArea {
             id: mainMouse
-            anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: sep.left }
+            anchors { left: parent.left; top: parent.top; bottom: parent.bottom; right: tile.expandable ? sep.left : parent.right }
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: tile.toggled()
@@ -173,6 +175,7 @@ PanelWindow {
 
         Rectangle {
             id: sep
+            visible: tile.expandable
             anchors { right: parent.right; rightMargin: 34; verticalCenter: parent.verticalCenter }
             width: 1
             height: parent.height * 0.5
@@ -180,6 +183,7 @@ PanelWindow {
         }
 
         Rectangle {
+            visible: tile.expandable
             anchors { left: sep.right; right: parent.right; top: parent.top; bottom: parent.bottom; margins: 4 }
             radius: 9
             color: chevMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.08) : "transparent"
@@ -499,6 +503,16 @@ PanelWindow {
                     onToggled: NightLight.toggle()
                     onExpand: Ui.controlSection = Ui.controlSection === "night" ? "" : "night"
                 }
+            }
+
+            Tile {
+                width: parent.width
+                expandable: false
+                icon: "󰄜"
+                label: "iphone spiegeln"
+                sub: Iphone.on ? "an · 8155-Laptop" : "aus"
+                on: Iphone.on
+                onToggled: Iphone.toggle()
             }
 
             // Energieprofile

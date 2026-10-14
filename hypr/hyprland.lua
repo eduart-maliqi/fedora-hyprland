@@ -285,6 +285,8 @@ hl.bind(mod .. " + Escape",      hl.dsp.exec_cmd(scripts .. "/powermenu.sh"))
 hl.bind(mod .. " + L",           hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mod .. " + N",           hl.dsp.exec_cmd("makoctl dismiss --all"))
 hl.bind(mod .. " + SHIFT + D",   hl.dsp.exec_cmd(scripts .. "/noa-start.sh"))   -- NOA-Entwicklungsumgebung hochfahren
+hl.bind(mod .. " + SHIFT + A",   hl.dsp.exec_cmd(scripts .. "/iphone.sh toggle"))   -- iPhone-Spiegelung (UxPlay) an/aus
+hl.bind(mod .. " + ALT + A",     hl.dsp.exec_cmd(scripts .. "/iphone.sh steuern"))  -- iPhone per Bluetooth mit Maus/Tastatur steuern
 
 -- 8155 Shell (Quickshell IPC)
 hl.bind(mod .. " + W",           hl.dsp.global("quickshell:galleryToggle"))   -- Wallpaper-Galerie (WallpaperGallery.qml)
@@ -725,6 +727,22 @@ hl.window_rule({
     name  = "fix-xwayland-drags",
     match = { class = "^$", title = "^$", xwayland = true, float = true, fullscreen = false, pin = false },
     no_focus = true,
+})
+
+-- iPhone-Spiegelung (UxPlay/waylandsink): schwebend, Hochformat wie das Telefon
+hl.window_rule({
+    name  = "iphone-spiegel",
+    match = { class = "^uxplay$" },
+    float = true,
+    center = true,
+    size  = { 420, 910 },
+})
+
+hl.window_rule({
+    name  = "iphone-steuern",
+    match = { class = "^iphone-steuern$" },
+    float = true,
+    center = true,
 })
 
 -- Kleine Tools schwebend und mittig

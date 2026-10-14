@@ -104,3 +104,24 @@ Dateikonflikten der i686-Pakete mit den alten x86_64-Einträgen. Gelöst mit
 + `dnf upgrade --refresh` → Kernel **7.2.9** (evdi per DKMS gebaut + signiert). Sicherung der alten Paketdatenbank:
 `/var/lib/rpmdb-sicherung-20261008-*.tar.gz` (kann weg, wenn alles läuft). Prüfen: `dnf check`, Duplikate:
 `rpm -qa --qf '%{NAME}.%{ARCH}\n' | sort | uniq -d`.
+
+
+## iPhone spiegeln & bedienen (UxPlay + Bluetooth-HID)
+
+**Anzeige:** Paket `uxplay` (AirPlay-Mirroring-Empfänger, GPLv3), User-Dienst `~/.config/systemd/user/uxplay.service`
+(`-n 8155-Laptop -pin -reg -vs waylandsink -fps 60`). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
+AirPlay-Ziel im Netz. Ein/Aus: **Super+Shift+A**, Kachel „iphone spiegeln“ im Kontrollzentrum (`Iphone.qml`) oder
+`scripts/iphone.sh an|aus|toggle|status`. Verbinden: iPhone → Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“;
+beim ersten Mal erscheint eine PIN auf dem Laptop, danach merkt `-reg` das Gerät. Firewall: Dienst `mdns` (5353/udp) in
+der Zone FedoraWorkstation freigegeben (sonst findet das iPhone den Empfänger nicht), die Datenports liegen im offenen Bereich 1025–65535.
+Fensterregel `iphone-spiegel` (Klasse `uxplay`, schwebend 420×910) – Klasse beim ersten echten Spiegeln mit `hyprctl clients -j` prüfen.
+Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei Flackern/Schwarz `-vs glimagesink`.
+
+**Bedienung** (AirPlay ist eine Einbahnstrasse, das Bild gibt keine Eingaben zurück): Der Laptop gibt sich per BlueZ als
+Bluetooth-LE-HID-Gerät „8155-Laptop-HID“ aus (HID over GATT, Dienst `iphone-hid.service`, Skript `iphone-hid.py`).
+`iphone-steuern.py` (Super+Alt+A) ist ein SDL-Fenster: Klick hinein → relative Maus + Tastatur gehen ans iPhone,
+**Strg+Alt+G** gibt frei. Gewählt statt evdev, weil der Benutzer nicht in der Gruppe `input` ist (kein Rechtegewinn nötig).
+Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveTouch **an**, dann Bluetooth → „8155-Laptop-HID“ koppeln.
+iOS kennt nur **relative** Mäuse: der Zeiger wird wie eine normale Maus geführt, kein „Klick auf die Stelle im Spiegelbild“.
+Protokoll Fenster → Dienst: Unix-Datagramme an `$XDG_RUNTIME_DIR/iphone-hid.sock` (`m dx dy [rad]`, `b maske`, `k mods tasten…`).
+Stand: BlueZ nimmt GATT-Anwendung + Werbung an, Fenster/Socket getestet; **Kopplung mit einem echten iPhone noch nicht erprobt**.

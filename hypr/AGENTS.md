@@ -95,6 +95,9 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── lyrics.py          ← Songtexte suchen (Cache → lrclib → NetEase → KI per YouTube-Audio + OpenAI Whisper):
 │   │                        `find`, `key` (OpenAI-Key speichern), `forget <artist> <titel>`, `info` → docs/musik.md
 │   ├── noa-start.sh       ← NOA-Entwicklungsumgebung hochfahren (Super+Shift+D) → docs/system.md
+│   ├── iphone.sh          ← iPhone-Spiegelung (UxPlay-Dienst) `an|aus|toggle|status|steuern` → docs/system.md
+│   ├── iphone-hid.py      ← Bluetooth-LE-Maus/Tastatur (HID over GATT, BlueZ-D-Bus) fürs iPhone, Dienst `iphone-hid.service`
+│   ├── iphone-steuern.py  ← SDL-Fenster: fängt Maus/Tastatur und schickt sie an iphone-hid.py (Unix-Socket)
 │   ├── kalender.py        ← Termine der nächsten 45 Tage als JSON (Evolution-Datenbank, Google-Konto über GNOME-Online-Konten) → docs/quickshell.md
 │   ├── nowplaying.sh      ← aktueller Song als Text (für hyprlock)
 │   ├── powermenu.sh       ← Power-Menü (rofi): sperren, Bereitschaft, abmelden, Neustart, aus
@@ -118,6 +121,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── Media.qml              ← Singleton: aktiver MPRIS-Player
 ├── LyricsService.qml      ← Singleton: synchronisierte Songtexte (ruft hypr/scripts/lyrics.py auf)
 ├── Spotify.qml            ← Singleton: Spotify Web API (Bibliothek, Suche, Abspielen, ♥, Wiedergabe-Status)
+├── Iphone.qml             ← Singleton: Zustand des UxPlay-Dienstes (fragt `scripts/iphone.sh status`), Kachel im Kontrollzentrum
 ├── NightLight.qml         ← Singleton: Nachtmodus (hyprsunset), Zustand in ~/.local/state/8155/nachtmodus.json
 ├── WindowMode.qml         ← Singleton: liest den Fenstermodus (geordnet/frei) aus ~/.local/state/8155/fenstermodus.json
 ├── Bar.qml                ← obere Leiste (pro Bildschirm); ohne Musik steht links `Theme.title` = „8155“
@@ -180,6 +184,8 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+Enter | Terminal (kitty) |
 | Super+Shift+Enter | **Dropdown-Terminal**: kitty (Klasse `dropterm`) oben 80 % × 45 %, ein-/ausblenden (Special-Workspace `dropterm`) |
 | Super+Shift+D | **NOA hochfahren** (`scripts/noa-start.sh`): Container `noadb`, Backend + Frontend in kitty-Tabs, IntelliJ |
+| **Super+Shift+A** | **iPhone spiegeln** an/aus (AirPlay-Empfänger UxPlay als User-Dienst, `scripts/iphone.sh`; auch Kachel im Kontrollzentrum). Am iPhone: Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“, PIN steht auf dem Laptop → docs/system.md |
+| **Super+Alt+A** | **iPhone steuern**: kleines Fenster anklicken → Maus/Tastatur gehören dem iPhone (Bluetooth-LE-HID), **Strg+Alt+G** gibt sie frei |
 | Super+Leertaste / Super+D | App-Starter (`rofi -show drun`) |
 | Super+E | Dateimanager (nautilus) |
 | Super+B | Browser (brave-browser) |
