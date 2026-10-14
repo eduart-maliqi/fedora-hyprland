@@ -56,6 +56,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 | Bar.qml | golden-bar | Top | pro Bildschirm, 45 px hoch, oben |
 | MusicWindow.qml (2× pro Bildschirm) | golden-music | Bottom + Top | oben links (48/64, 800×470); Bottom-Fenster bei `Ui.musicDesktopOn(screen)` (Musik läuft + Bildschirm leer), Top-Fenster bei `Ui.musicTopOn(screen)`; Inhalt per `Loader` nur, solange sichtbar |
 | ControlCenter.qml | golden-control | Top | oben rechts; `Ui.controlOpen` |
+| AirdropPanel.qml | golden-airdrop | Top | oben rechts (gleiche Stelle wie das Kontrollzentrum); `Ui.airdropOpen` |
 | VolumeOsd.qml | golden-osd | Overlay | unten Mitte, erscheint kurz bei Lautstärke-Änderung |
 | ModeOsd.qml | golden-osd | Overlay | unten Mitte, erscheint kurz beim Wechsel des Fenstermodus, des lebendigen Wallpapers oder der Wackelfenster |
 | TaskView.qml | golden-taskview | Overlay | pro Bildschirm, **immer da** als 1×1 px (klick-durchlässig); Super+Tab / Alt+Tab → auf dem Bildschirm mit Fokus ganzer Bildschirm |
@@ -65,10 +66,10 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 ## Gemeinsamer Zustand (`Ui.qml`)
 `wallpaper` (Bild-URL), Musik-Panel (`musicOpen`, `musicScreen`, `musicAuto`, `musicDismissed`, `musicShown`, `toggleMusic(name)`, `openMusic(name)`,
 `closeMusic()`, `musicTopOn(screen)`, `musicDesktopOn(screen)`, `musicOn(screen)`, `screenEmpty(screen)` – siehe `docs/musik.md`), `controlOpen`, `controlSection` (`""` | `"wifi"` | `"bluetooth"` | `"power"` | `"night"` = aufgeklappter Bereich),
-`controlScreen` (Bildschirm, auf dem das Kontrollzentrum aufgeht), `keysOpen` (Tastenkürzel-Übersicht), `lyricsEnabled`, `clockEnabled`,
+`controlScreen` (Bildschirm, auf dem das Kontrollzentrum aufgeht), `keysOpen` (Tastenkürzel-Übersicht), `airdropOpen` (AirDrop-Fenster), `lyricsEnabled`, `clockEnabled`,
 `wallpaperAnimated` (lebendiges Wallpaper, gespeichert in `wallpaper.json` – siehe `docs/wallpaper.md`).
-Kontrollzentrum und Tastenkürzel-Übersicht liegen beide oben rechts → `Ui.qml` sorgt dafür, dass immer nur eins offen ist
-(`onControlOpenChanged` / `onKeysOpenChanged`).
+Kontrollzentrum, Tastenkürzel-Übersicht und AirDrop liegen alle oben rechts → `Ui.qml` sorgt dafür, dass immer nur eins offen ist
+(`onControlOpenChanged` / `onKeysOpenChanged` / `onAirdropOpenChanged`).
 Dazu die Funktion `Ui.skipWindow(t)`: `true` für Fenster, die Taskleiste, Alt+Tab und Aufgabenansicht **nicht** zeigen
 (zurzeit: schwebende `clawd-on-desk`-Fenster). Weitere auszublendende Apps dort eintragen – Taskleiste (`StarLine.qml`) und Aufgabenansicht/Alt+Tab (`TaskView.qml`) benutzen sie.
 
@@ -88,7 +89,8 @@ Dazu die Funktion `Ui.skipWindow(t)`: `true` für Fenster, die Taskleiste, Alt+T
   - Mausrad über der Leiste → Workspaces wechseln
 - **Rechts:** Kapsel mit WLAN-/Bluetooth-/Lautstärke-Symbol + 󰅀 → öffnet das Kontrollzentrum. Zusätzlich grünes Blatt,
   solange Stromsparen an ist, Fenster-Symbol 󰖲 im freien Fenstermodus und Mond, solange der Nachtmodus an ist.
-  Akku-Kapsel (Klick → Kontrollzentrum). Uhr-Kapsel (Klick → Desktop-Uhr an/aus).
+  **AirDrop-Kapsel 󰀃** (zwischen Kontrollzentrum und Akku): Klick → AirDrop-Fenster; eine Datei darüberziehen öffnet es auch.
+  Symbol in Akzentfarbe + Restminuten („9′“), solange AirDrop an ist. Akku-Kapsel (Klick → Kontrollzentrum). Uhr-Kapsel (Klick → Desktop-Uhr an/aus).
   Bluetooth-Symbol grün = Gerät verbunden.
 - **Claude-Kapsel 󰚩** (links vom Akku, nur sichtbar, wenn eine Claude-Code-Sitzung fertig und noch nicht angesehen ist):
   zeigt den Ordnernamen der Sitzung, bei mehreren „N fertig“. Klick → zum ältesten wartenden Fenster springen
@@ -126,6 +128,17 @@ Dazu die Funktion `Ui.skipWindow(t)`: `true` für Fenster, die Taskleiste, Alt+T
     Schlägt alles fehl → „kalender nicht erreichbar“. **Nur lesen** – Termine anlegen/ändern geht hier nicht (dafür Google Kalender/Evolution).
 - **Fuß:** Akku-Details (lädt / voll in … / noch …), Knöpfe Sperren und Power-Menü
 - Schließen: ✕, Esc (nach Klick hinein, Tastatur ist `OnDemand`), nochmal auf die Kapsel, Klick aufs Wallpaper
+
+## AirDrop (`AirdropPanel.qml` + Singleton `Airdrop.qml`)
+Technik/Installation (omdrop, omdrop-owl, WLAN-Trennung): `docs/system.md`, Abschnitt „AirDrop“.
+- Kachel oben: an/aus (`omdrop on 10m` / `off`), zeigt Name „8155-Laptop“ und Restzeit. Fehlt der Funk-Teil → rote Zeile „funk-treiber fehlt“.
+- Ablagefläche: Dateien/Bilder hineinziehen (auch Links aus dem Browser) oder klicken → `zenity`-Dateiauswahl → liegen bereit (✕ verwirft).
+  DropAreas nehmen immer als **Kopie** an (bei „verschieben“ würde Nautilus die Quelle löschen).
+- „geräte in der nähe“ (nur solange Fenster offen + AirDrop an): `omdrop peers --json` alle 2 s, Namen über
+  `peers --json -n --stream` (kündigt dabei per Bluetooth an, läuft deshalb nur bei offenem Fenster). Gerät anklicken = bereitliegende
+  Dateien senden, Dateien direkt aufs Gerät ziehen = sofort senden, während des Sendens 󰅖 = abbrechen. Status (omdrops Sätze, übersetzt) in der Zeile.
+- Unten: Kurzanleitung beide Richtungen + „empfangen · ~/airdrop“ (öffnet den Ordner). Empfangene Dateien melden sich über mako.
+- Status-Abfrage `omdrop status --json` alle 2 s (Fenster offen oder AirDrop an), sonst alle 10 s.
 
 ## Aufgabenansicht (`TaskView.qml`, Super+Tab **und** Alt+Tab)
 Vollbild-Overlay mit abgedunkeltem, geblurrtem Hintergrund. Alle Fenster (auch versteckte) als Karten mit
@@ -173,6 +186,7 @@ oder das Kontrollzentrum öffnen.
 | `music` | `toggle` (holen/zurücklegen auf dem Bildschirm mit Fokus), `toggleOn <bildschirm>` (dasselbe auf z. B. `DVI-I-1`; benutzt Super+M), `open` (über die Fenster), `close` (ausblenden wie ✕) |
 | `lyrics` | `toggle` |
 | `clock` | `toggle` |
+| `airdrop` | `toggle`, `open`, `close` (Fenster), `on`, `off` (AirDrop 10 min an / aus) |
 | `control` | `toggle`, `close`, `open <bereich>` (bereich: `wifi`, `bluetooth`, `power`, `night` oder `""`) |
 | `night` | `toggle`, `enable`, `disable` (Nachtmodus) |
 | `wifi` | `toggle`, `close` (Kontrollzentrum mit WLAN-Liste) |

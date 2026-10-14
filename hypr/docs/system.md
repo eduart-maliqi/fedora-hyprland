@@ -142,3 +142,30 @@ Einmalig am iPhone: Einstellungen → Bedienungshilfen → Tippen → AssistiveT
 iOS kennt nur **relative** Mäuse: der Zeiger wird wie eine normale Maus geführt, kein „Klick auf die Stelle im Spiegelbild“.
 Protokoll Fenster → Dienst: Unix-Datagramme an `$XDG_RUNTIME_DIR/iphone-hid.sock` (`m dx dy [rad]`, `b maske`, `k mods tasten…`).
 Stand: BlueZ nimmt GATT-Anwendung + Werbung an, Fenster/Socket getestet; **Kopplung mit einem echten iPhone noch nicht erprobt**.
+
+## AirDrop (omdrop + omdrop-owl)
+
+Dateien/Bilder zwischen iPhone und Laptop per echtem AirDrop (AWDL), in beide Richtungen. Bedienung über die 󰀃-Kapsel in der
+Leiste → `AirdropPanel.qml` (siehe docs/quickshell.md). OpenDrop (seemoo-lab) selbst ist veraltet; benutzt wird der Nachfolger:
+- **CLI `omdrop`** (Python/Bash, MIT): Quelltext `~/.local/opt/omdrop-plugin` (git, github.com/brentkearney/omdrop-plugin – eigentlich
+  ein Omarchy-Plugin, die CLI läuft aber allein). Symlink `~/.local/bin/omdrop`. Quickshell ruft sie **mit vollem Pfad** auf
+  (Hyprlands PATH enthält `~/.local/bin` nicht). Wichtig: `omdrop on [min]`, `off`, `status --json`, `peers --json [-n --stream]`,
+  `send --to MAC -- DATEIEN…`, `name`, `dir`. Empfänger = User-Dienst `airdrop-receiver.service` (Port 8771, nur während eines Fensters),
+  Zeitfenster = Timer `omdrop-window`, Watcher `omdrop-watch` meldet jede angekommene Datei (kopiert sie auch in die Zwischenablage).
+- **Funk-Teil `omdrop-owl`** (github.com/t4t5/omdrop-owl, GPL): OWL (Open Wireless Link, AWDL im Userspace) + Helfer. Quelltext
+  `~/.local/opt/omdrop-owl`, gebaut mit `tools/build-rpm.sh` → RPM installiert nach `/usr/lib/omdrop` (+ polkit-Regel
+  `allow_active=yes` → kein Passwort beim Ein-/Ausschalten, NetworkManager ignoriert `awdl0`/`mon0`/`awdlibss0`).
+  Build-Abhängigkeiten: `rpm-build gcc gcc-c++ make libev-devel libpcap-devel libnl3-devel`.
+- **Intel AX211 kann nur „exclusive“:** solange AirDrop an ist, ist das **WLAN getrennt** (AWDL läuft auf Kanal 6), danach verbindet
+  `omdrop-discoverable` die vorige Verbindung wieder. Deshalb immer mit Zeitfenster (Panel: 10 min). Log der Root-Seite: `/run/omdrop-owl/log`,
+  Check: `/usr/lib/omdrop/omdrop-discoverable probe --json`.
+- Name für Apple-Geräte „8155-Laptop“ (`omdrop name`), Ziel **`~/airdrop`** (`omdrop dir`, schreibt Drop-in
+  `~/.config/systemd/user/airdrop-receiver.service.d/10-download-dir.conf`). Identität: selbstsigniert in `~/.omdrop/keys` →
+  iPhones sehen den Laptop nur, wenn sie selbst auf **„Für alle (10 Minuten)“** stehen bzw. beim Senden ans iPhone muss es so eingestellt sein.
+- **Meldungen:** omdrop ruft `omarchy-notification-send` auf → Ersatz `scripts/airdrop-meldung.sh` (notify-send/mako, Klick öffnet die Datei),
+  Symlink `~/.local/bin/omarchy-notification-send`; der Drop-in `~/.config/systemd/user/omdrop-watch.service.d/path.conf` legt
+  `~/.local/bin` in den PATH des Watchers (systemd-User-PATH ist nur `/usr/local/bin:/usr/bin`; Drop-ins greifen auch bei `systemd-run`-Units).
+- Firewall: nichts nötig, Zone FedoraWorkstation hat 1025–65535 offen (`omdrop firewall` ist nur für UFW).
+- `omdrop doctor` meldet fälschlich fehlende Bibliotheken (sucht `/usr/lib/libkeyutils.so.1`, Fedora hat `/usr/lib64/…`) – harmlos.
+- **Aktualisieren:** `git -C ~/.local/opt/omdrop-plugin pull` (CLI sofort aktiv); Funk-Teil: `git -C ~/.local/opt/omdrop-owl pull &&
+  ~/.local/opt/omdrop-owl/tools/build-rpm.sh && pkexec dnf install ~/.local/opt/omdrop-owl/omdrop-owl-*.rpm`.

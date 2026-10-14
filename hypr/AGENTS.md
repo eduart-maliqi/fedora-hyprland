@@ -41,7 +41,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 | `docs/quickshell.md` | QML-Grundlagen & -Fallstricke, Fenster/Ebenen/Namespaces, `Ui.qml`, Leiste, Kontrollzentrum, Aufgabenansicht/Alt+Tab, Super+I-Übersicht, IPC-Befehle |
 | `docs/musik.md` | Musik-Panel, Spotify Web API, Songtexte (`lyrics.py`: lrclib/NetEase/KI), yt-dlp |
 | `docs/wallpaper.md` | Wallpaper-Bilder, **Galerie (Super+W)**, **Farbthemen** (`thema.sh`, `themen/`), Masken, lebendiges Wallpaper (Shader) |
-| `docs/system.md` | hypridle, hyprlock, Anmeldung (GDM-Autoanmeldung + hyprlock beim Start), mako, rofi, Ton/PipeWire, Audiotreiber, Systemuhr/chrony, Dock/DisplayLink, „Bildschirme“ (nwg-displays), Windows-Partition, Explorer-Modus, Outlook, Clawd, Pakete, Kernel-Baustelle |
+| `docs/system.md` | hypridle, hyprlock, Anmeldung (GDM-Autoanmeldung + hyprlock beim Start), mako, rofi, Ton/PipeWire, Audiotreiber, Systemuhr/chrony, Dock/DisplayLink, „Bildschirme“ (nwg-displays), Windows-Partition, Explorer-Modus, Outlook, Clawd, Pakete, Kernel-Baustelle, iPhone spiegeln, **AirDrop** (omdrop) |
 | `docs/grub.md` | GRUB-Bootmenü „ghost“ (Dualboot) + Plymouth-Ladebildschirm |
 | `docs/testen.md` | Shader/QML nur auf der CPU testen, Plugins im verschachtelten Test-Hyprland, Absturzspuren |
 | `CHANGELOG.md` | wann/warum etwas geändert wurde – nur bei Bedarf (z. B. Fehlersuche „seit wann ist das so?“) |
@@ -88,6 +88,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── plugins/wobbly/        ← eigenes Hyprland-Plugin „Wackelfenster“ (Super+G): main.cpp, build.sh, wobbly.so → docs/plugins.md
 ├── shaders/               ← Fenster-Shader (GLSL) fürs Plugin HyprWindowShade, Regeln in hyprland.lua → docs/plugins.md
 ├── scripts/
+│   ├── airdrop-meldung.sh ← Meldung „Datei per AirDrop empfangen“ für omdrop (Ersatz für omarchy-notification-send) → docs/system.md
 │   ├── bt-pair.sh         ← Bluetooth-Gerät koppeln + vertrauen + verbinden (Arg: MAC)
 │   ├── clipboard.sh       ← Zwischenablage-Verlauf (cliphist + rofi)
 │   ├── explorer-modus.py  ← Nautilus: Lesezeichen Windows/Linux je nach aktivem Tab (Dienst; `status`, `linux`, `windows`)
@@ -131,6 +132,8 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── Pill.qml               ← Baustein: Glas-Kapsel [Symbol  Text]
 ├── Star.qml               ← Baustein: fünfzackiger Vektor-Stern
 ├── ControlCenter.qml      ← aufklappbares Kontrollzentrum oben rechts (mit Kalender)
+├── AirdropPanel.qml       ← AirDrop-Fenster (Kapsel 󰀃 in der Leiste): Dateien hineinziehen, an iPhone/Mac senden
+├── Airdrop.qml            ← Singleton: AirDrop-Zustand + Befehle (ruft die omdrop-CLI auf) → docs/system.md
 ├── CalendarView.qml       ← Kalender im Kontrollzentrum: heute + 1 Monat, Termine als Punkte + Liste
 ├── CalendarService.qml    ← Singleton: Termine (ruft scripts/kalender.py auf)
 ├── WifiList.qml           ← WLAN-Liste (im Kontrollzentrum)
@@ -159,6 +162,7 @@ Weitere Konfigurationen im selben Stil:
 ~/.cache/golden-backups/     ← Sicherungen (tar.gz) vor größeren Änderungen
 ~/.local/opt/phantomat/      ← Quelltext Phantomat (git, github.com/kaolti/phantomat), gebaut nach
                                ~/.local/share/hyprland/plugins/phantomat.so (intern heisst das Plugin „spatialoverview“)
+~/.local/opt/omdrop-plugin/   ← AirDrop-CLI `omdrop` (git), ~/.local/opt/omdrop-owl/ ← Funk-Teil (git, gebaut als RPM → /usr/lib/omdrop) → docs/system.md
 ~/.local/state/spatial-overview/canvas-memory.tsv ← Phantom merkt sich Fensterplätze + Kamera (über Neustarts)
 ~/.local/state/8155/  ← gespeicherter Zustand: nachtmodus.json (an/aus + Wärme), fenstermodus.json ({"free": true|false}),
                                wallpaper.json ({"animated": true|false}, „an“ erst nach 60 s Laufzeit gespeichert),
@@ -169,6 +173,7 @@ Weitere Konfigurationen im selben Stil:
                                lesezeichen-linux / lesezeichen-windows (Nautilus-Lesezeichen je Modus), explorer-modus (`linux`|`windows`)
 ~/.cache/8155/lyrics/ ← gefundene Songtexte (eine JSON pro Lied, von lyrics.py) – löschen = alles neu suchen
 ~/bildschirmfotos/           ← Ziel für Screenshots (hyprshot)
+~/airdrop/                   ← per AirDrop empfangene Dateien
 ```
 
 ---

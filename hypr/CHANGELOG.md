@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-14** – AirDrop mit dem iPhone: Kapsel 󰀃 + `AirdropPanel.qml`/`Airdrop.qml` (Dateien hineinziehen, an Geräte senden), Backend omdrop +
+  omdrop-owl (OpenDrop-Nachfolger, kann Intel AX211; WLAN ist solange getrennt), Meldungen über `scripts/airdrop-meldung.sh` → docs/system.md.
 - **2026-10-14** – iPhone steuern: iOS fand bzw. koppelte die LE-Maus am Dual-Mode-Adapter nicht (koppelte über Classic) → `iphone-le.sh`
   schaltet per pkexec während der Steuerung BR/EDR ab + LE-Privacy (statische Adresse brach GATT: Trennung nach 4 s), danach SSP wieder an; `iphone-hid.py` ohne doppelten 180A-Dienst, Alias, Journal-Ausgaben.
 - **2026-10-14** – iPhone spiegeln + bedienen: UxPlay-Dienst (Super+Shift+A, Kontrollzentrum-Kachel `Iphone.qml`, `scripts/iphone.sh`), Bluetooth-LE-HID
