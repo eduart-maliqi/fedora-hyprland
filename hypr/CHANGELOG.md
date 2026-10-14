@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-14** – IntelliJ-Flatpak: `JAVA_HOME` per `flatpak override` auf JDK-21-Kopie in `~/.jdks` (docs/system.md) – Gradle-Sync
+  scheiterte auf Java 25 („Incompatible Gradle JVM“).
 - **2026-10-14** – AirDrop mit dem iPhone: Kapsel 󰀃 + `AirdropPanel.qml`/`Airdrop.qml` (Dateien hineinziehen, an Geräte senden), Backend omdrop +
   omdrop-owl (OpenDrop-Nachfolger, kann Intel AX211; WLAN ist solange getrennt), Meldungen über `scripts/airdrop-meldung.sh` → docs/system.md.
 - **2026-10-14** – Spiegelfenster folgt dem Hoch-/Querformat (`iphone-fenster.py`, Grösse aus UxPlays Debug-Log), `-vsync no` gegen Verzögerung,

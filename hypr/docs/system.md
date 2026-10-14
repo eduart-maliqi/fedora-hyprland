@@ -80,6 +80,12 @@ eine Benachrichtigung „gestartet: …“ / „lief schon: …“ (alles schon 
 über eine kitty-Sitzungsdatei in `$XDG_RUNTIME_DIR`; `--hold` lässt sie bei Fehlern offen.
 **Fallstrick:** Java 25 ist Standard, Gradle 8.14 läuft darauf nicht → das Skript setzt `JAVA_HOME=/usr/lib/jvm/java-21-openjdk`
 nur für den Backend-Tab. Keycloak lokal wird nicht gestartet (`KEYCLOAK_ENABLED=false` in `noabackend/.env`).
+**IntelliJ (Flatpak) braucht dasselbe:** das Projekt nutzt als Gradle-JVM `#JAVA_HOME`, im Flatpak ist das `/app/jbr` (Java 25)
+→ „Unsupported class file major version 69“ / „Incompatible Gradle JVM“. Die Sandbox sieht `/usr/lib/jvm` nicht, deshalb liegt eine
+Kopie des Host-JDK 21 in `~/.jdks/openjdk-21-fedora` (`cp -aL /usr/lib/jvm/java-21-openjdk …`, löst die Symlinks auf, z. B. `cacerts`),
+und `flatpak override --user --env=JAVA_HOME=$HOME/.jdks/openjdk-21-fedora com.jetbrains.IntelliJ-IDEA-Community` zeigt darauf.
+IntelliJ selbst läuft weiter auf seiner eigenen JBR (der Starter nimmt zuerst `files/jbr`, erst danach `$JAVA_HOME`). Nach einem
+JDK-21-Update des Hosts die Kopie neu anlegen (Ordner löschen + `cp -aL` wiederholen).
 
 ## Pakete & Quellen
 
