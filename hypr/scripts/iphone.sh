@@ -2,7 +2,8 @@
 # ★ 8155 – iPhone-Spiegelung (AirPlay-Empfänger UxPlay) ein-/ausschalten
 #   iphone.sh an|aus|toggle|status   (status: „an“ oder „aus“, für Quickshell)
 #   iphone.sh passwort              AirPlay-Passwort anzeigen (Benachrichtigung)
-#   iphone.sh steuern               unsichtbares Steuerfenster über dem Spiegelbild (Bluetooth-HID, nur LE solange offen)
+#   iphone.sh steuern               unsichtbares Steuerfenster über dem Spiegelbild (Bluetooth-HID, nur LE solange offen);
+#                                   läuft schon eine Sitzung, wird sie beendet (Ein/Aus)
 #                                   IPHONE_BTMON=<datei> schneidet die Sitzung mit btmon mit
 unit=uxplay.service
 notify() { notify-send -a iphone "$@"; }
@@ -17,13 +18,21 @@ case "${1:-toggle}" in
     toggle) active && exec "$0" aus || exec "$0" an ;;
     passwort) notify -t 60000 "iphone-passwort" "$(<"$pwfile")" ;;
     steuern)
+        # nur eine Sitzung: zwei Steuerfenster kämpfen um die oberste Ebene (Zeiger springt dauernd in die Ecke),
+        # ein zweiter Helfer schaltet Bluetooth neu und trennt das iPhone → zweiter Aufruf beendet die laufende Sitzung
+        exec 9>"$XDG_RUNTIME_DIR/iphone-steuern.lock"
+        if ! flock -n 9; then
+            for p in $(pgrep -x python3); do grep -qa "iphone-steuern.py" "/proc/$p/cmdline" && kill "$p"; done
+            notify "iphone steuern aus"
+            exit 0
+        fi
         dir=$(dirname "$(readlink -f "$0")")
         le_only() { local s; s=$(btmgmt --index 0 info 2>/dev/null | grep "current settings:"); [[ $s == *powered* && $s != *br/edr* ]]; }
-        python3 -I "$dir/iphone-steuern.py" & win=$!
+        python3 -I "$dir/iphone-steuern.py" 9>&- & win=$!
         # Root-Helfer (ein Passwort-Dialog): Bluetooth nur LE, solange das Fenster offen ist – danach wieder Classic + LE
         irkfile="$HOME/.local/state/8155/iphone-irk"   # fester IRK, damit das iPhone die Kopplung wiedererkennt
         [[ -s $irkfile ]] || (umask 077; od -An -tx1 -N16 /dev/urandom | tr -d ' \n' >"$irkfile")
-        pkexec "$dir/iphone-le.sh" "$win" "$(<"$irkfile")" ${IPHONE_BTMON:+"$IPHONE_BTMON"} &
+        pkexec "$dir/iphone-le.sh" "$win" "$(<"$irkfile")" ${IPHONE_BTMON:+"$IPHONE_BTMON"} 9>&- &
         # HID-Dienst erst danach starten, sonst wirbt er wieder als Dual-Mode-Gerät
         for _ in $(seq 60); do le_only && break; sleep 1; done
         le_only || notify -u critical "iphone steuern" "Bluetooth ist nicht im LE-Modus – Passwort-Dialog abgebrochen?"

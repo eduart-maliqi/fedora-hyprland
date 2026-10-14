@@ -145,6 +145,9 @@ bekannte Position) und dann zur Maus gefahren (Schritte à 4 Einheiten, gemessen
 nachgeführt; an den Rändern wird nachgedrückt. Kleine Abweichungen sieht man nicht – man führt den iPhone-Zeiger nach Sicht.
 Neues oder fokussiertes Spiegelfenster rutscht nach oben → Steuerfenster per `alter_zorder({mode="top"})` wieder darüber. **Kein
 `hl.dsp.focus`**: das setzt den Mauszeiger in die Fenstermitte (Zeiger „teleportierte“ alle 0,3 s zurück, neues Fenster hat focusHistoryID −1).
+**Nur eine Sitzung** (`flock` auf `$XDG_RUNTIME_DIR/iphone-steuern.lock`): zwei Steuerfenster kämpften um die Ebene (Zeiger sprang
+alle ~0,8 s in die Ecke), ein zweiter Helfer trennte das iPhone. Super+Alt+A während einer Sitzung beendet sie. Testen ohne Bluetooth:
+`IPHONE_HID_SOCK=/tmp/x.sock python3 -I scripts/iphone-steuern.py` und dort mitlesen.
 Ohne Spiegelfenster wandert das Steuerfenster auf den Special-Workspace `iphone-steuern` (sonst finge es unsichtbar Klicks ab).
 **WLAN:** Der Laptop fiel zweimal aus dem iPhone-Hotspot (Kernel: `missed beacons`) zurück ins Gast-WLAN → Spiegelung weg; am iPhone
 Hotspot-Einstellungen öffnen und `nmcli connection up "iPhone (2)"`, dann neu spiegeln. Seit 2026-10-14: „iPhone (2)“ hat

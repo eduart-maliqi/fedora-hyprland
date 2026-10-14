@@ -16,7 +16,7 @@ os.environ.setdefault("SDL_VIDEODRIVER", "wayland")
 os.environ.setdefault("SDL_VIDEO_WAYLAND_WMCLASS", "iphone-steuern")   # Klasse für die Fensterregel
 import sdl2
 
-SOCK = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "iphone-hid.sock")
+SOCK = os.environ.get("IPHONE_HID_SOCK") or os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "iphone-hid.sock")
 # shortcut: feste Masse des iPhone 15 Pro Max im Hochformat; bei anderem iPhone/Querformat anpassen
 PHONE_W, PHONE_H = 430, 932   # Punkte
 # iOS kennt nur relative Mäuse mit Beschleunigung. Gemessen (Spiegelbild, 2026-10-14): Schritte von 4 Einheiten
