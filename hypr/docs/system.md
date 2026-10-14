@@ -109,10 +109,10 @@ Dateikonflikten der i686-Pakete mit den alten x86_64-Einträgen. Gelöst mit
 ## iPhone spiegeln & bedienen (UxPlay + Bluetooth-HID)
 
 **Anzeige:** Paket `uxplay` (AirPlay-Mirroring-Empfänger, GPLv3), User-Dienst `~/.config/systemd/user/uxplay.service`
-(`-n 8155-Laptop -pin -reg -vs waylandsink -fps 60`). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
+(`-n 8155-Laptop -pin -reg -vs waylandsink -fps 60`, gestartet über `scripts/iphone-uxplay.sh`: zeilenweise Ausgabe + PIN als Benachrichtigung). Wird **nicht** automatisch gestartet – sonst ist der Laptop dauernd
 AirPlay-Ziel im Netz. Ein/Aus: **Super+Shift+A**, Kachel „iphone spiegeln“ im Kontrollzentrum (`Iphone.qml`) oder
 `scripts/iphone.sh an|aus|toggle|status`. Verbinden: iPhone → Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“;
-beim ersten Mal erscheint eine PIN auf dem Laptop, danach merkt `-reg` das Gerät. Firewall: Dienst `mdns` (5353/udp) in
+beim ersten Mal erscheint die PIN als Benachrichtigung (auch `journalctl --user -u uxplay`; ohne `stdbuf` kam sie erst beim Beenden), danach merkt `-reg` das Gerät. Firewall: Dienst `mdns` (5353/udp) in
 der Zone FedoraWorkstation freigegeben (sonst findet das iPhone den Empfänger nicht), die Datenports liegen im offenen Bereich 1025–65535.
 Fensterregel `iphone-spiegel` (Klasse `uxplay`, schwebend 420×910) – Klasse beim ersten echten Spiegeln mit `hyprctl clients -j` prüfen.
 Debuggen: `journalctl --user -u uxplay`, `avahi-browse -rt _airplay._tcp`; bei Flackern/Schwarz `-vs glimagesink`.

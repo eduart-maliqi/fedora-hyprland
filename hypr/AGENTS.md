@@ -96,6 +96,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   │                        `find`, `key` (OpenAI-Key speichern), `forget <artist> <titel>`, `info` → docs/musik.md
 │   ├── noa-start.sh       ← NOA-Entwicklungsumgebung hochfahren (Super+Shift+D) → docs/system.md
 │   ├── iphone.sh          ← iPhone-Spiegelung (UxPlay-Dienst) `an|aus|toggle|status|steuern` → docs/system.md
+│   ├── iphone-uxplay.sh   ← startet UxPlay zeilengepuffert und zeigt die PIN als Benachrichtigung (ExecStart von uxplay.service)
 │   ├── iphone-hid.py      ← Bluetooth-LE-Maus/Tastatur (HID over GATT, BlueZ-D-Bus) fürs iPhone, Dienst `iphone-hid.service`
 │   ├── iphone-steuern.py  ← SDL-Fenster: fängt Maus/Tastatur und schickt sie an iphone-hid.py (Unix-Socket)
 │   ├── kalender.py        ← Termine der nächsten 45 Tage als JSON (Evolution-Datenbank, Google-Konto über GNOME-Online-Konten) → docs/quickshell.md
