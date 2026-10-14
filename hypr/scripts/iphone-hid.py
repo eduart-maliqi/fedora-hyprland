@@ -163,6 +163,11 @@ def main():
     ap = dbus.Interface(adapter, OBJ_PROPS)
     ap.Set("org.bluez.Adapter1", "Powered", True)
     ap.Set("org.bluez.Adapter1", "Pairable", True)
+    # iOS listet unter Bluetooth nur LE-Geräte, die „allgemein auffindbar“ werben (BlueZ setzt das Flag nur bei sichtbarem Adapter)
+    old_alias = str(ap.Get("org.bluez.Adapter1", "Alias"))
+    ap.Set("org.bluez.Adapter1", "DiscoverableTimeout", dbus.UInt32(0))
+    ap.Set("org.bluez.Adapter1", "Discoverable", True)
+    ap.Set("org.bluez.Adapter1", "Alias", NAME)
 
     app = App(bus)
     hid = Service(bus, app, "1812")
@@ -227,6 +232,8 @@ def main():
     try:
         loop.run()
     finally:
+        ap.Set("org.bluez.Adapter1", "Discoverable", False)
+        ap.Set("org.bluez.Adapter1", "Alias", old_alias)
         if os.path.exists(SOCK):
             os.unlink(SOCK)
 
