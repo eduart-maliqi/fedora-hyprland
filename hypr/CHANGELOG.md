@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-14** – Wackelfenster: Nachschwingen ruckelte/lief in Zeitlupe (`plugins/wobbly/main.cpp`): Plugin treibt die Bilder jetzt per
+  Timer selbst an (vorher 2–4 fps nach der Fensteranimation), `MAX_DT` 1/30 → 1/15 s. Nachschwingen fertig nach ~1,5 s statt ~5 s.
 - **2026-10-13** – Kalender im Kontrollzentrum (`CalendarView.qml`, `CalendarService.qml`, `scripts/kalender.py`): heute + 1 Monat rollend, Termine aus dem
   Google-Konto über die Evolution-Datenbank (GNOME-Online-Konten, kein eigenes Token). Neue Singleton-Datei → Quickshell einmal neu starten.
 - **2026-10-13** – Wallpaper-Galerie: Rest des letzten Wabenbands liegt in einer Reihe statt im Zickzack (`WallpaperGallery.qml`) – eine einzelne Wabe hing weit unten.

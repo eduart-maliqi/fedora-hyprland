@@ -32,6 +32,7 @@
 #include <hyprland/src/event/EventBus.hpp>
 #include <hyprland/src/helpers/time/Time.hpp>
 #include <hyprland/src/layout/LayoutManager.hpp>
+#include <hyprland/src/managers/eventLoop/EventLoopManager.hpp>
 #include <hyprland/src/managers/fullscreen/FullscreenController.hpp>
 #include <hyprland/src/managers/input/InputManager.hpp>
 #include <hyprland/src/output/Monitor.hpp>
@@ -61,7 +62,7 @@ namespace {
     constexpr int    ROW     = GRID + 1;                    // Punkte pro Zeile
     constexpr int    VERTS   = ROW * ROW;
     constexpr double SUBSTEP = 1.0 / 240.0;                 // Physik-Takt (s)
-    constexpr double MAX_DT  = 1.0 / 30.0;                  // längere Pausen zählen nicht als Zeit
+    constexpr double MAX_DT  = 1.0 / 15.0;                  // längere Pausen zählen nicht als Zeit
     constexpr double JUMP    = 600.0;                       // Sprung > 600 px pro Bild = Teleport, nicht wackeln
     constexpr double GRAB_R  = 0.30;                        // Reichweite des Griffs (Anteil der Fenstergröße)
     constexpr double ANIM    = 0.5;                         // Stärke bei Bewegungen ohne Maus (Tiling-Animationen)
@@ -89,6 +90,11 @@ namespace {
     Time::steady_tp                          g_lastUpdate = Time::steadyNow();
 
     Hyprutils::Signal::CHyprSignalListener   g_onRenderPre, g_onDestroy, g_onReload;
+
+    // Bilder anfordern, solange etwas wackelt: Schaden aus render.pre heraus löst nach Hyprlands eigener
+    // Animation nur noch sporadisch Bilder aus (gemessen: 2–4 fps, Physik läuft dann in Zeitlupe)
+    constexpr auto                           TICK = std::chrono::milliseconds(8);
+    SP<CEventLoopTimer>                      g_tick;
 
     // ── GL: eigener Shader + Gitter-Puffer ────────────────────────
     struct {
@@ -323,6 +329,8 @@ void main() {
         }
     }
 
+    void tick(SP<CEventLoopTimer> self, void*);
+
     void clearAll() {
         for (auto& [key, s] : g_wobbles) {
             settle(s, s.window.lock());
@@ -401,6 +409,18 @@ void main() {
         return maxOff < 0.3 && maxVel < 4.0;
     }
 
+    void tick(SP<CEventLoopTimer> self, void*) {
+        bool any = false;
+        for (auto& [key, s] : g_wobbles) {
+            if (!s.active || s.lastDamage.empty())
+                continue;
+            g_pHyprRenderer->damageBox(s.lastDamage);
+            any = true;
+        }
+        if (any)
+            self->updateTimeout(TICK);
+    }
+
     // ── pro Bild: Bewegungen erkennen, Physik rechnen, neu zeichnen lassen ──
     void update() {
         const auto NOW = Time::steadyNow();
@@ -416,6 +436,7 @@ void main() {
             return;
         }
 
+        bool      wobbling = false;
         PHLWINDOW dragged, resized;
         if (g_layoutManager && g_layoutManager->dragController()) {
             const auto& DRAG = g_layoutManager->dragController();
@@ -486,8 +507,12 @@ void main() {
                 continue;
             }
 
-            damage(s, wobbleBox(s, BOX)); // plant auch das nächste Bild ein → Schwingung läuft weiter
+            damage(s, wobbleBox(s, BOX));
+            wobbling = true;
         }
+
+        if (wobbling && g_tick && !g_tick->armed())
+            g_tick->updateTimeout(TICK);
 
         // Einträge zu verschwundenen Fenstern aufräumen
         std::erase_if(g_wobbles, [](const auto& e) { return e.second.window.expired(); });
@@ -516,6 +541,9 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
     HyprlandAPI::addConfigValueV2(PHANDLE, cfg.damping);
     HyprlandAPI::addConfigValueV2(PHANDLE, cfg.strength);
 
+    g_tick = makeShared<CEventLoopTimer>(std::nullopt, tick, nullptr);
+    g_pEventLoopManager->addTimer(g_tick);
+
     g_onRenderPre = Event::bus()->m_events.render.pre.listen([](PHLMONITOR) { update(); });
     g_onDestroy   = Event::bus()->m_events.window.destroy.listen([](PHLWINDOWREF w) { g_wobbles.erase(w.get()); });
     // nach dem Neuladen der Konfiguration (z. B. „aus“ per Super+G) sofort aufräumen, nicht erst beim nächsten Bild
@@ -531,6 +559,8 @@ APICALL EXPORT void PLUGIN_EXIT() {
     g_onRenderPre.reset();
     g_onDestroy.reset();
     g_onReload.reset();
+    g_pEventLoopManager->removeTimer(g_tick);
+    g_tick.reset();
 
     // Transformer müssen weg, bevor der Code dieser Bibliothek entladen wird
     for (const auto& w : Desktop::windowState()->windows()) {

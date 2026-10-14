@@ -27,6 +27,9 @@ Quelltext `~/.config/hypr/plugins/wobbly/main.cpp`.
   Solange ein Fenster wackelt, hängt ein `Render::IWindowTransformer` in `CWindow::m_transformers`: Hyprland zeichnet das
   Fenster dann in einen bildschirmgroßen Puffer, `transform()` zeichnet ihn als verformtes Gitter neu (eigener Shader).
   In Ruhe wird der Transformer wieder entfernt → **im Leerlauf kein Mehraufwand**, keine Extra-Bilder.
+- **Bilder selbst antreiben:** Solange etwas wackelt, läuft ein `CEventLoopTimer` (8 ms) und beschädigt die Fensterfläche – nur so
+  kommen nach dem Ende von Hyprlands eigener Fensteranimation weiter Bilder. Schaden aus `render.pre` allein (oder `scheduleFrame`
+  dort) lieferte nur 2–4 fps → das Wackeln lief ~5 s in Zeitlupe nach. Die Physik-Zeit pro Bild ist auf 1/15 s gekappt (`MAX_DT`).
 - Wackelt **nicht**: Vollbild-Fenster, Fenster mit Regel `no_anim` (Clawd-Pet), Sprünge > 600 px pro Bild (z. B. auf
   anderen Bildschirm geschoben), beim Größe-Ändern per Maus. Popups/Menüs bleiben gerade (Transformer gelten nur fürs Hauptfenster),
   ebenso Screenshots/Live-Vorschauen (Aufgabenansicht), weil Hyprland die „standalone“ zeichnet.
