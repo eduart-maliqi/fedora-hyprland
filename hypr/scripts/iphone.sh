@@ -3,6 +3,7 @@
 #   iphone.sh an|aus|toggle|status   (status: „an“ oder „aus“, für Quickshell)
 #   iphone.sh passwort              AirPlay-Passwort anzeigen (Benachrichtigung)
 #   iphone.sh steuern               Maus/Tastatur-Fenster (startet bei Bedarf den Bluetooth-HID-Dienst)
+#                                   IPHONE_BTMON=<datei> schneidet die Sitzung mit btmon mit
 unit=uxplay.service
 notify() { notify-send -a iphone "$@"; }
 pwfile="$HOME/.local/state/8155/iphone-passwort"
@@ -20,7 +21,9 @@ case "${1:-toggle}" in
         le_only() { local s; s=$(btmgmt --index 0 info 2>/dev/null | grep "current settings:"); [[ $s == *powered* && $s != *br/edr* ]]; }
         python3 -I "$dir/iphone-steuern.py" & win=$!
         # Root-Helfer (ein Passwort-Dialog): Bluetooth nur LE, solange das Fenster offen ist – danach wieder Classic + LE
-        pkexec "$dir/iphone-le.sh" "$win" &
+        irkfile="$HOME/.local/state/8155/iphone-irk"   # fester IRK, damit das iPhone die Kopplung wiedererkennt
+        [[ -s $irkfile ]] || (umask 077; od -An -tx1 -N16 /dev/urandom | tr -d ' \n' >"$irkfile")
+        pkexec "$dir/iphone-le.sh" "$win" "$(<"$irkfile")" ${IPHONE_BTMON:+"$IPHONE_BTMON"} &
         # HID-Dienst erst danach starten, sonst wirbt er wieder als Dual-Mode-Gerät
         for _ in $(seq 60); do le_only && break; sleep 1; done
         le_only || notify -u critical "iphone steuern" "Bluetooth ist nicht im LE-Modus – Passwort-Dialog abgebrochen?"

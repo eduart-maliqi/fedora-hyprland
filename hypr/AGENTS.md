@@ -98,7 +98,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── iphone.sh          ← iPhone-Spiegelung (UxPlay-Dienst) `an|aus|toggle|status|steuern` → docs/system.md
 │   ├── iphone-uxplay.sh   ← startet UxPlay zeilengepuffert mit Passwort `-pw` (ExecStart von uxplay.service)
 │   ├── iphone-hid.py      ← Bluetooth-LE-Maus/Tastatur (HID over GATT, BlueZ-D-Bus) fürs iPhone, Dienst `iphone-hid.service`
-│   ├── iphone-le.sh       ← (root via pkexec) Bluetooth nur LE + statische Adresse, solange das Steuerfenster offen ist
+│   ├── iphone-le.sh       ← (root via pkexec) Bluetooth nur LE + LE-Privacy, solange das Steuerfenster offen ist
 │   ├── iphone-steuern.py  ← SDL-Fenster: fängt Maus/Tastatur und schickt sie an iphone-hid.py (Unix-Socket)
 │   ├── kalender.py        ← Termine der nächsten 45 Tage als JSON (Evolution-Datenbank, Google-Konto über GNOME-Online-Konten) → docs/quickshell.md
 │   ├── nowplaying.sh      ← aktueller Song als Text (für hyprlock)

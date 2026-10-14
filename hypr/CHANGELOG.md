@@ -4,7 +4,7 @@ Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änd
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
 - **2026-10-14** – iPhone steuern: iOS fand bzw. koppelte die LE-Maus am Dual-Mode-Adapter nicht (koppelte über Classic) → `iphone-le.sh`
-  schaltet per pkexec während der Steuerung BR/EDR ab + statische Adresse; `iphone-hid.py` ohne doppelten 180A-Dienst, Alias, Journal-Ausgaben.
+  schaltet per pkexec während der Steuerung BR/EDR ab + LE-Privacy (statische Adresse brach GATT: Trennung nach 4 s), danach SSP wieder an; `iphone-hid.py` ohne doppelten 180A-Dienst, Alias, Journal-Ausgaben.
 - **2026-10-14** – iPhone spiegeln + bedienen: UxPlay-Dienst (Super+Shift+A, Kontrollzentrum-Kachel `Iphone.qml`, `scripts/iphone.sh`), Bluetooth-LE-HID
   (`iphone-hid.py` + `iphone-steuern.py`, Super+Alt+A), Firewall `mdns` offen. AirPlay allein kann das iPhone nicht steuern → docs/system.md.
 - **2026-10-14** – Wackelfenster: Nachschwingen ruckelte/lief in Zeitlupe (`plugins/wobbly/main.cpp`): Plugin treibt die Bilder jetzt per

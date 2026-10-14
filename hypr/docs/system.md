@@ -126,9 +126,11 @@ Bluetooth-LE-HID-Gerät „8155-Laptop-HID“ aus (HID over GATT, Dienst `iphone
 **Nur-LE-Modus während der Steuerung:** Der Adapter ist Dual-Mode (Classic + LE auf derselben Adresse). Ein sichtbarer Adapter
 liess das iPhone über Classic koppeln (btmon: BR-ACL, Passkey-Abfrage, nach ~30 s `Authentication Failure`; dort gibt es kein
 HID-Profil); nur die LE-Werbung als auffindbar (Flags 0x06, per btmon geprüft) reichte iOS nicht, das Gerät tauchte gar nicht auf.
-Deshalb ruft `iphone.sh steuern` per **pkexec** (ein Passwort-Dialog) `scripts/iphone-le.sh <pid>` auf: Adapter aus → `bredr off` →
-statische Zufallsadresse `C0:81:55:6A:00:2B` → an; sobald das Steuerfenster zu ist (oder der Helfer beendet wird) zurück auf
-Classic + LE mit der normalen Adresse. **Solange gesteuert wird, gehen klassische Geräte (Kopfhörer WH-CH720N) nicht.**
+Deshalb ruft `iphone.sh steuern` per **pkexec** (ein Passwort-Dialog) `scripts/iphone-le.sh <pid> <irk>` auf: Adapter aus →
+`bredr off` → `privacy on <irk>` (wechselnde Zufallsadressen, fester IRK in `~/.local/state/8155/iphone-irk`) → an; sobald das
+Steuerfenster zu ist (oder der Helfer beendet wird) zurück: `privacy off`, `bredr on`, **`ssp on`** (BR/EDR aus löscht SSP mit).
+**Keine statische Adresse** (`static-addr`): sie wird zur Identität der LE-Verbindung, bluetoothd lauscht für GATT aber auf der
+öffentlichen Adresse → das iPhone bekam auf „Exchange MTU“ keine Antwort, der Kernel trennte nach 4 s (btmon, 2026-10-14). **Solange gesteuert wird, gehen klassische Geräte (Kopfhörer WH-CH720N) nicht.**
 Eine polkit-Regel für passwortloses Umschalten wurde bewusst nicht angelegt. Erst danach startet `iphone-hid.service`.
 Der Dienst registriert einen eigenen BlueZ-Agenten (`NoInputNoOutput`, Just Works), setzt während er läuft den Alias
 „8155-Laptop-HID“ (= GAP-Gerätename) und protokolliert Verbinden/Koppeln/Abonnieren im Journal (`journalctl --user -u iphone-hid`).

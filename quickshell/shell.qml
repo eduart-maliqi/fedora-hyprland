@@ -40,6 +40,8 @@ ShellRoot {
 
     ControlCenter {}
 
+    AirdropPanel {}
+
     VolumeOsd {}
 
     ModeOsd {}

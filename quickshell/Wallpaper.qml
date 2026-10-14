@@ -70,10 +70,11 @@ PanelWindow {
         acceptedButtons: Qt.LeftButton
         onClicked: {
             // offene Panels zuerst schließen, erst danach Fenster verstecken
-            if (Ui.controlOpen || Ui.musicOpen || Ui.keysOpen) {
+            if (Ui.controlOpen || Ui.musicOpen || Ui.keysOpen || Ui.airdropOpen) {
                 Ui.controlOpen = false
                 Ui.musicOpen = false
                 Ui.keysOpen = false
+                Ui.airdropOpen = false
             } else {
                 Quickshell.execDetached(["hyprctl", "eval", "golden.desktop_click()"])
             }

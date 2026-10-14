@@ -822,7 +822,7 @@ end
 
 -- Blur hinter Quickshell-Flächen, rofi und Benachrichtigungen
 -- (golden-clock bewusst ohne Blur: die Desktop-Uhr ist eine klare Glasscheibe, das Wallpaper soll durchscheinen)
-hl.layer_rule({ match = { namespace = "^golden-(bar|music|taskview|control|osd|keys|gallery)$" }, blur = true, ignore_alpha = 0.05 })
+hl.layer_rule({ match = { namespace = "^golden-(bar|music|taskview|control|osd|keys|gallery|airdrop)$" }, blur = true, ignore_alpha = 0.05 })
 hl.layer_rule({ match = { namespace = "^rofi$" },                     blur = true, ignore_alpha = 0.1, dim_around = false })
 hl.layer_rule({ match = { namespace = "^notifications$" },            blur = true, ignore_alpha = 0.1 })
 -- Aufgabenansicht / Alt+Tab (TaskView.qml) soll sofort da sein: kein Einblenden (fadeLayersIn, 200 ms) und kein

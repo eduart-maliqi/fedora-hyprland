@@ -248,6 +248,26 @@ PanelWindow {
             }
         }
 
+        // AirDrop: Klick öffnet AirdropPanel.qml; Datei darüberziehen öffnet es auch. Restzeit, solange sichtbar
+        Pill {
+            icon: "󰀃"
+            iconColor: Airdrop.receiving ? Theme.accent : Theme.muted
+            text: Airdrop.receiving && Airdrop.remaining > 0 ? Math.ceil(Airdrop.remaining / 60) + "′" : ""
+            border.color: hovered || Ui.airdropOpen ? Theme.accentA(0.45) : Theme.hairline
+            onClicked: {
+                Ui.controlScreen = bar.screen
+                Ui.airdropOpen = !Ui.airdropOpen
+            }
+
+            DropArea {
+                anchors.fill: parent
+                onEntered: {
+                    Ui.controlScreen = bar.screen
+                    Ui.airdropOpen = true
+                }
+            }
+        }
+
         // Claude-Code-Sitzung fertig und noch nicht angesehen: Klick springt hin, Rechtsklick = gesehen (ClaudeSessions.qml)
         Pill {
             visible: ClaudeSessions.waiting.length > 0

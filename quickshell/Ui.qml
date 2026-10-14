@@ -85,11 +85,13 @@ Singleton {
     property string controlSection: ""      // aufgeklappt im Kontrollzentrum: "", "wifi", "bluetooth", "power" oder "night"
     property var controlScreen: null         // Bildschirm, auf dem das Kontrollzentrum aufgeht
     property bool keysOpen: false            // Tastenkürzel-Übersicht (SUPER+I, KeysHelp.qml)
+    property bool airdropOpen: false         // AirDrop-Fenster (AirdropPanel.qml), Bildschirm wie controlScreen
     property bool lyricsEnabled: true
 
-    // Kontrollzentrum und Tastenkürzel-Übersicht liegen beide oben rechts → immer nur eins offen
-    onControlOpenChanged: if (controlOpen) keysOpen = false
-    onKeysOpenChanged: if (keysOpen) controlOpen = false
+    // Kontrollzentrum, Tastenkürzel-Übersicht und AirDrop liegen alle oben rechts → immer nur eins offen
+    onControlOpenChanged: if (controlOpen) { keysOpen = false; airdropOpen = false }
+    onKeysOpenChanged: if (keysOpen) { controlOpen = false; airdropOpen = false }
+    onAirdropOpenChanged: if (airdropOpen) { controlOpen = false; keysOpen = false }
     property bool clockEnabled: true
 
     // Lebendiges Wallpaper (Wolken, Wind, Wasser) an/aus – SUPER+SHIFT+W, siehe Wallpaper.qml.
