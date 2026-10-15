@@ -13,11 +13,17 @@ Singleton {
     // echter Pfad hinter dem Symlink `current` – Bilder aus wallpapers/seide/ sind nur Standbilder der bewegten Seide
     property string wallpaperReal: ""
     readonly property bool wallpaperSeide: wallpaperReal.indexOf("/wallpapers/seide/") >= 0
-    onWallpaperChanged: resolveWallpaper.running = true
+    // Befehl im Handler setzen statt per Binding – der Handler läuft vor dem Binding, sonst liest readlink den alten Pfad
+    // (gleicher Fallstrick wie WallpaperScene.resolvePath)
+    function resolveWallpaperReal() {
+        resolveWallpaper.running = false
+        resolveWallpaper.command = ["readlink", "-f", wallpaper.replace(/^file:\/\//, "")]
+        resolveWallpaper.running = true
+    }
+    onWallpaperChanged: resolveWallpaperReal()
+    Component.onCompleted: resolveWallpaperReal()
     Process {
         id: resolveWallpaper
-        running: true
-        command: ["readlink", "-f", ui.wallpaper.replace(/^file:\/\//, "")]
         stdout: StdioCollector { onStreamFinished: ui.wallpaperReal = text.trim() }
     }
     // Musik-Panel (MusicPanel.qml), pro Bildschirm zwei Fenster (MusicWindow.qml):

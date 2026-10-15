@@ -85,7 +85,8 @@ passt sich Anzahl und Bildschirm an.
 
 ## Bewegtes Wallpaper „seide“
 Gleicher Shader wie der Hintergrund des Songtext-Bildschirms (`quickshell/shaders/seide.frag`, siehe `docs/musik.md`).
-- `Ui.wallpaperReal` = echter Pfad hinter `current` (`readlink -f` bei jedem Wechsel), `Ui.wallpaperSeide` = liegt er in `wallpapers/seide/`.
+- `Ui.wallpaperReal` = echter Pfad hinter `current` (`readlink -f` bei jedem Wechsel; Befehl im Handler gesetzt wie in
+  `WallpaperScene.resolvePath` – per Binding las er den alten Pfad, die Seide blieb dann als Standbild stehen), `Ui.wallpaperSeide` = liegt er in `wallpapers/seide/`.
 - `Wallpaper.qml`: Ebene `seide` über den Bildern, blendet 1,1 s ein/aus; Farben = `Theme.accentDeep/accent/accentSoft` (das Thema
   wechselt per Dateiname mit: `seide/glut.jpg` → glut). In ½ Größe gerechnet; Uhr = `root.time` (30 Bilder/s, Runde 50 s, 2000 s
   ist ein Vielfaches → nahtlos) – absichtlich nicht pro Bildschirmbild, weil die DisplayLink-Monitore jedes neue Bild über USB schicken.
