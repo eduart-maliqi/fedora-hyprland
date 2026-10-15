@@ -183,6 +183,8 @@ PanelWindow {
         Column {
             id: info
             readonly property real coverSize: Math.min(win.width * 0.28, win.height * 0.48)
+            property real dragPos: -1           // beim Ziehen am Fortschritt: Zielzeit, sonst -1
+            readonly property real shownPos: dragPos >= 0 ? dragPos : Media.position
             x: win.width * 0.08
             anchors.verticalCenter: parent.verticalCenter
             width: coverSize
@@ -247,30 +249,53 @@ PanelWindow {
 
             Item { width: 1; height: 6 }
 
-            Rectangle {
+            // Fortschritt – Klick oder Ziehen spult (gespult wird erst beim Loslassen)
+            Item {
                 width: parent.width
-                height: 4
-                radius: 2
-                color: Theme.alpha(Theme.cream, 0.22)
+                height: 6
                 Rectangle {
-                    width: parent.width * Math.max(0, Math.min(1, Media.length > 0 ? Media.position / Media.length : 0))
-                    height: parent.height
-                    radius: 2
-                    color: Theme.cream
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width
+                    height: seekArea.containsMouse || seekArea.pressed ? 6 : 4
+                    radius: height / 2
+                    color: Theme.alpha(Theme.cream, 0.22)
+                    Behavior on height { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+                    Rectangle {
+                        width: parent.width * Math.max(0, Math.min(1, Media.length > 0 ? info.shownPos / Media.length : 0))
+                        height: parent.height
+                        radius: parent.radius
+                        color: Theme.cream
+                    }
+                }
+                MouseArea {
+                    id: seekArea
+                    anchors.fill: parent
+                    anchors.margins: -10             // größere Trefferfläche als die dünne Linie
+                    hoverEnabled: true
+                    enabled: Media.active?.canSeek ?? false
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    function at(mx) { return Math.max(0, Math.min(1, (mx - 10) / (width - 20))) * Media.length }
+                    onPressed: m => info.dragPos = at(m.x)
+                    onPositionChanged: m => { if (pressed) info.dragPos = at(m.x) }
+                    onReleased: {
+                        if (Media.active?.canSeek) Media.active.position = info.dragPos
+                        info.dragPos = -1
+                    }
+                    onCanceled: info.dragPos = -1
                 }
             }
             Item {
                 width: parent.width
                 height: 18
                 Text {
-                    text: Media.fmt(Media.position)
+                    text: Media.fmt(info.shownPos)
                     color: Theme.alpha(Theme.cream, 0.55)
                     font.family: "SF Pro Display"
                     font.pixelSize: 13
                 }
                 Text {
                     anchors.right: parent.right
-                    text: "-" + Media.fmt(Media.length - Media.position)
+                    text: "-" + Media.fmt(Media.length - info.shownPos)
                     color: Theme.alpha(Theme.cream, 0.55)
                     font.family: "SF Pro Display"
                     font.pixelSize: 13

@@ -3,6 +3,7 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-15** – Songtext-Bildschirm: Fortschrittslinie spult per Klick/Ziehen – Wunsch des Benutzers.
 - **2026-10-15** – Songtext-Bildschirm: Hintergrund „seide“ (Shader `seide.frag`, glänzende 3D-Seide) als neuer Standard – nach einem
   Beispielvideo des Benutzers; „fluss“/„flecken“ bleiben per `qs ipc call lyrics style …`.
 - **2026-10-15** – Songtext-Bildschirm: Tastatur `OnDemand` statt `Exclusive` – andere Fenster bekamen keine Eingaben mehr.
