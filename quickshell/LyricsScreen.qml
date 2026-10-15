@@ -54,7 +54,7 @@ PanelWindow {
 
             property real t: 0
             NumberAnimation on t {
-                from: 0; to: Math.PI * 2; duration: 90000
+                from: 0; to: Math.PI * 2; duration: 40000
                 loops: Animation.Infinite; running: win.visible
             }
 
@@ -65,6 +65,8 @@ PanelWindow {
                 blur: 1
                 blurMax: 24
                 autoPaddingEnabled: false
+                saturation: 0.6                 // kräftigere Farben als Wallpaper und Thema von sich aus haben
+                contrast: 0.15
             }
 
             Image {
@@ -75,34 +77,35 @@ PanelWindow {
                 sourceSize.width: 256
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
-                rotation: bg.t * 180 / Math.PI
-                opacity: 0.6
+                rotation: bg.t * 360 / Math.PI
+                opacity: 0.7
             }
 
             // ganzzahlige Frequenzen (fx, fy) → nach einer Runde von t steht alles wieder am Anfang, kein Sprung
             Repeater {
                 model: [
-                    { c: Theme.accent,     cx: 0.25, cy: 0.30, fx: 1, fy: 2, ph: 0.0, s: 0.80, o: 0.80 },
-                    { c: Theme.accentDeep, cx: 0.75, cy: 0.70, fx: 2, fy: 1, ph: 2.1, s: 0.95, o: 0.85 },
-                    { c: Theme.accentSoft, cx: 0.65, cy: 0.25, fx: 1, fy: 3, ph: 4.2, s: 0.55, o: 0.55 },
-                    { c: Theme.accentDeep, cx: 0.20, cy: 0.80, fx: 3, fy: 1, ph: 1.0, s: 0.75, o: 0.75 },
+                    { c: Theme.accent,     cx: 0.25, cy: 0.30, fx: 1, fy: 2, ph: 0.0, s: 0.75, o: 0.95 },
+                    { c: Theme.accentDeep, cx: 0.75, cy: 0.70, fx: 2, fy: 1, ph: 2.1, s: 0.90, o: 0.95 },
+                    { c: Theme.accentSoft, cx: 0.65, cy: 0.25, fx: 1, fy: 3, ph: 4.2, s: 0.50, o: 0.80 },
+                    { c: Theme.accentDeep, cx: 0.20, cy: 0.80, fx: 3, fy: 1, ph: 1.0, s: 0.70, o: 0.90 },
+                    { c: Theme.accent,     cx: 0.55, cy: 0.55, fx: 2, fy: 3, ph: 3.3, s: 0.55, o: 0.85 },
                 ]
                 Rectangle {
                     required property var modelData
                     readonly property var m: modelData
-                    width: bg.width * m.s
+                    width: bg.width * m.s * (1 + 0.3 * Math.sin(bg.t * (m.fx + m.fy) + m.ph))
                     height: width
                     radius: width / 2
                     color: m.c
                     opacity: m.o
-                    x: bg.width * (m.cx + 0.22 * Math.sin(bg.t * m.fx + m.ph)) - width / 2
-                    y: bg.height * (m.cy + 0.22 * Math.cos(bg.t * m.fy + m.ph)) - height / 2
+                    x: bg.width * (m.cx + 0.32 * Math.sin(bg.t * m.fx + m.ph)) - width / 2
+                    y: bg.height * (m.cy + 0.32 * Math.cos(bg.t * m.fy + m.ph)) - height / 2
                 }
             }
         }
 
         // abdunkeln, damit weißer Text auch auf hellen Wallpapern lesbar bleibt
-        Rectangle { anchors.fill: parent; color: Theme.alpha(Theme.ink, 0.4) }
+        Rectangle { anchors.fill: parent; color: Theme.alpha(Theme.ink, 0.22) }
 
         // links: Cover, Titel, Interpret, Fortschritt
         Column {
