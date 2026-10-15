@@ -89,7 +89,7 @@ Fenster/Ebenen und `Ui.qml`-Zustand: `docs/quickshell.md`.
   rutscht der Text 476 px nach unten unter das Panel (Fenster dafür 940 px hoch).
 - **`LyricsScreen.qml` – Songtext-Bildschirm** (Super+Shift+M, Vorbild Apple Music): Overlay-Fenster über einen ganzen Bildschirm
   (der unter der Maus; Zustand `Ui.lyricsScreen` = Bildschirmname, `Ui.toggleLyricsScreen()`; nochmal drücken → zu, anderer
-  Bildschirm → wechselt dorthin; Esc schließt). Links Cover (640 px von Spotify, wenn `Spotify.item` = MPRIS-Titel – Brave liefert per MPRIS nur 150 px; sonst `Media.artUrl`; `Spotify.qml` ist dafür auch bei offenem Songtext-Bildschirm aktiv), Titel, Interpret, Fortschritt + Zeiten; rechts der
+  Bildschirm → wechselt dorthin; Esc schließt nach Klick hinein, Tastatur `OnDemand`). Links Cover (640 px von Spotify, wenn `Spotify.item` = MPRIS-Titel – Brave liefert per MPRIS nur 150 px; sonst `Media.artUrl`; `Spotify.qml` ist dafür auch bei offenem Songtext-Bildschirm aktiv), Titel, Interpret, Fortschritt + Zeiten; rechts der
   Songtext linksbündig, `SF Pro Display` Bold (5 % der Bildschirmhöhe), aktuelle Zeile bei 36 % der Höhe, voll deckend mit
   Leuchten in `Theme.accentSoft`, nächste Zeilen 42 % → blasser, vorherige 15 % → weg. Ohne Text: „suche songtext …“ usw.
   **Hintergrund** (passt sich dem Wallpaper an), zwei Varianten, Wahl in `Ui.lyricsScreenStyle` (Vorgabe `fluss`), umschalten mit

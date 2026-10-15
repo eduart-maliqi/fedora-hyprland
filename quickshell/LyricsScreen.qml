@@ -8,7 +8,8 @@ import Quickshell.Wayland
 // Hintergrund in den Farben des Themas + Wallpaper → passt sich dem Wallpaper an. Zwei Varianten (Ui.lyricsScreenStyle):
 //   fluss – Farben fließen wie Flüssigkeit (Shader shaders/fluss.frag), flecken – verschwommenes Wallpaper + wandernde Kreise.
 // Umschalten: `qs ipc call lyrics style fluss|flecken`.
-// Öffnen/Schließen: SUPER+SHIFT+M (Bildschirm unter der Maus), Esc schließt. IPC: `qs ipc call lyrics screenOn <bildschirm>`.
+// Öffnen/Schließen: SUPER+SHIFT+M (Bildschirm unter der Maus), Esc schließt (erst nach Klick hinein – nimmt den
+// anderen Fenstern die Tastatur nicht weg). IPC: `qs ipc call lyrics screenOn <bildschirm>`.
 PanelWindow {
     id: win
     required property var modelData
@@ -25,7 +26,7 @@ PanelWindow {
     visible: shown || lingering
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "golden-lyricsscreen"
-    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     readonly property real fs: Math.round(height * 0.05)       // Schriftgröße Songtext (1200 px → 60)
 

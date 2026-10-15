@@ -3,6 +3,7 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-15** – Songtext-Bildschirm: Tastatur `OnDemand` statt `Exclusive` – andere Fenster bekamen keine Eingaben mehr.
 - **2026-10-15** – Songtext-Bildschirm: neuer Hintergrund „fluss“ (Shader `fluss.frag`, fließende Farben), alter als „flecken“ per
   `qs ipc call lyrics style flecken` – Benutzer mochte die Flecken-Animation nicht so, will aber zurück können.
 - **2026-10-15** – Songtext-Bildschirm: Hintergrund schneller/weiter bewegt, Sättigung hoch, weniger abgedunkelt – war zu wenig bewegt und zu fade.
