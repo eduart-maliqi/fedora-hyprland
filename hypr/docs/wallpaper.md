@@ -38,6 +38,9 @@ nächsten Bildwechsel erkannt.
     │                        **Der Anfang des Dateinamens bis zum ersten „-“ ist das Farbthema** (siehe „Farbthemen“).
     │                        Neue Bilder: auf 2880×1800 zuschneiden (16:10, wie der Bildschirm), z. B.
     │                        `magick in.jpg -resize 2880x1800^ -gravity center -extent 2880x1800 -strip -quality 92 golden-<name>.jpg`
+    ├── seide/             ← <thema>.jpg (golden, glut, kohle, purpur, mond, silber): **Standbilder des bewegten Wallpapers „seide“**
+    │                        (2880×1800, erzeugt von `scripts/seide-standbild.py`); `current` zeigt darauf → hyprlock/Uhr-Helligkeit
+    │                        nehmen das Standbild, der Desktop zeigt den Shader. Unterordner → `next` und `weg` lassen ihn aus.
     ├── aussortiert/       ← nicht mehr im Wechsel (Unterordner → wallpaper.sh ignoriert ihn):
     │                        golden-meadow.jpg + masken/golden-meadow.{png,json} – zurück: beides eine Ebene hoch schieben;
     │                        mond-wolken.jpg (Vollmond über Wolkenmeer, Cael Gibran, wallhaven 73rmme, Thema „mond“; 2026-10-09
@@ -74,7 +77,22 @@ passt sich Anzahl und Bildschirm an.
   Maus-Treffer nur in der Wabe (`containmentMask` = Umriss-`Shape` mit `FillContains`), weil sich die Rechtecke überlappen.
 - Holt sich die Tastatur (`Exclusive`) – beim Testen also nicht öffnen, während jemand tippt (Tasten landen in der Galerie,
   Leertaste übernimmt!). Gefahrlos testen: Kopie mit Stub-`Ui.qml` in einem verschachtelten Hyprland (`docs/testen.md`).
+- **Wabe „seide“** (bewegtes Wallpaper): alle Standbilder aus `wallpapers/seide/` sind **eine** Wabe (Platz laut Verlauf, nie benutzt →
+  gleich nach dem aktiven Bild); Vorschau ist der Shader selbst (bewegt). Enter/Klick → **Farbauswahl** darunter (6 Kreise = Farbthemen,
+  ←/→ oder Maus, die Wabe zeigt die Farbe gleich an; Enter/Klick übernimmt → `wallpaper.sh wallpapers/seide/<thema>.jpg`, Esc zurück).
+  Nicht löschbar (Strg+Entf tut dort nichts).
 - IPC: `qs ipc call gallery toggle|open|close`. Layer-Regel: Blur + `no_anim` (blendet selbst ein, 180 ms).
+
+## Bewegtes Wallpaper „seide“
+Gleicher Shader wie der Hintergrund des Songtext-Bildschirms (`quickshell/shaders/seide.frag`, siehe `docs/musik.md`).
+- `Ui.wallpaperReal` = echter Pfad hinter `current` (`readlink -f` bei jedem Wechsel), `Ui.wallpaperSeide` = liegt er in `wallpapers/seide/`.
+- `Wallpaper.qml`: Ebene `seide` über den Bildern, blendet 1,1 s ein/aus; Farben = `Theme.accentDeep/accent/accentSoft` (das Thema
+  wechselt per Dateiname mit: `seide/glut.jpg` → glut). In ½ Größe gerechnet; Uhr = `root.time` (30 Bilder/s, Runde 50 s, 2000 s
+  ist ein Vielfaches → nahtlos) – absichtlich nicht pro Bildschirmbild, weil die DisplayLink-Monitore jedes neue Bild über USB schicken.
+  Bewegt sich **immer** (unabhängig von Super+Shift+W), pausiert nur unter Vollbild-Fenstern. Kostet dauernd etwas Grafik/Akku.
+- **Standbilder neu rechnen** (nach Änderung an `seide.frag` oder den Paletten – `PAL` im Skript nachziehen):
+  `python3 -m venv /tmp/v && /tmp/v/bin/pip install numpy pillow && /tmp/v/bin/python ~/.config/hypr/scripts/seide-standbild.py` (~20 s).
+- `wallpaper.sh`: Thema = Dateiname bis zum ersten „-“ **und** ohne Endung (`glut.jpg` → glut).
 
 ## Farbthemen (golden / glut / kohle / purpur / mond)
 Zu hellen Bildern passt Amber/Gold, zu rot-schwarzen Glutrot, zu Anthrazit Sonnengelb, zu Neon-Violett Pink, zu blauen

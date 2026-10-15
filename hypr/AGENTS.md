@@ -107,6 +107,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── powermenu.sh       ← Power-Menü (rofi): sperren, Bereitschaft, abmelden, Neustart, aus
 │   ├── claude-sessions.py ← Claude-Code-Sitzungen: welche sind fertig und ungesehen? (liest ~/.claude/sessions, für die Leiste) → docs/quickshell.md
 │   ├── spotify-auth.py    ← Spotify-Anmeldung fürs Musik-Panel (PKCE): `login [client-id]`, `token [--refresh]`, `logout`
+│   ├── seide-standbild.py ← Standbilder wallpapers/seide/<thema>.jpg fürs bewegte Wallpaper „seide“ (numpy-Nachbau des Shaders) → docs/wallpaper.md
 │   ├── thema.sh           ← Farbthema umschalten (`<name>`, ohne Argument: aktives zeigen) → Quickshell, Hyprland, mako, kitty
 │   ├── wallpaper.sh       ← Wallpaper wechseln (`next` oder Pfad, `weg <pfad>` = in den Papierkorb) → Symlink + Quickshell-IPC + Verlauf + Farbthema aus dem Dateinamen
 │   ├── windowshade.sh     ← Plugin HyprWindowShade: `build`, `update`, `load` (Autostart, mit Versions-/Prüfsummen-Check), `unload`
@@ -114,7 +115,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   │                        HyprWindowShade aus), `unload` (Notbremse) → docs/plugins.md
 │   └── wifi.sh            ← WLAN-Auswahl per rofi + nmcli (älter; im Kontrollzentrum gibt es jetzt eine eigene Liste)
 └── wallpapers/            ← <thema>-<name>.jpg (golden-, glut-, kohle-, mond-, purpur-, silber-; Name vor dem „-“ = Farbthema), `current` = Symlink aufs aktive Bild,
-                             masken/ (lebendiges Wallpaper), aussortiert/ → docs/wallpaper.md
+                             masken/ (lebendiges Wallpaper), seide/ (Standbilder des bewegten Wallpapers „seide“), aussortiert/ → docs/wallpaper.md
 
 ~/.config/quickshell/      ← Quickshell-Konfiguration (QML), Einstieg: shell.qml → Details docs/quickshell.md
 ├── AGENTS.md              ← Symlink auf ~/.config/hypr/AGENTS.md
@@ -204,7 +205,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+L | Bildschirm sperren |
 | Super+N | alle Benachrichtigungen schließen |
 | **Super+I** | **Tastenkürzel-Übersicht** oben rechts an/aus (`KeysHelp.qml`) |
-| **Super+W** | **Wallpaper-Galerie** (Waben, zuletzt genutzt zuerst; Pfeile/Maus wählen, Enter/Klick übernehmen, **Strg+Entf löscht** (Papierkorb), Esc zu) – das **Farbthema wechselt mit** |
+| **Super+W** | **Wallpaper-Galerie** (Waben, zuletzt genutzt zuerst; Pfeile/Maus wählen, Enter/Klick übernehmen, **Strg+Entf löscht** (Papierkorb), Esc zu) – das **Farbthema wechselt mit**. Wabe **„seide“** = bewegtes Wallpaper (Shader), Enter → Farbe wählen |
 | **Super+Shift+W** | **lebendiges Wallpaper** an/aus (Wolken ziehen, Gras/Bäume im Wind, Wasser glitzert) |
 | **Super+G** | **Wackelfenster** an/aus (Fenster wackeln beim Verschieben wie Wackelpudding, Plugin `wobbly`) |
 | **Super+P** | **Phantom** (Plugin Phantomat): erster Druck = alle Fenster auf eine unendliche Fläche + rauszoomen (tippen = Fenster suchen, Enter = hin, Esc = zurück); danach rauszoomen ↔ 100 %. Siehe docs/plugins.md |

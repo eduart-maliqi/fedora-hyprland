@@ -13,6 +13,8 @@ import Quickshell.Io
 //   Reihenfolge: aktives Bild, dann ~/.local/state/8155/wallpaper-verlauf (schreibt wallpaper.sh, neuestes oben),
 //   nie benutzte Bilder hinten nach Name. Der Rand der gewählten Wabe zeigt die Akzentfarbe ihres Themas.
 //   Super+W fängt Hyprland ab (hyprland.lua) und meldet es als quickshell:galleryToggle.
+//   Wabe „seide“ = bewegtes Wallpaper (Shader): Enter/Klick öffnet die Farbauswahl (←/→, Enter/Klick übernimmt,
+//   Esc zurück) → wallpaper.sh wallpapers/seide/<thema>.jpg (Standbild; der Desktop zeigt dazu den Shader).
 PanelWindow {
     id: root
 
@@ -28,24 +30,40 @@ PanelWindow {
     WlrLayershell.namespace: "golden-gallery"
     WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
-    property var items: []              // { path, label, theme }
+    property var items: []              // { path, label, theme, seide }
     property int sel: 0
     property string activePath: ""
+
+    // Farbauswahl für die Seide
+    readonly property var colors: ["golden", "glut", "kohle", "purpur", "mond", "silber"]
+    property bool picking: false
+    property int pickSel: 0
+    onShownChanged: picking = false
 
     function toggle() {
         if (shown) shown = false
         else scan.running = true
     }
     function move(d) {
-        if (items.length) sel = (sel + d + items.length) % items.length
+        if (picking) pickSel = (pickSel + d + colors.length) % colors.length
+        else if (items.length) sel = (sel + d + items.length) % items.length
     }
     function moveRow(d) {
         const t = sel + d * layout.k
-        if (t >= 0 && t < items.length) sel = t
+        if (!picking && t >= 0 && t < items.length) sel = t
     }
     function apply(i) {
         const it = items[i]
-        if (it && it.path !== activePath)
+        if (it?.seide && !picking) {
+            sel = i
+            pickSel = Math.max(0, colors.indexOf(it.theme))
+            picking = true
+            return
+        }
+        if (it?.seide) {
+            const path = Theme.home + "/.config/hypr/wallpapers/seide/" + colors[pickSel] + ".jpg"
+            if (path !== activePath) Quickshell.execDetached([Theme.home + "/.config/hypr/scripts/wallpaper.sh", path])
+        } else if (it && it.path !== activePath)
             Quickshell.execDetached([Theme.home + "/.config/hypr/scripts/wallpaper.sh", it.path])
         shown = false
     }
@@ -54,7 +72,7 @@ PanelWindow {
     property bool keepSel: false
     function remove(i) {
         const it = items[i]
-        if (!it || del.running) return
+        if (!it || it.seide || del.running) return
         del.command = [Theme.home + "/.config/hypr/scripts/wallpaper.sh", "weg", it.path]
         del.running = true
     }
@@ -64,11 +82,11 @@ PanelWindow {
     }
 
     function build(text) {
-        const sec = [[], [], []]
+        const sec = [[], [], [], []]
         let k = 0
         for (const l of text.split("\n")) {
             if (l === "--") k++
-            else if (l) sec[Math.min(k, 2)].push(l)
+            else if (l) sec[Math.min(k, 3)].push(l)
         }
         const files = sec[2]
         const list = []
@@ -77,12 +95,23 @@ PanelWindow {
         for (const p of files)
             if (!list.includes(p)) list.push(p)
 
-        items = list.map(p => {
+        const mapped = list.map(p => {
             const n = p.split("/").pop().replace(/\.[^.]+$/, "")
             const i = n.indexOf("-")
             const t = i > 0 ? n.slice(0, i) : ""
-            return { path: p, label: i > 0 ? n.slice(i + 1) : n, theme: Theme.palettes[t] ? t : "golden" }
+            return { path: p, label: i > 0 ? n.slice(i + 1) : n, theme: Theme.palettes[t] ? t : "golden", seide: false }
         })
+        // alle Seiden-Standbilder sind eine Wabe: an der Stelle im Verlauf, nie benutzt → gleich nach dem aktiven Bild
+        const seiden = sec[3]
+        if (seiden.length > 0) {
+            const used = [...sec[0], ...sec[1]].find(p => seiden.includes(p)) ?? ""
+            const t = used.split("/").pop().replace(/\.[^.]+$/, "")
+            const item = { path: used, label: "seide", theme: Theme.palettes[t] ? t : Theme.name, seide: true }
+            const order = [...new Set([...sec[0], ...sec[1]])].filter(p => files.includes(p) || p === used)
+            const at = used === "" ? Math.min(1, mapped.length) : order.indexOf(used)
+            mapped.splice(Math.max(0, at), 0, item)
+        }
+        items = mapped
         activePath = sec[0][0] ?? ""
         if (keepSel) {
             keepSel = false
@@ -112,7 +141,8 @@ PanelWindow {
         command: ["bash", "-c",
             "d=\"$HOME/.config/hypr/wallpapers\"; readlink -f \"$d/current\"; echo --; "
             + "cat \"$HOME/.local/state/8155/wallpaper-verlauf\" 2>/dev/null; echo --; "
-            + "find \"$d\" -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) | sort"]
+            + "find \"$d\" -maxdepth 1 -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) | sort; echo --; "
+            + "find \"$d/seide\" -maxdepth 1 -type f -iname '*.jpg' 2>/dev/null | sort"]
         stdout: StdioCollector { onStreamFinished: root.build(text) }
     }
 
@@ -150,7 +180,7 @@ PanelWindow {
 
         Keys.onPressed: e => {
             switch (e.key) {
-            case Qt.Key_Escape:    root.shown = false; break
+            case Qt.Key_Escape:    if (root.picking) root.picking = false; else root.shown = false; break
             case Qt.Key_Left:      root.move(-1); break
             case Qt.Key_Right:     root.move(1); break
             case Qt.Key_Up:        root.moveRow(-1); break
@@ -223,7 +253,9 @@ PanelWindow {
                         required property int index
                         readonly property bool selected: index === root.sel
                         readonly property bool active: modelData.path === root.activePath
-                        readonly property color tint: Theme.palettes[modelData.theme].accent
+                        readonly property string theme: modelData.seide && root.picking ? root.colors[root.pickSel] : modelData.theme
+                        readonly property var pal: Theme.palettes[theme]
+                        readonly property color tint: pal.accent
                         readonly property var hex: {
                             const w = width, h = height
                             return [Qt.point(w / 2, 0), Qt.point(w, h / 4), Qt.point(w, h * 3 / 4),
@@ -242,10 +274,31 @@ PanelWindow {
                             id: img
                             anchors.fill: parent
                             visible: false
-                            source: "file://" + tile.modelData.path
+                            source: tile.modelData.seide ? "" : "file://" + tile.modelData.path
                             sourceSize.height: tile.height * 2       // Vorschau statt 2880×1800 dekodieren
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
+                        }
+
+                        // Seide: bewegte Vorschau in der gewählten Farbe
+                        ShaderEffect {
+                            id: seidePreview
+                            anchors.fill: parent
+                            visible: false
+                            layer.enabled: tile.modelData.seide
+                            property real phase: 0
+                            property real aspect: width / Math.max(1, height)
+                            property color deep: tile.pal.accentDeep
+                            property color mid: tile.pal.accent
+                            property color soft: tile.pal.accentSoft
+                            fragmentShader: tile.modelData.seide ? Qt.resolvedUrl("shaders/seide.frag.qsb") : ""
+                            NumberAnimation on phase {
+                                from: 0; to: Math.PI * 2; duration: 30000
+                                loops: Animation.Infinite; running: tile.modelData.seide && root.shown
+                            }
+                            Behavior on deep { ColorAnimation { duration: 300 } }
+                            Behavior on mid { ColorAnimation { duration: 300 } }
+                            Behavior on soft { ColorAnimation { duration: 300 } }
                         }
 
                         Item {
@@ -266,7 +319,7 @@ PanelWindow {
 
                         MultiEffect {
                             anchors.fill: parent
-                            source: img
+                            source: tile.modelData.seide ? seidePreview : img
                             maskEnabled: true
                             maskSource: hexMask
                             maskThresholdMin: 0.5
@@ -303,14 +356,86 @@ PanelWindow {
                             containmentMask: outline       // nur die Wabe, nicht das Rechteck (Nachbarn überlappen)
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onEntered: root.sel = tile.index
+                            onEntered: if (!root.picking) root.sel = tile.index
                             onClicked: root.apply(tile.index)
                         }
                     }
                 }
             }
 
+            // Farbauswahl für die Seide (statt der Infozeile)
             Column {
+                visible: root.picking
+                anchors { top: honeycomb.bottom; topMargin: 34; horizontalCenter: parent.horizontalCenter }
+                spacing: 14
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "seide · farbe wählen"
+                    color: Theme.cream
+                    font.family: Theme.serif
+                    font.italic: true
+                    font.weight: Font.Medium
+                    font.pixelSize: 30
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 18
+                    Repeater {
+                        model: root.colors
+                        Column {
+                            id: swatch
+                            required property string modelData
+                            required property int index
+                            readonly property var pal: Theme.palettes[modelData]
+                            readonly property bool chosen: index === root.pickSel
+                            spacing: 6
+
+                            Rectangle {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                width: 44; height: 44; radius: 22
+                                scale: swatch.chosen ? 1.12 : 1
+                                Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
+                                border.width: swatch.chosen ? 2.5 : 1
+                                border.color: swatch.chosen ? swatch.pal.accentSoft : Theme.hairline
+                                gradient: Gradient {
+                                    orientation: Gradient.Vertical
+                                    GradientStop { position: 0; color: swatch.pal.accentSoft }
+                                    GradientStop { position: 0.5; color: swatch.pal.accent }
+                                    GradientStop { position: 1; color: swatch.pal.accentDeep }
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onEntered: root.pickSel = swatch.index
+                                    onClicked: { root.pickSel = swatch.index; root.apply(root.sel) }
+                                }
+                            }
+                            Text {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: swatch.modelData
+                                color: swatch.chosen ? Theme.cream : Theme.faint
+                                font.family: Theme.mono
+                                font.pixelSize: 11
+                            }
+                        }
+                    }
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    topPadding: 4
+                    text: "← → farbe  ·  enter übernehmen  ·  esc zurück"
+                    color: Theme.faint
+                    font.family: Theme.mono
+                    font.pixelSize: 11
+                }
+            }
+
+            Column {
+                visible: !root.picking
                 anchors { top: honeycomb.bottom; topMargin: 40; horizontalCenter: parent.horizontalCenter }
                 spacing: 8
 
@@ -336,7 +461,7 @@ PanelWindow {
                     }
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "thema " + (parent.parent.cur?.theme ?? "")
+                        text: (parent.parent.cur?.seide ? "bewegt · enter = farbe wählen  ·  thema " : "thema ") + (parent.parent.cur?.theme ?? "")
                               + (parent.parent.cur?.path === root.activePath ? "  ·  aktiv" : "")
                         color: Theme.muted
                         font.family: Theme.mono

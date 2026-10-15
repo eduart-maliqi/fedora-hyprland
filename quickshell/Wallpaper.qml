@@ -4,6 +4,8 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 
 // Hintergrundbild mit weicher Überblendung beim Wechsel (SUPER+W)
+// Ist ein Bild aus wallpapers/seide/ gesetzt (Ui.wallpaperSeide), liegt darüber die bewegte Seide
+// (Shader shaders/seide.frag in den Farben des Themas, immer in Bewegung außer unter Vollbild-Fenstern).
 // „Lebendig“ (Wolken ziehen, Gras/Bäume im Wind, Wasser glitzert – siehe WallpaperScene.qml),
 // solange Ui.wallpaperAnimated an ist (SUPER+SHIFT+W). Die Bewegung pausiert, während auf
 // diesem Bildschirm ein Vollbild-Fenster offen ist.
@@ -30,7 +32,7 @@ PanelWindow {
     Timer {
         interval: 33
         repeat: true
-        running: root.strength > 0 && !root.covered && (front.canAnimate || back.canAnimate)
+        running: !root.covered && ((root.strength > 0 && (front.canAnimate || back.canAnimate)) || seide.visible)
         property double last: 0
         onRunningChanged: last = Date.now()
         onTriggered: {
@@ -61,6 +63,30 @@ PanelWindow {
         time: root.time
         strength: root.strength
         onStatusChanged: if (status === Image.Ready) fadeIn.restart()
+    }
+
+    // bewegte Seide – in halber Größe gerechnet (weich genug), Uhr = root.time mit 30 Bildern/s statt jedem
+    // Bildschirmbild: die DisplayLink-Monitore müssen jedes neue Bild über USB schicken
+    Item {
+        id: seide
+        anchors.fill: parent
+        opacity: Ui.wallpaperSeide ? 1 : 0
+        visible: opacity > 0
+        Behavior on opacity { NumberAnimation { duration: 1100; easing.type: Easing.InOutQuad } }
+        layer.enabled: visible
+        layer.smooth: true
+        layer.textureSize: Qt.size(width / 2, height / 2)
+
+        ShaderEffect {
+            anchors.fill: parent
+            // Runde 50 s – 2000 s (Ende der Uhr) ist ein Vielfaches davon, der Sprung dort bleibt unsichtbar
+            property real phase: (root.time % 50) / 50 * Math.PI * 2
+            property real aspect: width / Math.max(1, height)
+            property color deep: Theme.accentDeep
+            property color mid: Theme.accent
+            property color soft: Theme.accentSoft
+            fragmentShader: Qt.resolvedUrl("shaders/seide.frag.qsb")
+        }
     }
 
     // Klick aufs Wallpaper → offene Panels schließen, sonst aktives Fenster verstecken

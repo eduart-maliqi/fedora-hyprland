@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # ★ 8155 – Wallpaper wechseln
 #   wallpaper.sh next        → nächstes Bild aus ~/.config/hypr/wallpapers
-#   wallpaper.sh /pfad.jpg   → bestimmtes Bild setzen (so ruft es die Galerie auf, Super+W)
+#   wallpaper.sh /pfad.jpg   → bestimmtes Bild setzen (so ruft es die Galerie auf, Super+W);
+#                              wallpapers/seide/<thema>.jpg = bewegte Seide (Standbild für hyprlock, Desktop zeigt den Shader)
 #   wallpaper.sh weg /pfad.jpg → Bild (+ Maske) in den Papierkorb (Strg+Entf in der Galerie); war es aktiv,
 #                              kommt vorher das zuletzt davor genutzte
 # Jeder Wechsel kommt oben in ~/.local/state/8155/wallpaper-verlauf → Galerie sortiert „zuletzt genutzt“
@@ -49,7 +50,7 @@ magick "$target" -gravity northeast -crop 28%x30%+0+0 +repage -colorspace gray -
     > "${verlauf%/*}/uhr-hintergrund" 2>/dev/null &
 { echo "$target"; grep -vxF "$target" "$verlauf" 2>/dev/null; } > "$verlauf.neu" && mv "$verlauf.neu" "$verlauf"
 
-# Farbthema = Anfang des Dateinamens (golden-castle.jpg → golden, purpur-wolf.jpg → purpur); unbekannt → golden
-thema="$(basename "$target")"; thema="${thema%%-*}"
+# Farbthema = Anfang des Dateinamens (golden-castle.jpg → golden, purpur-wolf.jpg → purpur, seide/glut.jpg → glut); unbekannt → golden
+thema="$(basename "$target")"; thema="${thema%%-*}"; thema="${thema%%.*}"
 [[ -d "$HOME/.config/hypr/themen/$thema" ]] || thema=golden
 [[ "$(readlink "$HOME/.config/hypr/themen/aktiv")" == "$thema" ]] || "$HOME/.config/hypr/scripts/thema.sh" "$thema"

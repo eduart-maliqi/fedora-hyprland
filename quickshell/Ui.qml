@@ -10,6 +10,16 @@ Singleton {
     id: ui
 
     property string wallpaper: "file://" + Theme.home + "/.config/hypr/wallpapers/current"
+    // echter Pfad hinter dem Symlink `current` – Bilder aus wallpapers/seide/ sind nur Standbilder der bewegten Seide
+    property string wallpaperReal: ""
+    readonly property bool wallpaperSeide: wallpaperReal.indexOf("/wallpapers/seide/") >= 0
+    onWallpaperChanged: resolveWallpaper.running = true
+    Process {
+        id: resolveWallpaper
+        running: true
+        command: ["readlink", "-f", ui.wallpaper.replace(/^file:\/\//, "")]
+        stdout: StdioCollector { onStreamFinished: ui.wallpaperReal = text.trim() }
+    }
     // Musik-Panel (MusicPanel.qml), pro Bildschirm zwei Fenster (MusicWindow.qml):
     //   musicOpen      – von Hand geholt (SUPER+M, Klick auf den Titel in der Leiste) → liegt über den Fenstern,
     //                    und zwar nur auf musicScreen (Bildschirm unter der Maus bzw. der angeklickten Leiste)
