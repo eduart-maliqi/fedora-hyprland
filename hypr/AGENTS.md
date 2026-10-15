@@ -147,7 +147,8 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── Wallpaper.qml          ← Hintergrundbild (mit Überblendung) + Klick-Logik + Uhr fürs lebendige Wallpaper
 ├── WallpaperScene.qml     ← ein Bild + Maske + Shader (lebendiges Wallpaper), zwei Stück in Wallpaper.qml
 ├── shaders/               ← wallpaper.frag (GLSL) → wallpaper.frag.qsb (DAS lädt Quickshell – nach Änderung mit qsb
-│                            neu kompilieren!), rauschen.png → docs/wallpaper.md
+│                            neu kompilieren + qs neu starten!), rauschen.png → docs/wallpaper.md;
+│                            seide.frag, fluss.frag = Hintergründe des Songtext-Bildschirms → docs/musik.md
 ├── VolumeOsd.qml          ← Lautstärke-Anzeige unten in der Mitte
 ├── ModeOsd.qml            ← kurzer Hinweis unten in der Mitte: Fenstermodus gewechselt / Wallpaper lebendig↔still /
 │                            Wackelfenster an↔aus (beobachtet dafür selbst wackelfenster.json)

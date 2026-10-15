@@ -5,9 +5,11 @@ import Quickshell.Wayland
 
 // Songtext-Bildschirm (Stil Apple Music): füllt einen ganzen Bildschirm – links Cover, Titel, Fortschritt,
 // rechts der Songtext groß, die aktuelle Zeile hell und leuchtend, darunter die nächsten Zeilen blasser.
-// Hintergrund in den Farben des Themas + Wallpaper → passt sich dem Wallpaper an. Zwei Varianten (Ui.lyricsScreenStyle):
-//   fluss – Farben fließen wie Flüssigkeit (Shader shaders/fluss.frag), flecken – verschwommenes Wallpaper + wandernde Kreise.
-// Umschalten: `qs ipc call lyrics style fluss|flecken`.
+// Hintergrund in den Farben des Themas → passt sich dem Wallpaper an. Drei Varianten (Ui.lyricsScreenStyle):
+//   seide – glänzende 3D-Seide mit Licht und Schatten (Shader shaders/seide.frag),
+//   fluss – Farben fließen wie Flüssigkeit, mit Wallpaper (shaders/fluss.frag),
+//   flecken – verschwommenes Wallpaper + wandernde Kreise.
+// Umschalten: `qs ipc call lyrics style seide|fluss|flecken`.
 // Öffnen/Schließen: SUPER+SHIFT+M (Bildschirm unter der Maus), Esc schließt (erst nach Klick hinein – nimmt den
 // anderen Fenstern die Tastatur nicht weg). IPC: `qs ipc call lyrics screenOn <bildschirm>`.
 PanelWindow {
@@ -41,10 +43,35 @@ PanelWindow {
 
         Rectangle { anchors.fill: parent; color: Theme.ink }
 
-        // Hintergrund: Ui.lyricsScreenStyle = "fluss" (Shader) oder "flecken" (wandernde Farbkreise)
+        // Hintergrund: Ui.lyricsScreenStyle = "seide" / "fluss" (Shader) oder "flecken" (wandernde Farbkreise)
         Loader {
             anchors.fill: parent
-            sourceComponent: Ui.lyricsScreenStyle === "flecken" ? flecken : fluss
+            sourceComponent: Ui.lyricsScreenStyle === "flecken" ? flecken
+                           : Ui.lyricsScreenStyle === "fluss" ? fluss : seide
+        }
+
+        Component {
+            id: seide
+            // in halber Größe gerechnet – die Falten haben feine Glanzkanten, ¼ wäre zu verwaschen
+            Item {
+                layer.enabled: true
+                layer.smooth: true
+                layer.textureSize: Qt.size(width / 2, height / 2)
+
+                ShaderEffect {
+                    anchors.fill: parent
+                    property real phase: 0
+                    property real aspect: width / Math.max(1, height)
+                    property color deep: Theme.accentDeep
+                    property color mid: Theme.accent
+                    property color soft: Theme.accentSoft
+                    fragmentShader: Qt.resolvedUrl("shaders/seide.frag.qsb")
+                    NumberAnimation on phase {
+                        from: 0; to: Math.PI * 2; duration: 60000
+                        loops: Animation.Infinite; running: win.visible
+                    }
+                }
+            }
         }
 
         Component {

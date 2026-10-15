@@ -92,9 +92,13 @@ Fenster/Ebenen und `Ui.qml`-Zustand: `docs/quickshell.md`.
   Bildschirm → wechselt dorthin; Esc schließt nach Klick hinein, Tastatur `OnDemand`). Links Cover (640 px von Spotify, wenn `Spotify.item` = MPRIS-Titel – Brave liefert per MPRIS nur 150 px; sonst `Media.artUrl`; `Spotify.qml` ist dafür auch bei offenem Songtext-Bildschirm aktiv), Titel, Interpret, Fortschritt + Zeiten; rechts der
   Songtext linksbündig, `SF Pro Display` Bold (5 % der Bildschirmhöhe), aktuelle Zeile bei 36 % der Höhe, voll deckend mit
   Leuchten in `Theme.accentSoft`, nächste Zeilen 42 % → blasser, vorherige 15 % → weg. Ohne Text: „suche songtext …“ usw.
-  **Hintergrund** (passt sich dem Wallpaper an), zwei Varianten, Wahl in `Ui.lyricsScreenStyle` (Vorgabe `fluss`), umschalten mit
-  `qs ipc call lyrics style fluss|flecken` (nicht gespeichert – dauerhaft: Vorgabe in `Ui.qml` ändern):
-  - **fluss** (seit 2026-10-15 Standard): Shader `shaders/fluss.frag(.qsb)` – Domain Warping (Rauschen verzerrt Rauschen), Farben
+  **Hintergrund** (passt sich dem Wallpaper an), drei Varianten, Wahl in `Ui.lyricsScreenStyle` (Vorgabe `seide`), umschalten mit
+  `qs ipc call lyrics style seide|fluss|flecken` (nicht gespeichert – dauerhaft: Vorgabe in `Ui.qml` ändern):
+  - **seide** (Standard, nach einem Beispielvideo des Benutzers): Shader `shaders/seide.frag(.qsb)` – glänzende 3D-Seide. Höhe =
+    5× verzerrte Sinuswellen, Normale aus der Steigung, Licht von oben links + Glanzpunkt; Helligkeit → Verlauf fast schwarz →
+    `accentDeep` → `accent` → `accentSoft` → fast weiß, Sättigung ×1.5, alles ×0.82 und Glanz gedämpft (sonst verschluckt Weiß den
+    Songtext). In ½ Größe gerechnet, Runde 60 s. Ausprobiert wurde das Aussehen vorab mit einem numpy-Nachbau auf der CPU.
+  - **fluss**: Shader `shaders/fluss.frag(.qsb)` – Domain Warping (Rauschen verzerrt Rauschen), Farben
     fließen wie Flüssigkeit: dunkles `accentDeep` → `accentDeep` → `accent` → `accentSoft`, dazu 20 % Wallpaper (nur 48 px breit
     geladen → nur Farbflächen), mitverzerrt; Sättigung ×1.6 im Shader. Gerechnet in ¼ Größe (`layer.textureSize`), hochskaliert.
     Runde 36 s (`phase` 0…2π, nur ganzzahlige Vielfache → nahtlos). **Nach Änderung am Shader: qsb + Quickshell neu starten**

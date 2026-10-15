@@ -82,7 +82,7 @@ ShellRoot {
         function close(): void { Ui.closeMusic() }
     }
 
-    // qs ipc call lyrics toggle | screenOn <bildschirm> | screenClose | style fluss|flecken
+    // qs ipc call lyrics toggle | screenOn <bildschirm> | screenClose | style seide|fluss|flecken
     // (Songtext auf dem Desktop an/aus; Songtext-Bildschirm auf/zu – SUPER+SHIFT+M, Bildschirm unter der Maus)
     IpcHandler {
         target: "lyrics"

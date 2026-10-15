@@ -17,6 +17,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 - **Position/Größe von Fenstern:** Ändert man `margins`/`implicitWidth`/`implicitHeight` eines `PanelWindow`, übernimmt
   das automatische Neuladen das manchmal **nicht** – das alte Fenster bleibt an der alten Stelle. Prüfen mit
   `hyprctl layers` (xywh pro Namespace); dann Quickshell wie oben neu starten.
+- **Shader (`.qsb`) geändert → Quickshell neu starten:** das automatische Neuladen nimmt die alte `.qsb` aus dem Zwischenspeicher.
 - Kein QML-Linter installiert → nach Änderungen `qs log` auf Fehler prüfen und per Screenshot kontrollieren.
 - **Große Schrift (≥ ~80 px) mit feinen Haarlinien** (z. B. Cormorant Garamond Light) bekommt mit der Standard-Darstellung
   (Distance Field) ausgefranste Kanten. Abhilfe: `renderType: Text.CurveRendering` (Qt ≥ 6.7, hier 6.10).
@@ -185,7 +186,7 @@ oder das Kontrollzentrum öffnen.
 | `gallery` | `toggle`, `open`, `close` (Wallpaper-Galerie, Super+W) |
 | `theme` | `set golden\|glut\|kohle\|purpur\|mond` (Farbthema, ruft `scripts/thema.sh` auf), `get` |
 | `music` | `toggle` (holen/zurücklegen auf dem Bildschirm mit Fokus), `toggleOn <bildschirm>` (dasselbe auf z. B. `DVI-I-1`; benutzt Super+M), `open` (über die Fenster), `close` (ausblenden wie ✕) |
-| `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose`, `style fluss\|flecken` (Hintergrund des Songtext-Bildschirms) |
+| `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose`, `style seide\|fluss\|flecken` (Hintergrund des Songtext-Bildschirms) |
 | `clock` | `toggle` |
 | `airdrop` | `toggle`, `open`, `close` (Fenster), `on`, `off` (AirDrop 10 min an / aus) |
 | `control` | `toggle`, `close`, `open <bereich>` (bereich: `wifi`, `bluetooth`, `power`, `night` oder `""`) |
