@@ -140,10 +140,12 @@ PanelWindow {
                 Image {
                     id: cover
                     anchors.fill: parent
-                    source: Media.artUrl
+                    // Brave liefert übers MPRIS nur 150 px → wenn möglich das 640-px-Cover von Spotify
+                    source: Media.title === "" ? ""
+                          : Spotify.item?.name === Media.title && Spotify.itemImage !== "" ? Spotify.itemImage
+                          : Media.artUrl
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
-                    sourceSize.width: 640
                 }
             }
 

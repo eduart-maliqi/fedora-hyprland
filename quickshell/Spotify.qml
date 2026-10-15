@@ -64,7 +64,7 @@ Singleton {
     property bool noDevice: false            // kein Spotify offen → Knopf „spotify öffnen“
     property string message: ""
 
-    readonly property bool active: Ui.musicShown
+    readonly property bool active: Ui.musicShown || Ui.lyricsScreen !== ""   // Songtext-Bildschirm braucht das große Cover
     onActiveChanged: if (active) start()
     onCurrentUriChanged: checkLiked()
 
