@@ -8,6 +8,7 @@
                                                                      bei Netzfehlern zusätzlich "error")
   lyrics.py key [--remove]          OpenAI-API-Key eingeben (verdeckt) bzw. löschen – nötig für die KI-Songtexte
   lyrics.py forget ARTIST TITEL     gespeicherten Songtext eines Lieds verwerfen (z. B. falscher Treffer)
+  lyrics.py line                    aktuelle Zeile des laufenden Lieds aus dem Cache (hyprlock-Sperrbildschirm)
   lyrics.py info                    Key/yt-dlp vorhanden?, Anzahl gespeicherter Texte, bisherige KI-Kosten (Schätzung)
 
 Quellen, in dieser Reihenfolge:
@@ -556,6 +557,23 @@ def cmd_info():
     return 0
 
 
+def cmd_line():
+    """Aktuelle Zeile des laufenden Lieds aus dem Cache (für hyprlock; kein Netz, sperrt nie)."""
+    r = subprocess.run(["playerctl", "metadata", "--format", "{{artist}}\n{{title}}\n{{position}}"],
+                       capture_output=True, text=True)
+    parts = r.stdout.split("\n")
+    if r.returncode or len(parts) < 3 or not parts[2].strip().isdigit():
+        return 0
+    d = cache_get(cache_path(parts[0], parts[1]), True) or {}
+    pos, line = int(parts[2]) / 1e6, ""
+    for m in re.finditer(r"^\[(\d+):(\d+(?:\.\d+)?)\](.*)$", d.get("lrc", ""), re.M):
+        if int(m[1]) * 60 + float(m[2]) > pos:
+            break
+        line = m[3].strip()
+    print(line)
+    return 0
+
+
 def main(argv):
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "find" and len(argv) >= 4:
@@ -574,6 +592,8 @@ def main(argv):
         return cmd_forget(argv[2], argv[3])
     if cmd == "info":
         return cmd_info()
+    if cmd == "line":
+        return cmd_line()
     print(__doc__)
     return 2
 

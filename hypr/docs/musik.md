@@ -81,6 +81,8 @@ Fenster/Ebenen und `Ui.qml`-Zustand: `docs/quickshell.md`.
     Stand 2026-10-13 so gesetzt für „Irini Qirjako – Cu mbush mali plot me rrush“.
   - Bereinigung (im Skript): YouTube-Titel „Interpret - Titel“ zerlegen, „(Official Video)“ usw. weg; für Suchen
     zusätzlich „- Remastered 2011“, „(feat. …)“ weg.
+- **Sperrbildschirm:** `hyprlock.conf` ruft jede Sekunde `scripts/nowplaying.sh` → Titel · Interpret + `lyrics.py line` (aktuelle
+  LRC-Zeile aus dem Cache anhand `playerctl position`; kein Netz – Text steht nur da, wenn das Lied schon vorher im Panel lief).
 - `Lyrics.qml`: Stil wie die Instagram-Songtexte, oben links (Rand links 48, oben 92 px, 520 px breit):
   vorherige Zeile grau, aktuelle Zeile weiß und fett, nächste Zeile grau – alle `SF Pro Display` Bold 36 px,
   mittig gesetzt, lange Zeilen brechen um. Alle Zeilen stehen in einer `Column`, die bei jeder neuen Zeile weich

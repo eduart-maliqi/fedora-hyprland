@@ -3,6 +3,7 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-15** – hyprlock zeigt unter dem Titel die aktuelle Songtext-Zeile (`lyrics.py line`, nur Cache) – Wunsch des Benutzers.
 - **2026-10-15** – Bildschirmaufnahme: wf-recorder + `scripts/aufnahme.sh` auf Strg+Druck – Wunsch des Benutzers.
 - **2026-10-15** – Seide blieb nach erneutem Auswählen stehen: `Ui.wallpaperReal` las per Binding den alten Pfad → Befehl im Handler setzen.
 - **2026-10-15** – Bewegtes Wallpaper „seide“ (Wabe in der Galerie mit Farbauswahl, Ebene in `Wallpaper.qml`, Standbilder `wallpapers/seide/`

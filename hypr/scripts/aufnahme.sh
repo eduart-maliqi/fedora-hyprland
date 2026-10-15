@@ -1,6 +1,7 @@
 #!/bin/bash
 # Bildschirmaufnahme (wf-recorder) per Strg+Druck: Bereich wählen → aufnehmen, erneuter Druck beendet.
 ziel=~/videos/bildschirmaufzeichnungen
+echo "$(date +%T) gestartet" >> /tmp/claude-1000/aufnahme.log
 notify() { notify-send -a aufnahme "$@"; }
 
 if pgrep -x wf-recorder >/dev/null; then
