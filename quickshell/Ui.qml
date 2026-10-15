@@ -87,6 +87,13 @@ Singleton {
     property bool keysOpen: false            // Tastenkürzel-Übersicht (SUPER+I, KeysHelp.qml)
     property bool airdropOpen: false         // AirDrop-Fenster (AirdropPanel.qml), Bildschirm wie controlScreen
     property bool lyricsEnabled: true
+    // Songtext-Bildschirm (LyricsScreen.qml): Name des Bildschirms, auf dem er offen ist, sonst ""
+    property string lyricsScreen: ""
+    // SUPER+SHIFT+M: auf Bildschirm `name` öffnen; dort nochmal → zu; offen woanders → dorthin wechseln
+    function toggleLyricsScreen(name) {
+        const target = name || Hyprland.focusedMonitor?.name || ""
+        lyricsScreen = lyricsScreen === target ? "" : target
+    }
 
     // Kontrollzentrum, Tastenkürzel-Übersicht und AirDrop liegen alle oben rechts → immer nur eins offen
     onControlOpenChanged: if (controlOpen) { keysOpen = false; airdropOpen = false }

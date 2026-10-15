@@ -70,6 +70,7 @@ PanelWindow {
                 ["super + p",              "phantom: fläche / zoom"],
                 ["super + strg + p",       "phantom aus"],
                 ["super + m",              "musik-panel"],
+                ["super + shift + m",      "songtext-bildschirm"],
                 ["strg + shift + leer",    "musik pause / weiter"],
                 ["strg + shift + ← →",     "lied zurück / weiter"],
                 ["super + alt + ← →",      "musik 5 s zurück / vor"],

@@ -3,6 +3,9 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-15** – Songtext-Bildschirm Super+Shift+M (`LyricsScreen.qml`, Ui, shell.qml, hyprland.lua, KeysHelp): Vollbild wie Apple Music
+  mit bewegtem, verschwommenem Hintergrund aus Wallpaper + Themenfarben – Wunsch des Benutzers.
+
 - **2026-10-14** – IntelliJ-Flatpak: `JAVA_HOME` per `flatpak override` auf JDK-21-Kopie in `~/.jdks` (docs/system.md) – Gradle-Sync
   scheiterte auf Java 25 („Incompatible Gradle JVM“).
 - **2026-10-14** – AirDrop mit dem iPhone: Kapsel 󰀃 + `AirdropPanel.qml`/`Airdrop.qml` (Dateien hineinziehen, an Geräte senden), Backend omdrop +

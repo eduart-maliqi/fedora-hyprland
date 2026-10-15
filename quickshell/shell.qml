@@ -27,6 +27,11 @@ ShellRoot {
         delegate: Component { Lyrics {} }
     }
 
+    Variants {
+        model: Quickshell.screens
+        delegate: Component { LyricsScreen {} }
+    }
+
     // Musik-Panel pro Bildschirm: auf dem Desktop (geht von selbst auf, wenn der Bildschirm leer ist)
     // und über den Fenstern (SUPER+M → Bildschirm unter der Maus)
     Variants {
@@ -77,10 +82,13 @@ ShellRoot {
         function close(): void { Ui.closeMusic() }
     }
 
-    // qs ipc call lyrics toggle
+    // qs ipc call lyrics toggle | screenOn <bildschirm> | screenClose
+    // (Songtext auf dem Desktop an/aus; Songtext-Bildschirm auf/zu – SUPER+SHIFT+M, Bildschirm unter der Maus)
     IpcHandler {
         target: "lyrics"
         function toggle(): void { Ui.lyricsEnabled = !Ui.lyricsEnabled }
+        function screenOn(screen: string): void { Ui.toggleLyricsScreen(screen) }
+        function screenClose(): void { Ui.lyricsScreen = "" }
     }
 
     // qs ipc call control toggle | close | open <bereich>   (bereich: wifi, bluetooth, power, night oder "")

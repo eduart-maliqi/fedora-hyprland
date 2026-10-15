@@ -296,6 +296,11 @@ hl.bind(mod .. " + M", function()
     local m = hl.get_monitor_at_cursor() or hl.get_active_monitor()
     hl.exec_cmd("qs ipc call music toggleOn '" .. (m and m.name or "") .. "'")
 end)
+-- Super+Shift+M: Songtext-Bildschirm (Vollbild, Stil Apple Music) auf dem Bildschirm unter der Maus
+hl.bind(mod .. " + SHIFT + M", function()
+    local m = hl.get_monitor_at_cursor() or hl.get_active_monitor()
+    hl.exec_cmd("qs ipc call lyrics screenOn '" .. (m and m.name or "") .. "'")
+end)
 hl.bind(mod .. " + SHIFT + L",   hl.dsp.exec_cmd("qs ipc call lyrics toggle"))
 hl.bind(mod .. " + SHIFT + C",   hl.dsp.exec_cmd("qs ipc call clock toggle"))
 -- Super+I: Übersicht aller Tastenkürzel oben rechts (Anzeige: ~/.config/quickshell/KeysHelp.qml –

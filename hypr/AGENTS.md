@@ -3,7 +3,7 @@
 Kern-Doku des Desktop-Setups (Hyprland + Quickshell + Hilfsprogramme). Diese Datei wird **immer** geladen und enthält
 nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/` und wird **nur bei Bedarf** gelesen.
 
-**Stand:** 2026-10-14
+**Stand:** 2026-10-15
 
 ---
 
@@ -143,6 +143,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── MusicPanel.qml         ← Musik-Panel oben links (wie ein kleines Spotify: Playlists, Lieder, Suche, Steuerung)
 ├── ClockWidget.qml        ← große Desktop-Uhr oben rechts (oben „8155“ in der Akzentfarbe, Uhrzeit, Linie, Datum)
 ├── Lyrics.qml             ← Songtext oben links auf dem Desktop (Instagram-Stil)
+├── LyricsScreen.qml       ← Super+Shift+M: Songtext-Bildschirm im Vollbild (Stil Apple Music) → docs/musik.md
 ├── Wallpaper.qml          ← Hintergrundbild (mit Überblendung) + Klick-Logik + Uhr fürs lebendige Wallpaper
 ├── WallpaperScene.qml     ← ein Bild + Maske + Shader (lebendiges Wallpaper), zwei Stück in Wallpaper.qml
 ├── shaders/               ← wallpaper.frag (GLSL) → wallpaper.frag.qsb (DAS lädt Quickshell – nach Änderung mit qsb
@@ -211,6 +212,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Strg+Shift+Leertaste | Musik pausieren / weiter (`playerctl play-pause`, wie die Medientaste; auch bei gesperrtem Bildschirm) |
 | Strg+Shift+←/→ | voriges / nächstes Lied (`playerctl previous/next`) – überdeckt kitty-Tabwechsel und Wortauswahl in Textfeldern |
 | Super+Alt+←/→ | Musik 5 s zurück / vor (`playerctl position 5-/5+`, ein Druck = 5 s) |
+| **Super+Shift+M** | **Songtext-Bildschirm** (Vollbild wie Apple Music: Cover links, großer Songtext rechts, bewegter verschwommener Hintergrund aus Wallpaper + Themenfarben) auf dem Bildschirm unter der Maus an/aus; Esc schließt (`LyricsScreen.qml`) |
 | Super+Shift+L | Songtexte auf dem Desktop an/aus |
 | Super+Shift+C | Desktop-Uhr an/aus |
 | Druck / Super+Shift+S | Screenshot Bereich → `~/bildschirmfotos` + Zwischenablage |

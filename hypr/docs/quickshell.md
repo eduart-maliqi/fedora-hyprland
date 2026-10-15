@@ -53,6 +53,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 | Wallpaper.qml | golden-wallpaper | Background | pro Bildschirm, immer |
 | ClockWidget.qml | golden-clock | Bottom | pro Bildschirm, oben rechts; klick-durchlässig; `Ui.clockEnabled`. Datumszeile auf hellen Bildern dunkel + fett: `wallpaper.sh` misst die Helligkeit oben rechts → `~/.local/state/8155/uhr-hintergrund` (0–1, > 0.6 = hell). Hat die Palette `clockDate` (zurzeit nur purpur: `#d6286e`), gilt diese Farbe (fett) |
 | Lyrics.qml | golden-lyrics | Bottom | pro Bildschirm, oben links (unter der Leiste); klick-durchlässig; nur wenn Songtext gefunden |
+| LyricsScreen.qml | golden-lyricsscreen | Overlay | pro Bildschirm, Vollbild; nur auf `Ui.lyricsScreen` (Super+Shift+M); Tastatur `Exclusive` (Esc schließt) |
 | Bar.qml | golden-bar | Top | pro Bildschirm, 45 px hoch, oben |
 | MusicWindow.qml (2× pro Bildschirm) | golden-music | Bottom + Top | oben links (48/64, 800×470); Bottom-Fenster bei `Ui.musicDesktopOn(screen)` (Musik läuft + Bildschirm leer), Top-Fenster bei `Ui.musicTopOn(screen)`; Inhalt per `Loader` nur, solange sichtbar |
 | ControlCenter.qml | golden-control | Top | oben rechts; `Ui.controlOpen` |
@@ -184,7 +185,7 @@ oder das Kontrollzentrum öffnen.
 | `gallery` | `toggle`, `open`, `close` (Wallpaper-Galerie, Super+W) |
 | `theme` | `set golden\|glut\|kohle\|purpur\|mond` (Farbthema, ruft `scripts/thema.sh` auf), `get` |
 | `music` | `toggle` (holen/zurücklegen auf dem Bildschirm mit Fokus), `toggleOn <bildschirm>` (dasselbe auf z. B. `DVI-I-1`; benutzt Super+M), `open` (über die Fenster), `close` (ausblenden wie ✕) |
-| `lyrics` | `toggle` |
+| `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose` |
 | `clock` | `toggle` |
 | `airdrop` | `toggle`, `open`, `close` (Fenster), `on`, `off` (AirDrop 10 min an / aus) |
 | `control` | `toggle`, `close`, `open <bereich>` (bereich: `wifi`, `bluetooth`, `power`, `night` oder `""`) |
