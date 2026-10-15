@@ -89,6 +89,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── shaders/               ← Fenster-Shader (GLSL) fürs Plugin HyprWindowShade, Regeln in hyprland.lua → docs/plugins.md
 ├── scripts/
 │   ├── airdrop-meldung.sh ← Meldung „Datei per AirDrop empfangen“ für omdrop (Ersatz für omarchy-notification-send) → docs/system.md
+│   ├── aufnahme.sh        ← Bildschirmaufnahme an/aus (wf-recorder + slurp), Strg+Druck → docs/system.md
 │   ├── bt-pair.sh         ← Bluetooth-Gerät koppeln + vertrauen + verbinden (Arg: MAC)
 │   ├── clipboard.sh       ← Zwischenablage-Verlauf (cliphist + rofi)
 │   ├── explorer-modus.py  ← Nautilus: Lesezeichen Windows/Linux je nach aktivem Tab (Dienst; `status`, `linux`, `windows`)
@@ -219,6 +220,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+Shift+C | Desktop-Uhr an/aus |
 | Druck / Super+Shift+S | Screenshot Bereich → `~/bildschirmfotos` + Zwischenablage |
 | Shift+Druck | Screenshot ganzer Bildschirm |
+| Strg+Druck | **Bildschirmaufnahme** Bereich an/aus (`scripts/aufnahme.sh`, wf-recorder → `~/videos/bildschirmaufzeichnungen`) |
 **Fenster**
 
 | Kürzel | Aktion |

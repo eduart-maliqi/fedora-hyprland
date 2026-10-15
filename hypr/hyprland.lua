@@ -307,9 +307,11 @@ hl.bind(mod .. " + SHIFT + C",   hl.dsp.exec_cmd("qs ipc call clock toggle"))
 -- die Liste dort ist von Hand gepflegt, neue Kürzel also auch dort eintragen)
 hl.bind(mod .. " + I",           hl.dsp.global("quickshell:keysToggle"))
 
--- Screenshots (landen in ~/bildschirmfotos + Zwischenablage)
+-- Screenshots (landen in ~/bildschirmfotos + Zwischenablage); Strg+Druck = Bildschirmaufnahme an/aus
 hl.bind("Print",                 hl.dsp.exec_cmd("hyprshot -m region -o ~/bildschirmfotos"))
-hl.bind("SHIFT + Print",         hl.dsp.exec_cmd("hyprshot -m output -o ~/bildschirmfotos"))hl.bind(mod .. " + SHIFT + S",   hl.dsp.exec_cmd("hyprshot -m region -o ~/bildschirmfotos"))
+hl.bind("SHIFT + Print",         hl.dsp.exec_cmd("hyprshot -m output -o ~/bildschirmfotos"))
+hl.bind("CTRL + Print",          hl.dsp.exec_cmd("~/.config/hypr/scripts/aufnahme.sh"))
+hl.bind(mod .. " + SHIFT + S",   hl.dsp.exec_cmd("hyprshot -m region -o ~/bildschirmfotos"))
 
 -- Fenster
 hl.bind(mod .. " + Q",           hl.dsp.window.close())

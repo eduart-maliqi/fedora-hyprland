@@ -110,7 +110,9 @@ PanelWindow {
             ] },
             { title: "bildschirmfoto", keys: [
                 ["druck / super + shift + s", "bereich aufnehmen"],
-                ["shift + druck",          "ganzer bildschirm"],            ] },
+                ["shift + druck",          "ganzer bildschirm"],
+                ["strg + druck",           "aufnahme an / aus"],
+            ] },
         ],
     ]
 
