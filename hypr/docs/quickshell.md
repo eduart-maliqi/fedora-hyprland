@@ -185,7 +185,7 @@ oder das Kontrollzentrum öffnen.
 | `gallery` | `toggle`, `open`, `close` (Wallpaper-Galerie, Super+W) |
 | `theme` | `set golden\|glut\|kohle\|purpur\|mond` (Farbthema, ruft `scripts/thema.sh` auf), `get` |
 | `music` | `toggle` (holen/zurücklegen auf dem Bildschirm mit Fokus), `toggleOn <bildschirm>` (dasselbe auf z. B. `DVI-I-1`; benutzt Super+M), `open` (über die Fenster), `close` (ausblenden wie ✕) |
-| `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose` |
+| `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose`, `style fluss\|flecken` (Hintergrund des Songtext-Bildschirms) |
 | `clock` | `toggle` |
 | `airdrop` | `toggle`, `open`, `close` (Fenster), `on`, `off` (AirDrop 10 min an / aus) |
 | `control` | `toggle`, `close`, `open <bereich>` (bereich: `wifi`, `bluetooth`, `power`, `night` oder `""`) |

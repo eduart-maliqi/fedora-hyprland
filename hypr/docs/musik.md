@@ -92,10 +92,17 @@ Fenster/Ebenen und `Ui.qml`-Zustand: `docs/quickshell.md`.
   Bildschirm → wechselt dorthin; Esc schließt). Links Cover (640 px von Spotify, wenn `Spotify.item` = MPRIS-Titel – Brave liefert per MPRIS nur 150 px; sonst `Media.artUrl`; `Spotify.qml` ist dafür auch bei offenem Songtext-Bildschirm aktiv), Titel, Interpret, Fortschritt + Zeiten; rechts der
   Songtext linksbündig, `SF Pro Display` Bold (5 % der Bildschirmhöhe), aktuelle Zeile bei 36 % der Höhe, voll deckend mit
   Leuchten in `Theme.accentSoft`, nächste Zeilen 42 % → blasser, vorherige 15 % → weg. Ohne Text: „suche songtext …“ usw.
-  **Hintergrund** (passt sich dem Wallpaper an): `Ui.wallpaper` + 5 Kreise in `accent`/`accentDeep`/`accentSoft`, auf 1/10 der Größe
-  gemalt, mit `MultiEffect` verwischt (+ Sättigung 0.6, Kontrast 0.15 → kräftiger) und 10× hochskaliert (billig); Bild dreht sich
-  in 20 s einmal, Kreise wandern auf Sinusbahnen (±32 %, Runde 40 s, ganzzahlige Frequenzen → nahtlose Schleife) und pulsieren ±30 %;
-  darüber `Theme.ink` 22 % für Kontrast. Animation läuft nur, solange sichtbar.
+  **Hintergrund** (passt sich dem Wallpaper an), zwei Varianten, Wahl in `Ui.lyricsScreenStyle` (Vorgabe `fluss`), umschalten mit
+  `qs ipc call lyrics style fluss|flecken` (nicht gespeichert – dauerhaft: Vorgabe in `Ui.qml` ändern):
+  - **fluss** (seit 2026-10-15 Standard): Shader `shaders/fluss.frag(.qsb)` – Domain Warping (Rauschen verzerrt Rauschen), Farben
+    fließen wie Flüssigkeit: dunkles `accentDeep` → `accentDeep` → `accent` → `accentSoft`, dazu 20 % Wallpaper (nur 48 px breit
+    geladen → nur Farbflächen), mitverzerrt; Sättigung ×1.6 im Shader. Gerechnet in ¼ Größe (`layer.textureSize`), hochskaliert.
+    Runde 36 s (`phase` 0…2π, nur ganzzahlige Vielfache → nahtlos). **Nach Änderung am Shader: qsb + Quickshell neu starten**
+    – das automatische Neuladen nimmt die alte `.qsb` aus dem Zwischenspeicher.
+  - **flecken** (erste Version): `Ui.wallpaper` + 5 Kreise in `accent`/`accentDeep`/`accentSoft`, auf 1/10 der Größe gemalt, mit
+    `MultiEffect` verwischt (+ Sättigung 0.6, Kontrast 0.15) und 10× hochskaliert; Bild dreht sich in 20 s einmal, Kreise wandern
+    auf Sinusbahnen (±32 %, Runde 40 s) und pulsieren ±30 %.
+  Über beiden `Theme.ink` 22 % für Kontrast. Animation läuft nur, solange sichtbar.
 
 ## yt-dlp 2026.08.19
 

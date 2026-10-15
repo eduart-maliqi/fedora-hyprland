@@ -82,13 +82,14 @@ ShellRoot {
         function close(): void { Ui.closeMusic() }
     }
 
-    // qs ipc call lyrics toggle | screenOn <bildschirm> | screenClose
+    // qs ipc call lyrics toggle | screenOn <bildschirm> | screenClose | style fluss|flecken
     // (Songtext auf dem Desktop an/aus; Songtext-Bildschirm auf/zu – SUPER+SHIFT+M, Bildschirm unter der Maus)
     IpcHandler {
         target: "lyrics"
         function toggle(): void { Ui.lyricsEnabled = !Ui.lyricsEnabled }
         function screenOn(screen: string): void { Ui.toggleLyricsScreen(screen) }
         function screenClose(): void { Ui.lyricsScreen = "" }
+        function style(name: string): void { Ui.lyricsScreenStyle = name }
     }
 
     // qs ipc call control toggle | close | open <bereich>   (bereich: wifi, bluetooth, power, night oder "")

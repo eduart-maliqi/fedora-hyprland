@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-15** – Songtext-Bildschirm: neuer Hintergrund „fluss“ (Shader `fluss.frag`, fließende Farben), alter als „flecken“ per
+  `qs ipc call lyrics style flecken` – Benutzer mochte die Flecken-Animation nicht so, will aber zurück können.
 - **2026-10-15** – Songtext-Bildschirm: Hintergrund schneller/weiter bewegt, Sättigung hoch, weniger abgedunkelt – war zu wenig bewegt und zu fade.
 - **2026-10-15** – Songtext-Bildschirm: Cover von Spotify (640 px) statt MPRIS (`Spotify.qml` dafür aktiv) – Brave liefert nur 150 px, war unscharf.
 - **2026-10-15** – Songtext-Bildschirm Super+Shift+M (`LyricsScreen.qml`, Ui, shell.qml, hyprland.lua, KeysHelp): Vollbild wie Apple Music

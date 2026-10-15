@@ -5,8 +5,9 @@ import Quickshell.Wayland
 
 // Songtext-Bildschirm (Stil Apple Music): füllt einen ganzen Bildschirm – links Cover, Titel, Fortschritt,
 // rechts der Songtext groß, die aktuelle Zeile hell und leuchtend, darunter die nächsten Zeilen blasser.
-// Hintergrund: das Wallpaper stark verschwommen, langsam drehend, dazu wandernde Farbflecken in den
-// Farben des Themas → passt sich dem Wallpaper an.
+// Hintergrund in den Farben des Themas + Wallpaper → passt sich dem Wallpaper an. Zwei Varianten (Ui.lyricsScreenStyle):
+//   fluss – Farben fließen wie Flüssigkeit (Shader shaders/fluss.frag), flecken – verschwommenes Wallpaper + wandernde Kreise.
+// Umschalten: `qs ipc call lyrics style fluss|flecken`.
 // Öffnen/Schließen: SUPER+SHIFT+M (Bildschirm unter der Maus), Esc schließt. IPC: `qs ipc call lyrics screenOn <bildschirm>`.
 PanelWindow {
     id: win
@@ -39,67 +40,110 @@ PanelWindow {
 
         Rectangle { anchors.fill: parent; color: Theme.ink }
 
-        // Hintergrund auf 1/10 Größe malen, verwischen und hochskalieren – ein Blur in voller Größe
-        // wäre bei jedem Bild teuer, so kostet die Animation fast nichts.
-        Item {
-            id: bg
-            readonly property real k: 10
-            x: -parent.width * 0.1
-            y: -parent.height * 0.1
-            width: parent.width * 1.2 / k
-            height: parent.height * 1.2 / k
-            scale: k
-            transformOrigin: Item.TopLeft
-            clip: true
+        // Hintergrund: Ui.lyricsScreenStyle = "fluss" (Shader) oder "flecken" (wandernde Farbkreise)
+        Loader {
+            anchors.fill: parent
+            sourceComponent: Ui.lyricsScreenStyle === "flecken" ? flecken : fluss
+        }
 
-            property real t: 0
-            NumberAnimation on t {
-                from: 0; to: Math.PI * 2; duration: 40000
-                loops: Animation.Infinite; running: win.visible
+        Component {
+            id: fluss
+            // Shader in 1/4 Größe rechnen und hochskalieren – das Ergebnis ist ohnehin weich
+            Item {
+                layer.enabled: true
+                layer.smooth: true
+                layer.textureSize: Qt.size(width / 4, height / 4)
+
+                Image {
+                    id: wallSrc
+                    source: Ui.wallpaper
+                    sourceSize.width: 48   // klein = nur Farbflächen, keine Details
+                    asynchronous: true
+                    visible: false
+                }
+
+                ShaderEffect {
+                    anchors.fill: parent
+                    property var source: wallSrc
+                    property real phase: 0
+                    property real aspect: width / Math.max(1, height)
+                    property color c1: Qt.darker(Theme.accentDeep, 2.2)
+                    property color c2: Theme.accentDeep
+                    property color c3: Theme.accent
+                    property color c4: Theme.accentSoft
+                    fragmentShader: Qt.resolvedUrl("shaders/fluss.frag.qsb")
+                    NumberAnimation on phase {
+                        from: 0; to: Math.PI * 2; duration: 36000
+                        loops: Animation.Infinite; running: win.visible
+                    }
+                }
             }
+        }
 
-            layer.enabled: true
-            layer.smooth: true
-            layer.effect: MultiEffect {
-                blurEnabled: true
-                blur: 1
-                blurMax: 24
-                autoPaddingEnabled: false
-                saturation: 0.6                 // kräftigere Farben als Wallpaper und Thema von sich aus haben
-                contrast: 0.15
-            }
+        Component {
+            id: flecken
+            // Hintergrund auf 1/10 Größe malen, verwischen und hochskalieren – ein Blur in voller Größe
+            // wäre bei jedem Bild teuer, so kostet die Animation fast nichts.
+            Item {
+                id: bg
+                readonly property real k: 10
+                x: -parent.width * 0.1
+                y: -parent.height * 0.1
+                width: parent.width * 1.2 / k
+                height: parent.height * 1.2 / k
+                scale: k
+                transformOrigin: Item.TopLeft
+                clip: true
 
-            Image {
-                anchors.centerIn: parent
-                width: Math.max(parent.width, parent.height) * 1.5
-                height: width
-                source: Ui.wallpaper
-                sourceSize.width: 256
-                fillMode: Image.PreserveAspectCrop
-                asynchronous: true
-                rotation: bg.t * 360 / Math.PI
-                opacity: 0.7
-            }
+                property real t: 0
+                NumberAnimation on t {
+                    from: 0; to: Math.PI * 2; duration: 40000
+                    loops: Animation.Infinite; running: win.visible
+                }
 
-            // ganzzahlige Frequenzen (fx, fy) → nach einer Runde von t steht alles wieder am Anfang, kein Sprung
-            Repeater {
-                model: [
-                    { c: Theme.accent,     cx: 0.25, cy: 0.30, fx: 1, fy: 2, ph: 0.0, s: 0.75, o: 0.95 },
-                    { c: Theme.accentDeep, cx: 0.75, cy: 0.70, fx: 2, fy: 1, ph: 2.1, s: 0.90, o: 0.95 },
-                    { c: Theme.accentSoft, cx: 0.65, cy: 0.25, fx: 1, fy: 3, ph: 4.2, s: 0.50, o: 0.80 },
-                    { c: Theme.accentDeep, cx: 0.20, cy: 0.80, fx: 3, fy: 1, ph: 1.0, s: 0.70, o: 0.90 },
-                    { c: Theme.accent,     cx: 0.55, cy: 0.55, fx: 2, fy: 3, ph: 3.3, s: 0.55, o: 0.85 },
-                ]
-                Rectangle {
-                    required property var modelData
-                    readonly property var m: modelData
-                    width: bg.width * m.s * (1 + 0.3 * Math.sin(bg.t * (m.fx + m.fy) + m.ph))
+                layer.enabled: true
+                layer.smooth: true
+                layer.effect: MultiEffect {
+                    blurEnabled: true
+                    blur: 1
+                    blurMax: 24
+                    autoPaddingEnabled: false
+                    saturation: 0.6                 // kräftigere Farben als Wallpaper und Thema von sich aus haben
+                    contrast: 0.15
+                }
+
+                Image {
+                    anchors.centerIn: parent
+                    width: Math.max(parent.width, parent.height) * 1.5
                     height: width
-                    radius: width / 2
-                    color: m.c
-                    opacity: m.o
-                    x: bg.width * (m.cx + 0.32 * Math.sin(bg.t * m.fx + m.ph)) - width / 2
-                    y: bg.height * (m.cy + 0.32 * Math.cos(bg.t * m.fy + m.ph)) - height / 2
+                    source: Ui.wallpaper
+                    sourceSize.width: 256
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    rotation: bg.t * 360 / Math.PI
+                    opacity: 0.7
+                }
+
+                // ganzzahlige Frequenzen (fx, fy) → nach einer Runde von t steht alles wieder am Anfang, kein Sprung
+                Repeater {
+                    model: [
+                        { c: Theme.accent,     cx: 0.25, cy: 0.30, fx: 1, fy: 2, ph: 0.0, s: 0.75, o: 0.95 },
+                        { c: Theme.accentDeep, cx: 0.75, cy: 0.70, fx: 2, fy: 1, ph: 2.1, s: 0.90, o: 0.95 },
+                        { c: Theme.accentSoft, cx: 0.65, cy: 0.25, fx: 1, fy: 3, ph: 4.2, s: 0.50, o: 0.80 },
+                        { c: Theme.accentDeep, cx: 0.20, cy: 0.80, fx: 3, fy: 1, ph: 1.0, s: 0.70, o: 0.90 },
+                        { c: Theme.accent,     cx: 0.55, cy: 0.55, fx: 2, fy: 3, ph: 3.3, s: 0.55, o: 0.85 },
+                    ]
+                    Rectangle {
+                        required property var modelData
+                        readonly property var m: modelData
+                        width: bg.width * m.s * (1 + 0.3 * Math.sin(bg.t * (m.fx + m.fy) + m.ph))
+                        height: width
+                        radius: width / 2
+                        color: m.c
+                        opacity: m.o
+                        x: bg.width * (m.cx + 0.32 * Math.sin(bg.t * m.fx + m.ph)) - width / 2
+                        y: bg.height * (m.cy + 0.32 * Math.cos(bg.t * m.fy + m.ph)) - height / 2
+                    }
                 }
             }
         }

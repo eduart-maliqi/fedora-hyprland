@@ -89,6 +89,7 @@ Singleton {
     property bool lyricsEnabled: true
     // Songtext-Bildschirm (LyricsScreen.qml): Name des Bildschirms, auf dem er offen ist, sonst ""
     property string lyricsScreen: ""
+    property string lyricsScreenStyle: "fluss"   // Hintergrund: fluss | flecken
     // SUPER+SHIFT+M: auf Bildschirm `name` öffnen; dort nochmal → zu; offen woanders → dorthin wechseln
     function toggleLyricsScreen(name) {
         const target = name || Hyprland.focusedMonitor?.name || ""
