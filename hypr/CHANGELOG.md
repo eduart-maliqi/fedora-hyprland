@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-16** – Akku-Warnungen (`BatteryWarning.qml`): 20 %/10 % klein, 5…1 % gross – Wunsch des Benutzers.
+- **2026-10-16** – hypr-computer Branch `smaller-after-shots`: Kontrollbilder 900 px statt 1568 (`screen.py`, `server.py`) – weniger Tokens.
 - **2026-10-16** – Super+I-Übersicht filtert beim Tippen (`KeysHelp.qml`, Tastatur Exclusive) – Wunsch des Benutzers.
 - **2026-10-16** – hypr-computer installiert (MCP für Claude, eigene Agenten-Desktops auf Workspace 4–0, docs/system.md) – Wunsch des Benutzers.
 - **2026-10-16** – agentControl installiert (`~/.local/opt/agent-control`) + `hl.env("PATH")` mit `~/.local/bin` – Hyprland/rofi fanden Programme aus `~/.local/bin` nicht.

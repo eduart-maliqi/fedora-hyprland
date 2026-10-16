@@ -61,6 +61,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 | AirdropPanel.qml | golden-airdrop | Top | oben rechts (gleiche Stelle wie das Kontrollzentrum); `Ui.airdropOpen` |
 | VolumeOsd.qml | golden-osd | Overlay | unten Mitte, erscheint kurz bei Lautstärke-Änderung |
 | ModeOsd.qml | golden-osd | Overlay | unten Mitte, erscheint kurz beim Wechsel des Fenstermodus, des lebendigen Wallpapers oder der Wackelfenster |
+| BatteryWarning.qml | golden-osd | Overlay | Akku-Warnungen beim Entladen: 20 % und 10 % kleine Kapsel unten Mitte, 5/4/3/2/1 % jedes Mal grosse Karte in der Bildschirmmitte (je Stufe einmal pro Abstieg, nicht beim Laden/Start) |
 | TaskView.qml | golden-taskview | Overlay | pro Bildschirm, **immer da** als 1×1 px (klick-durchlässig); Super+Tab / Alt+Tab → auf dem Bildschirm mit Fokus ganzer Bildschirm |
 | KeysHelp.qml | golden-keys | Overlay | Super+I, oben rechts (auch über Vollbild); `Ui.keysOpen` |
 | WallpaperGallery.qml | golden-gallery | Overlay | Super+W (`quickshell:galleryToggle`), ganzer Bildschirm mit Fokus, Tastatur `Exclusive` – siehe `docs/wallpaper.md` |

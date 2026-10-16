@@ -80,6 +80,7 @@ Die Fensterregel `clawd-on-desk-pet` und `Ui.skipWindow()` sind noch da, tun abe
 - **Jeder Agent bekommt einen eigenen verschachtelten Hyprland** (headless, eigene Konfiguration aus `agentdesk.py`, **nicht** unsere hyprland.lua) mit eigenem Cursor/Fokus/Zwischenablage. Ein Zuschauer-Fenster (Klasse `dev.hypr_computer.viewer`, nur Anzeige) kommt auf den ersten freien **Workspace 4–9/0** → Super+4 … zeigt den Agenten. Fenster zu = Agenten-Desktop beendet.
 - Dein echter Desktop: nur lesen (`use_host`); Eingaben dort sind aus (`HYPR_COMPUTER_ALLOW_HOST_INPUT` nicht gesetzt, keine uinput-Rechte).
 - `contrib/agent-places.lua` **nicht** eingebunden (gehört zu seinem `CanvasTiling`); ohne sie landet der Zuschauer einfach auf Workspace N.
+- Lokaler Branch `smaller-after-shots` (Benutzer ist Collaborator): `screenshot_after` liefert nur 900 px lange Kante (`HYPR_COMPUTER_AFTER_EDGE`) → ~56 % weniger Bild-Tokens; Anweisung nennt a11y/`wait(until_text)` zuerst. `git pull` auf master geht weiter.
 - Test: `OUT=<ordner> .venv/bin/python tests/agent_live.py` (bricht ab, wenn in der Zwischenablage ein Bild liegt – Fehler im Testskript).
 
 ## NOA-Entwicklungsumgebung (Super+Shift+D)

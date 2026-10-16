@@ -51,6 +51,8 @@ ShellRoot {
 
     ModeOsd {}
 
+    BatteryWarning {}
+
     TaskView {}
 
     KeysHelp {}

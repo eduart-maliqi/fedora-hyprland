@@ -154,6 +154,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── VolumeOsd.qml          ← Lautstärke-Anzeige unten in der Mitte
 ├── ModeOsd.qml            ← kurzer Hinweis unten in der Mitte: Fenstermodus gewechselt / Wallpaper lebendig↔still /
 │                            Wackelfenster an↔aus (beobachtet dafür selbst wackelfenster.json)
+├── BatteryWarning.qml     ← Akku-Warnungen: 20 %/10 % klein, 5…1 % gross (UPower)
 ├── TaskView.qml           ← Aufgabenansicht mit Live-Vorschau: Super+Tab (wie Windows) und Alt+Tab-Fensterwechsler
 ├── ClaudeSessions.qml     ← Singleton: Claude-Code-Sitzungen, die fertig sind und auf dich warten (Kapsel in der Leiste)
 ├── KeysHelp.qml           ← Super+I: Übersicht aller Tastenkürzel oben rechts (Liste von Hand gepflegt)
