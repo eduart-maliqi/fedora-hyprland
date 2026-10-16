@@ -5,7 +5,8 @@ import Quickshell.Hyprland
 import Quickshell.Io
 
 // Super+I: Spickzettel oben rechts – alle Tastenkürzel mit kurzer Erklärung
-//   Schließen: Super+I nochmal, 󰅖, Esc (nach Klick hinein) oder Klick aufs Wallpaper
+//   Tippen filtert die Liste (mehrere Wörter = alle müssen passen, "ctrl" gilt wie "strg"), Esc löscht erst die Suche
+//   Schließen: Super+I nochmal, 󰅖, Esc (bei leerer Suche) oder Klick aufs Wallpaper
 //   Super+I fängt Hyprland ab (hyprland.lua) und meldet es als quickshell:keysToggle.
 // Die Liste ist von Hand gepflegt → neues Tastenkürzel in hyprland.lua? Hier auch eintragen!
 //   Schreibweise: Tasten mit " + " verbinden, Alternativen mit " / " trennen ("super + leer / d").
@@ -25,8 +26,24 @@ PanelWindow {
     visible: Ui.keysOpen || card.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay          // auch über Vollbild-Fenstern sichtbar
     WlrLayershell.namespace: "golden-keys"
-    // OnDemand: Tastatur erst nach einem Klick hinein (für Esc) – die App darunter behält sonst den Fokus
-    WlrLayershell.keyboardFocus: Ui.keysOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+    // Exclusive, damit man sofort tippen kann; Hyprland-Binds (Super+I) gelten trotzdem
+    WlrLayershell.keyboardFocus: Ui.keysOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
+    property string query: ""
+    readonly property var terms: query.toLowerCase().replace(/ctrl/g, "strg").split(/[\s+]+/).filter(t => t !== "")
+
+    // ein Suchwort passt, wenn eine Taste oder ein Erklärungswort damit beginnt
+    function matches(combo, info) {
+        const words = (combo + " " + info).toLowerCase().split(/[\s+\/]+/)
+        return terms.every(t => words.some(w => w.startsWith(t)))
+    }
+    function anyMatch(keys) { return keys.some(k => matches(k[0], k[1])) }
+    function anyColumnMatch(col) { return col.some(sec => anyMatch(sec.keys)) }
+
+    Connections {
+        target: Ui
+        function onKeysOpenChanged() { root.query = "" }
+    }
 
     function toggle() {
         if (!Ui.keysOpen)
@@ -118,6 +135,7 @@ PanelWindow {
 
     readonly property int keyW: 160          // Breite der Tasten-Spalte (Erklärungen fluchten)
     readonly property int infoW: 172
+    readonly property int bodyW: Math.max(cols.implicitWidth, keyW + 12 + infoW)
 
     // ── Bausteine ─────────────────────────────────────────────
 
@@ -149,6 +167,7 @@ PanelWindow {
         property string info: ""
         width: root.keyW + 12 + root.infoW
         height: 22
+        visible: root.matches(combo, info)
 
         Row {
             anchors.verticalCenter: parent.verticalCenter
@@ -208,7 +227,17 @@ PanelWindow {
         scale: Ui.keysOpen ? 1 : 0.97
         transformOrigin: Item.TopRight
         focus: true
-        Keys.onEscapePressed: Ui.keysOpen = false
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_Escape) {
+                if (root.query !== "") root.query = ""
+                else Ui.keysOpen = false
+            } else if (event.key === Qt.Key_Backspace) {
+                root.query = root.query.slice(0, -1)
+            } else if (event.text.length === 1 && event.text >= " " && !(event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) {
+                root.query += event.text
+            } else return
+            event.accepted = true
+        }
         Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
         Behavior on scale { NumberAnimation { duration: 240; easing.type: Easing.OutCubic } }
 
@@ -220,7 +249,7 @@ PanelWindow {
 
             // Kopf
             Item {
-                width: cols.implicitWidth
+                width: root.bodyW
                 height: 22
 
                 Row {
@@ -241,6 +270,14 @@ PanelWindow {
                         font.pixelSize: 18
                         font.letterSpacing: 1
                     }
+                }
+
+                Text {
+                    anchors { right: parent.right; rightMargin: 34; verticalCenter: parent.verticalCenter }
+                    text: root.query === "" ? "tippen zum filtern" : "󰍉 " + root.query + "▏"
+                    color: root.query === "" ? Theme.faint : Theme.accent
+                    font.family: Theme.mono
+                    font.pixelSize: 11
                 }
 
                 Text {
@@ -271,6 +308,7 @@ PanelWindow {
                         id: col
                         required property var modelData
                         spacing: 12
+                        visible: root.anyColumnMatch(modelData)
 
                         Repeater {
                             model: col.modelData
@@ -278,6 +316,7 @@ PanelWindow {
                                 id: sec
                                 required property var modelData
                                 spacing: 0
+                                visible: root.anyMatch(modelData.keys)
 
                                 Row {
                                     spacing: 7
@@ -313,9 +352,17 @@ PanelWindow {
                 }
             }
 
+            Text {
+                visible: !root.anyColumnMatch(root.columns[0]) && !root.anyColumnMatch(root.columns[1])
+                text: "nichts gefunden"
+                color: Theme.faint
+                font.family: Theme.mono
+                font.pixelSize: 11
+            }
+
             // Fuß
             Rectangle {
-                width: cols.implicitWidth
+                width: root.bodyW
                 height: 1
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
@@ -326,7 +373,7 @@ PanelWindow {
             }
 
             Item {
-                width: cols.implicitWidth
+                width: root.bodyW
                 height: 14
 
                 Text {
@@ -338,7 +385,7 @@ PanelWindow {
                 }
                 Text {
                     anchors { right: parent.right; rightMargin: 4; verticalCenter: parent.verticalCenter }
-                    text: "esc / super + i schließt"
+                    text: "esc löscht / schließt"
                     color: Theme.faint
                     font.family: Theme.mono
                     font.pixelSize: 10

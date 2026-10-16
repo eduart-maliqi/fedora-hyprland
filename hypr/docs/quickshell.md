@@ -173,8 +173,10 @@ Windows 11: gleiche Höhe, Breite nach Fensterform, zeilenweise zentriert, Grö�
 Glas-Karte oben rechts (≈ 750 × 630 px) mit allen Kürzeln in zwei Spalten: links „apps & menüs“, „desktop“, „workspaces“,
 rechts „fenster“, „maus & gesten“, „bildschirmfoto“; unten ein Hinweis auf die Laptop-Tasten. Jede Taste als kleine
 Kappe, daneben eine kurze Erklärung. Hyprland meldet Super+I als `quickshell:keysToggle`; geht auf dem Bildschirm mit
-Fokus auf. Schließen: Super+I, 󰅖, Esc (Tastatur `OnDemand` → erst nach Klick hinein), Klick aufs Wallpaper,
-oder das Kontrollzentrum öffnen.
+Fokus auf. Schließen: Super+I, 󰅖, Esc (bei leerer Suche), Klick aufs Wallpaper, oder das Kontrollzentrum öffnen.
+- **Filter:** Tastatur ist `Exclusive` → sofort tippen (Super+I bleibt als Hyprland-Bind trotzdem wirksam). Suchwörter (Leerzeichen/`+`
+  getrennt, alle müssen passen, `ctrl` = `strg`) treffen, wenn eine Taste oder ein Erklärungswort damit **beginnt**; leere Abschnitte/Spalten
+  verschwinden. Esc löscht erst die Suche, dann schliesst es. Ablauf in `matches()` / `anyMatch()`.
 - **Liste pflegen:** Eigenschaft `columns` = [linke Spalte, rechte Spalte] → Abschnitte `{ title, keys: [[Tasten, Erklärung], …] }`.
   Tasten mit `" + "` verbinden, Alternativen mit `" / "` trennen (`"super + leer / d"` → [super][leer] / [d]).
   Erklärungen kurz halten (≤ 24 Zeichen), sonst werden sie abgeschnitten (`infoW`); Tasten-Spalte `keyW` = 160 px.
