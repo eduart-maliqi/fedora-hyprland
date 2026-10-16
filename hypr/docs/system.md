@@ -70,6 +70,10 @@ Desktop-Pet, das Claude-Code-Sessions anzeigt ([GitHub](https://github.com/rulle
 (Clawd wird nicht mehr benutzt; Sicherung `~/.claude/settings.json.vor-clawd-hooks-entfernt-*.bak`). Wird Clawd wieder gestartet, trägt es sie neu ein.
 Die Fensterregel `clawd-on-desk-pet` und `Ui.skipWindow()` sind noch da, tun aber ohne Clawd nichts. Kein Auto-Update: neues AppImage mit `--appimage-extract` entpacken und den Ordner ersetzen.
 
+## agentControl (Claude-Code-Agenten im Raster)
+
+[github.com/zinoos/agent-control](https://github.com/zinoos/agent-control) (von einem Arbeitskollegen, MIT). GTK4-App: jeder Agent = Claude-Code-Sitzung im eigenen tmux-Server (`tmux -L agentcontrol`), als Kachel mit Terminal + Nachrichtenbox; laufen weiter, wenn das Fenster zu ist. Quelltext `~/.local/opt/agent-control` (git, `git pull` aktualisiert), `install.sh` hat nur Symlinks angelegt: `~/.local/bin/{ac,agentcontrol}`, `~/.local/share/applications/agentcontrol.desktop` (rofi). Entfernen: `install.sh --uninstall`. Ohne Skill installiert (`--skill` = Claude darf selbst Agenten starten). CLI: `ac new NAME -C DIR -p "…"`, `ac ls`, `ac send`, `ac peek`, `ac wait`, `ac attach`, `ac kill`. Projekte in `~/.config/agentcontrol/projects.json`. Braucht `~/.local/bin` im PATH von Hyprland (`hl.env("PATH", …)` in hyprland.lua), sonst startet es aus rofi nicht und findet `claude` nicht. Nicht eingerichtet: Live-Desktops (hypr-computer, belegt Workspaces 4–0).
+
 ## NOA-Entwicklungsumgebung (Super+Shift+D)
 
 `scripts/noa-start.sh`: `podman start noadb` (Postgres, wartet auf `pg_isready`), dann **ein** kitty-Fenster (Klasse `noa-dev`)

@@ -86,6 +86,8 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
+-- GDM gibt nur /usr/local/bin:/usr/bin mit; ~/.local/bin braucht z. B. agentControl (agentcontrol, claude)
+hl.env("PATH", os.getenv("HOME") .. "/.local/bin:/usr/local/bin:/usr/bin")
 
 -----------------------
 ---- LOOK & FEEL ------

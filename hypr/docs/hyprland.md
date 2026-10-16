@@ -17,7 +17,7 @@
    `docs/system.md` → Anmeldung), dbus-Umgebung (siehe Fallstrick unten), `hyprpolkitagent`, `qs` (Quickshell),
    `hypridle`, `mako`, `blueman-applet`, `cliphist` (Text + Bilder),
    `scripts/windowshade.sh load` (Plugin HyprWindowShade, siehe `docs/plugins.md`), `scripts/explorer-modus.py` (Explorer-Modus)
-5. **Umgebungsvariablen** – Cursor WhiteSur-cursors 24, Qt Wayland + qt6ct, Electron/Firefox auf Wayland
+5. **Umgebungsvariablen** – Cursor WhiteSur-cursors 24, Qt Wayland + qt6ct, Electron/Firefox auf Wayland, `PATH` mit `~/.local/bin` vorne (GDM gibt es nicht mit)
 6. **Look & Feel** – Lücken, 1-px-Rand in der Akzentfarbe (Verlauf), Rundung 12, Schatten, Glühen in der Akzentfarbe, Blur,
    Animationen/Kurven. Die drei Themenfarben (`active_border`, `glow.color`, `misc.background_color`) stehen **nicht** in diesen
    Blöcken, sondern in `golden.apply_theme` – die läuft beim Laden mit dem Thema aus dem Symlink `themen/aktiv` (per `io.popen`)
