@@ -3,6 +3,8 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-16** – hypr-computer installiert (MCP für Claude, eigene Agenten-Desktops auf Workspace 4–0, docs/system.md) – Wunsch des Benutzers.
+- **2026-10-16** – agentControl installiert (`~/.local/opt/agent-control`) + `hl.env("PATH")` mit `~/.local/bin` – Hyprland/rofi fanden Programme aus `~/.local/bin` nicht.
 - **2026-10-16** – Swallowing aus (`misc.enable_swallow`) – vom Terminal gestartete Fenster (Playwright-Browser u. a.) verschluckten das kitty von Claude Code.
 - **2026-10-16** – `kitty help` zeigt Kürzel (`~/.config/kitty/help.sh`, Funktion in `~/.bashrc.d/kitty.sh`) – Wunsch des Benutzers.
 - **2026-10-15** – hyprlock zeigt unter dem Titel die aktuelle Songtext-Zeile (`lyrics.py line`, nur Cache) – Wunsch des Benutzers.

@@ -41,7 +41,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 | `docs/quickshell.md` | QML-Grundlagen & -Fallstricke, Fenster/Ebenen/Namespaces, `Ui.qml`, Leiste, Kontrollzentrum, Aufgabenansicht/Alt+Tab, Super+I-Übersicht, IPC-Befehle |
 | `docs/musik.md` | Musik-Panel, Spotify Web API, Songtexte (`lyrics.py`: lrclib/NetEase/KI), yt-dlp |
 | `docs/wallpaper.md` | Wallpaper-Bilder, **Galerie (Super+W)**, **Farbthemen** (`thema.sh`, `themen/`), Masken, lebendiges Wallpaper (Shader) |
-| `docs/system.md` | hypridle, hyprlock, Anmeldung (GDM-Autoanmeldung + hyprlock beim Start), mako, rofi, Ton/PipeWire, Audiotreiber, Systemuhr/chrony, Dock/DisplayLink, „Bildschirme“ (nwg-displays), Windows-Partition, Explorer-Modus, Outlook, Clawd, agentControl, Pakete, Kernel-Baustelle, iPhone spiegeln, **AirDrop** (omdrop) |
+| `docs/system.md` | hypridle, hyprlock, Anmeldung (GDM-Autoanmeldung + hyprlock beim Start), mako, rofi, Ton/PipeWire, Audiotreiber, Systemuhr/chrony, Dock/DisplayLink, „Bildschirme“ (nwg-displays), Windows-Partition, Explorer-Modus, Outlook, Clawd, agentControl, hypr-computer, Pakete, Kernel-Baustelle, iPhone spiegeln, **AirDrop** (omdrop) |
 | `docs/grub.md` | GRUB-Bootmenü „ghost“ (Dualboot) + Plymouth-Ladebildschirm |
 | `docs/testen.md` | Shader/QML nur auf der CPU testen, Plugins im verschachtelten Test-Hyprland, Absturzspuren |
 | `CHANGELOG.md` | wann/warum etwas geändert wurde – nur bei Bedarf (z. B. Fehlersuche „seit wann ist das so?“) |
@@ -168,6 +168,7 @@ Weitere Konfigurationen im selben Stil:
 ~/.local/opt/phantomat/      ← Quelltext Phantomat (git, github.com/kaolti/phantomat), gebaut nach
                                ~/.local/share/hyprland/plugins/phantomat.so (intern heisst das Plugin „spatialoverview“)
 ~/.local/opt/agent-control/  ← agentControl (git): Claude-Code-Agenten im Raster, CLI `ac` → docs/system.md
+~/.local/opt/hypr-computer/ ← MCP-Server hypr-computer (git, venv): Claude-Agenten mit eigenem Desktop, Zuschauer auf Workspace 4–0 → docs/system.md
 ~/.local/opt/omdrop-plugin/   ← AirDrop-CLI `omdrop` (git), ~/.local/opt/omdrop-owl/ ← Funk-Teil (git, gebaut als RPM → /usr/lib/omdrop) → docs/system.md
 ~/.local/state/spatial-overview/canvas-memory.tsv ← Phantom merkt sich Fensterplätze + Kamera (über Neustarts)
 ~/.local/state/8155/  ← gespeicherter Zustand: nachtmodus.json (an/aus + Wärme), fenstermodus.json ({"free": true|false}),
