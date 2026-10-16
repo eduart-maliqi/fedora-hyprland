@@ -3,7 +3,7 @@
 Kern-Doku des Desktop-Setups (Hyprland + Quickshell + Hilfsprogramme). Diese Datei wird **immer** geladen und enthält
 nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/` und wird **nur bei Bedarf** gelesen.
 
-**Stand:** 2026-10-15
+**Stand:** 2026-10-16
 
 ---
 

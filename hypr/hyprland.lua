@@ -195,6 +195,7 @@ hl.config({
         focus_on_activate       = true,
         enable_swallow          = true,
         swallow_regex           = "^(kitty)$",
+        swallow_exception_regex = "Brave$",   -- sonst verschluckt der Playwright-Browser das Terminal von Claude Code
     },
     cursor = {
         sync_gsettings_theme = true,
@@ -311,6 +312,8 @@ hl.bind(mod .. " + I",           hl.dsp.global("quickshell:keysToggle"))
 hl.bind("Print",                 hl.dsp.exec_cmd("hyprshot -m region -o ~/bildschirmfotos"))
 hl.bind("SHIFT + Print",         hl.dsp.exec_cmd("hyprshot -m output -o ~/bildschirmfotos"))
 hl.bind("CTRL + Print",          hl.dsp.exec_cmd("~/.config/hypr/scripts/aufnahme.sh"))
+hl.bind("CTRL + Sys_Req",        hl.dsp.exec_cmd("~/.config/hypr/scripts/aufnahme.sh"))
+hl.bind("CTRL + code:107",       hl.dsp.exec_cmd("~/.config/hypr/scripts/aufnahme.sh"))
 hl.bind(mod .. " + SHIFT + S",   hl.dsp.exec_cmd("hyprshot -m region -o ~/bildschirmfotos"))
 
 -- Fenster

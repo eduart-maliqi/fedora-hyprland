@@ -9,7 +9,7 @@ Plugins: `docs/plugins.md` · Songtexte/yt-dlp: `docs/musik.md` · GRUB-Bootmen�
 | hyprlock | Sperrbildschirm, auch direkt nach dem Booten (siehe „Anmeldung“): Wallpaper (`wallpapers/current`) geblurrt, „★ 8155“ (Cormorant kursiv 42, `lnum`), große Uhr, Datum, Passwortfeld, aktueller Song. Farben per `source =` aus `themen/aktiv/hyprlock.conf` (Variablen `$akzent`, `$uhrfarbe` …, auch `$helligkeit`) |
 | mako | Benachrichtigungen oben rechts, 6 s; Farben per `include=` aus `themen/aktiv/mako` (`thema.sh` → `makoctl reload`) |
 | rofi | App-Starter, Power-Menü, WLAN (wifi.sh), Zwischenablage; Farben per `@import` aus `themen/aktiv/rofi.rasi` |
-| kitty | Terminal, `smart_paste.py` für Strg+V; Grundfarben/Auswahl/Cursor/Tabs per `include` aus `themen/aktiv/kitty.conf` (`thema.sh` → `pkill -USR1 -x kitty` lädt neu), ANSI-Farben fest in kitty.conf |
+| kitty | Terminal, `smart_paste.py` für Strg+V; `kitty help` zeigt die Kürzel (`help.sh`, Funktion in `~/.bashrc.d/kitty.sh`); Grundfarben/Auswahl/Cursor/Tabs per `include` aus `themen/aktiv/kitty.conf` (`thema.sh` → `pkill -USR1 -x kitty` lädt neu), ANSI-Farben fest in kitty.conf |
 | hyprshot | Screenshots → `~/bildschirmfotos` |
 | wf-recorder | Bildschirmaufnahme (Strg+Druck, `scripts/aufnahme.sh`: Bereich wählen, erneut drücken = Ende) → `~/videos/bildschirmaufzeichnungen` |
 | cliphist | Zwischenablage-Verlauf (Text + Bilder) |

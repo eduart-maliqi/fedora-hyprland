@@ -21,7 +21,7 @@
 6. **Look & Feel** – Lücken, 1-px-Rand in der Akzentfarbe (Verlauf), Rundung 12, Schatten, Glühen in der Akzentfarbe, Blur,
    Animationen/Kurven. Die drei Themenfarben (`active_border`, `glow.color`, `misc.background_color`) stehen **nicht** in diesen
    Blöcken, sondern in `golden.apply_theme` – die läuft beim Laden mit dem Thema aus dem Symlink `themen/aktiv` (per `io.popen`)
-7. **Misc / Input** – `ch`-Layout, natürliches Scrollen, Tap-to-Click, Swallowing für kitty.
+7. **Misc / Input** – `ch`-Layout, natürliches Scrollen, Tap-to-Click, Swallowing für kitty (Brave ausgenommen, sonst verschluckt der Playwright-Browser das Claude-Terminal).
    Mausempfindlichkeit: `input.sensitivity` (−1.0 … 1.0, 0 = Standard) gilt für Maus **und** Touchpad;
    einzeln pro Gerät mit `hl.device({ name = "logitech-usb-laser-mouse", sensitivity = … })`
    (Gerätenamen: `hyprctl devices`; Touchpad: `gxtp5100:00-27c6:01e0-touchpad`). Ohne Beschleunigung: `accel_profile = "flat"`.
