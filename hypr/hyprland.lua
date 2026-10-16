@@ -195,9 +195,7 @@ hl.config({
         disable_splash_rendering = true,
         font_family             = "JetBrainsMono Nerd Font",
         focus_on_activate       = true,
-        enable_swallow          = true,
-        swallow_regex           = "^(kitty)$",
-        swallow_exception_regex = "Brave$",   -- sonst verschluckt der Playwright-Browser das Terminal von Claude Code
+        enable_swallow          = false,   -- sonst verschluckt jedes von Claude Code gestartete Fenster (Playwright, xdg-open …) sein Terminal
     },
     cursor = {
         sync_gsettings_theme = true,
