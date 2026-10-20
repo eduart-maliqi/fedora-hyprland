@@ -30,6 +30,8 @@ nächsten Bildwechsel erkannt.
     ├── mond-titan.jpg    ← Attack on Titan: Silhouette mit ausgebreiteten Armen über Wolken, Logo unten mittig im Bild (3840×2160, mittig auf 16:10 geschnitten, 2026-10-09) – Thema „mond“; ohne Maske
     ├── mond-naruto.jpg   ← Naruto mit Supreme-Maske vor nächtlicher Neon-Stadt (Vorlage nur 236×236 → mit Lanczos auf 1800×1800 hochgerechnet, mittig auf unscharfem, abgedunkeltem Hintergrund 2880×1800, 2026-10-12; sehr weich) – Thema „mond“; ohne Maske
     ├── purpur-kirschbaum.jpg ← surrealer Kirschbaum am Wasser (5120×2880) – Thema „purpur“
+    ├── lila-lavendel.jpg  ← Häuschen + Baum im Lavendelfeld unter Sternenhimmel (Vorlage nur 800×450 → Lanczos auf 2880×1800, 2026-10-20; weich) – Thema „lila“; ohne Maske
+    ├── silber-auto.jpg    ← schwarzes Auto, nur Scheinwerfer leuchten (3300×1856, 2026-10-20) – Thema „silber“; ohne Maske
     ├── silber-band.jpg    ← schwarzes Band auf Schwarz (Microsoft Surface, 5120×3200) – Thema „silber“
     ├── silber-goku.jpg    ← Goku mit weisser Aura, fast schwarz (5120×2880) – Thema „silber“
     │                        (diese 7 vom Benutzer aus ~/downloads/wallpaper, 2026-10-09)
@@ -38,7 +40,7 @@ nächsten Bildwechsel erkannt.
     │                        **Der Anfang des Dateinamens bis zum ersten „-“ ist das Farbthema** (siehe „Farbthemen“).
     │                        Neue Bilder: auf 2880×1800 zuschneiden (16:10, wie der Bildschirm), z. B.
     │                        `magick in.jpg -resize 2880x1800^ -gravity center -extent 2880x1800 -strip -quality 92 golden-<name>.jpg`
-    ├── seide/             ← <thema>.jpg (golden, glut, kohle, purpur, mond, silber): **Standbilder des bewegten Wallpapers „seide“**
+    ├── seide/             ← <thema>.jpg (golden, glut, kohle, purpur, lila, mond, silber): **Standbilder des bewegten Wallpapers „seide“**
     │                        (2880×1800, erzeugt von `scripts/seide-standbild.py`); `current` zeigt darauf → hyprlock/Uhr-Helligkeit
     │                        nehmen das Standbild, der Desktop zeigt den Shader. Unterordner → `next` und `weg` lassen ihn aus.
     ├── aussortiert/       ← nicht mehr im Wechsel (Unterordner → wallpaper.sh ignoriert ihn):
@@ -78,7 +80,7 @@ passt sich Anzahl und Bildschirm an.
 - Holt sich die Tastatur (`Exclusive`) – beim Testen also nicht öffnen, während jemand tippt (Tasten landen in der Galerie,
   Leertaste übernimmt!). Gefahrlos testen: Kopie mit Stub-`Ui.qml` in einem verschachtelten Hyprland (`docs/testen.md`).
 - **Wabe „seide“** (bewegtes Wallpaper): alle Standbilder aus `wallpapers/seide/` sind **eine** Wabe (Platz laut Verlauf, nie benutzt →
-  gleich nach dem aktiven Bild); Vorschau ist der Shader selbst (bewegt). Enter/Klick → **Farbauswahl** darunter (6 Kreise = Farbthemen,
+  gleich nach dem aktiven Bild); Vorschau ist der Shader selbst (bewegt). Enter/Klick → **Farbauswahl** darunter (7 Kreise = Farbthemen,
   ←/→ oder Maus, die Wabe zeigt die Farbe gleich an; Enter/Klick übernimmt → `wallpaper.sh wallpapers/seide/<thema>.jpg`, Esc zurück).
   Nicht löschbar (Strg+Entf tut dort nichts).
 - IPC: `qs ipc call gallery toggle|open|close`. Layer-Regel: Blur + `no_anim` (blendet selbst ein, 180 ms).
@@ -95,13 +97,15 @@ Gleicher Shader wie der Hintergrund des Songtext-Bildschirms (`quickshell/shader
   `python3 -m venv /tmp/v && /tmp/v/bin/pip install numpy pillow && /tmp/v/bin/python ~/.config/hypr/scripts/seide-standbild.py` (~20 s).
 - `wallpaper.sh`: Thema = Dateiname bis zum ersten „-“ **und** ohne Endung (`glut.jpg` → glut).
 
-## Farbthemen (golden / glut / kohle / purpur / mond)
+## Farbthemen (golden / glut / kohle / purpur / lila / mond)
 Zu hellen Bildern passt Amber/Gold, zu rot-schwarzen Glutrot, zu Anthrazit Sonnengelb, zu Neon-Violett Pink, zu blauen
 Nachtbildern Mondlicht-Blau. Das Thema hängt am Wallpaper:
 `wallpaper.sh` nimmt den Dateinamen-Anfang (`golden-castle.jpg` → `golden`, `glut-finsternis.jpg` → `glut`; unbekannt → `golden`)
 und ruft bei einem Wechsel `scripts/thema.sh <name>` auf. Von Hand: `thema.sh glut` (ohne Argument: zeigt das aktive Thema).
 `silber` (Silberweiß auf Schwarz: accent `#cfd6df`, soft `#eef1f5`, deep `#6b7684`, cream `#eceef1`, ink `#0c0d0f`,
 Glas (0.06, 0.065, 0.075)) für schwarz-graue Bilder.
+`lila` (Lavendel auf Nachtviolett: accent `#b18cf2`, soft `#dcc8fb`, deep `#6a43b0`, cream `#ece6f5`, muted/faint `#aaa3ba`/`#736b85`,
+ink `#0f0b1a`, red `#e0714f`, Glas (0.07, 0.05, 0.12)) für lila-blaue Bilder (Lavendelfeld).
 
 | | golden | glut | kohle | purpur | mond |
 |---|---|---|---|---|---|

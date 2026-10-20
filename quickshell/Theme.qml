@@ -8,7 +8,7 @@ import Quickshell.Io
 // Farbthemen, gewählt über das Wallpaper (Dateiname <thema>-<name>.jpg, siehe hypr/scripts/thema.sh):
 //   golden – Amber/Gold zu den hellen Bildern, mond – Mondlicht-Blau zu Nachtbildern,
 //   glut – Glutrot zu dunklen, rot-schwarzen Bildern (Finsternis), kohle – Sonnengelb auf Anthrazit,
-//   purpur – Neonpink auf Violett, silber – Silberweiß auf Schwarz.
+//   purpur – Neonpink auf Violett, lila – Lavendel auf Nachtviolett, silber – Silberweiß auf Schwarz.
 // Umschalten: `qs ipc call theme set <name>` (macht thema.sh); beim Start gilt ~/.config/hypr/themen/aktiv.
 // Beim Wechsel blenden die Farben weich über (wie das Wallpaper).
 Singleton {
@@ -59,6 +59,13 @@ Singleton {
             onAccentMuted: "#4d0f2c",
             red: "#ffb054",
             base: [0.08, 0.03, 0.11], hover: [0.15, 0.07, 0.19], hair: [1, 0.9, 1, 0.09]
+        },
+        lila: {
+            accent: "#b18cf2", accentSoft: "#dcc8fb", accentDeep: "#6a43b0",
+            cream: "#ece6f5", muted: "#aaa3ba", dim: "#978fa9", faint: "#736b85", ink: "#0f0b1a",
+            onAccentMuted: "#2f1c52",
+            red: "#e0714f",
+            base: [0.07, 0.05, 0.12], hover: [0.13, 0.10, 0.21], hair: [0.95, 0.9, 1, 0.09]
         }
     })
 

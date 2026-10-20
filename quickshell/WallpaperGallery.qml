@@ -35,7 +35,7 @@ PanelWindow {
     property string activePath: ""
 
     // Farbauswahl für die Seide
-    readonly property var colors: ["golden", "glut", "kohle", "purpur", "mond", "silber"]
+    readonly property var colors: ["golden", "glut", "kohle", "purpur", "lila", "mond", "silber"]
     property bool picking: false
     property int pickSel: 0
     onShownChanged: picking = false

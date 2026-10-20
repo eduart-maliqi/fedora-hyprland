@@ -8,7 +8,7 @@
 ---- PALETTE -----
 ------------------
 
--- Farbthemen wie in Quickshell (Theme.qml: golden, mond, glut, kohle, purpur, silber). Welches gilt, zeigt der Symlink themen/aktiv; umgeschaltet wird mit
+-- Farbthemen wie in Quickshell (Theme.qml: golden, mond, glut, kohle, purpur, lila, silber). Welches gilt, zeigt der Symlink themen/aktiv; umgeschaltet wird mit
 -- scripts/thema.sh <name> (beim Wallpaper-Wechsel automatisch) → golden.apply_theme weiter unten.
 local palettes = {
     golden = { accent = "e3a142", accent_soft = "f2c57c", ink = "12181e" },
@@ -16,6 +16,7 @@ local palettes = {
     glut   = { accent = "ef5a50", accent_soft = "fdb59a", ink = "0d0b10" },
     kohle  = { accent = "e8a21c", accent_soft = "f5c867", ink = "121212" },
     purpur = { accent = "f2508a", accent_soft = "f3b0d6", ink = "12071a" },
+    lila   = { accent = "b18cf2", accent_soft = "dcc8fb", ink = "0f0b1a" },
     silber = { accent = "cfd6df", accent_soft = "eef1f5", ink = "0c0d0f" },
 }
 

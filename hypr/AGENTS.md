@@ -3,7 +3,7 @@
 Kern-Doku des Desktop-Setups (Hyprland + Quickshell + Hilfsprogramme). Diese Datei wird **immer** geladen und enthält
 nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/` und wird **nur bei Bedarf** gelesen.
 
-**Stand:** 2026-10-16
+**Stand:** 2026-10-20
 
 ---
 
@@ -286,7 +286,7 @@ Medien vor/zurück/Play-Pause. Alle funktionieren auch bei gesperrtem Bildschirm
 
 ## Design & Stil
 
-**Farben** (`Theme.qml`, Paletten golden/glut/kohle/purpur/mond; in `hyprland.lua` als `palettes`; übrige Programme in
+**Farben** (`Theme.qml`, Paletten golden/glut/kohle/purpur/lila/mond/silber; in `hyprland.lua` als `palettes`; übrige Programme in
 `themen/<name>/`). Hier die Werte von **golden**, alle Themen nebeneinander in `docs/wallpaper.md`:
 
 | Name | golden | Verwendung |
