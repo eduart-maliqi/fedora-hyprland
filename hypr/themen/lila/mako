@@ -1,5 +1,5 @@
 # ★ 8155 – Farben der Benachrichtigungen, Thema lila (eingebunden von mako/config über themen/aktiv)
 background-color=#160c2ad6
 text-color=#ece6f5
-border-color=#a66bff66
-progress-color=over #a66bff44
+border-color=#a100ff66
+progress-color=over #a100ff44

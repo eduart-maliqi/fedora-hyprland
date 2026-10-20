@@ -16,7 +16,7 @@ local palettes = {
     glut   = { accent = "ef5a50", accent_soft = "fdb59a", ink = "0d0b10" },
     kohle  = { accent = "e8a21c", accent_soft = "f5c867", ink = "121212" },
     purpur = { accent = "f2508a", accent_soft = "f3b0d6", ink = "12071a" },
-    lila   = { accent = "a66bff", accent_soft = "d2b4ff", ink = "100820" },
+    lila   = { accent = "a100ff", accent_soft = "dcafff", ink = "100820" },
     silber = { accent = "cfd6df", accent_soft = "eef1f5", ink = "0c0d0f" },
 }
 

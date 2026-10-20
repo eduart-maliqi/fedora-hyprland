@@ -12,7 +12,7 @@ W, H = 2880, 1800
 # accentDeep, accent, accentSoft – wie die Paletten in quickshell/Theme.qml
 PAL = {"golden": ("#b8792b", "#e3a142", "#f2c57c"), "glut": ("#9e2f34", "#ef5a50", "#fdb59a"),
        "kohle": ("#a8740f", "#e8a21c", "#f5c867"), "purpur": ("#8f1f5a", "#f2508a", "#f3b0d6"),
-       "lila": ("#6b2fd6", "#a66bff", "#d2b4ff"),
+       "lila": ("#7500c0", "#a100ff", "#dcafff"),
        "mond": ("#4b7aa3", "#8cc0e4", "#cfe3f1"), "silber": ("#6b7684", "#cfd6df", "#eef1f5")}
 K1, K2 = [1, 2, 1, 3, 2], [2, 1, 3, 1, 2]
 
