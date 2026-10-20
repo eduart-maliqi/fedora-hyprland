@@ -104,8 +104,8 @@ Nachtbildern Mondlicht-Blau. Das Thema hängt am Wallpaper:
 und ruft bei einem Wechsel `scripts/thema.sh <name>` auf. Von Hand: `thema.sh glut` (ohne Argument: zeigt das aktive Thema).
 `silber` (Silberweiß auf Schwarz: accent `#cfd6df`, soft `#eef1f5`, deep `#6b7684`, cream `#eceef1`, ink `#0c0d0f`,
 Glas (0.06, 0.065, 0.075)) für schwarz-graue Bilder.
-`lila` (Lavendel auf Nachtviolett: accent `#b18cf2`, soft `#dcc8fb`, deep `#6a43b0`, cream `#ece6f5`, muted/faint `#aaa3ba`/`#736b85`,
-ink `#0f0b1a`, red `#e0714f`, Glas (0.07, 0.05, 0.12)) für lila-blaue Bilder (Lavendelfeld).
+`lila` (Lavendel auf Nachtviolett: accent `#a66bff`, soft `#d2b4ff`, deep `#6b2fd6`, cream `#ece6f5`, muted/faint `#aaa3ba`/`#736b85`,
+ink `#100820`, red `#e0714f`, Glas (0.08, 0.04, 0.16)) für lila-blaue Bilder (Lavendelfeld).
 
 | | golden | glut | kohle | purpur | mond |
 |---|---|---|---|---|---|

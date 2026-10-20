@@ -1,11 +1,11 @@
 /* ★ 8155 – rofi-Farben, Thema lila (eingebunden von rofi/config.rasi über themen/aktiv) */
 * {
-    accent:      #b18cf2;
-    accent-soft: #dcc8fb;
+    accent:      #a66bff;
+    accent-soft: #d2b4ff;
     cream:       #ece6f5;
     muted:       #aaa3ba;
     faint:       #736b85;
-    ink:         #0f0b1a;
+    ink:         #100820;
     hairline:    #f0e6ff17;
-    panel:       #140f20b8;
+    panel:       #160c2ab8;
 }

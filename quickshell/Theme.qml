@@ -61,11 +61,11 @@ Singleton {
             base: [0.08, 0.03, 0.11], hover: [0.15, 0.07, 0.19], hair: [1, 0.9, 1, 0.09]
         },
         lila: {
-            accent: "#b18cf2", accentSoft: "#dcc8fb", accentDeep: "#6a43b0",
-            cream: "#ece6f5", muted: "#aaa3ba", dim: "#978fa9", faint: "#736b85", ink: "#0f0b1a",
-            onAccentMuted: "#2f1c52",
+            accent: "#a66bff", accentSoft: "#d2b4ff", accentDeep: "#6b2fd6",
+            cream: "#ece6f5", muted: "#aaa3ba", dim: "#978fa9", faint: "#736b85", ink: "#100820",
+            onAccentMuted: "#2e1460",
             red: "#e0714f",
-            base: [0.07, 0.05, 0.12], hover: [0.13, 0.10, 0.21], hair: [0.95, 0.9, 1, 0.09]
+            base: [0.08, 0.04, 0.16], hover: [0.15, 0.09, 0.26], hair: [0.95, 0.88, 1, 0.10]
         }
     })
 
