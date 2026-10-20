@@ -30,7 +30,7 @@ nächsten Bildwechsel erkannt.
     ├── mond-titan.jpg    ← Attack on Titan: Silhouette mit ausgebreiteten Armen über Wolken, Logo unten mittig im Bild (3840×2160, mittig auf 16:10 geschnitten, 2026-10-09) – Thema „mond“; ohne Maske
     ├── mond-naruto.jpg   ← Naruto mit Supreme-Maske vor nächtlicher Neon-Stadt (Vorlage nur 236×236 → mit Lanczos auf 1800×1800 hochgerechnet, mittig auf unscharfem, abgedunkeltem Hintergrund 2880×1800, 2026-10-12; sehr weich) – Thema „mond“; ohne Maske
     ├── purpur-kirschbaum.jpg ← surrealer Kirschbaum am Wasser (5120×2880) – Thema „purpur“
-    ├── lila-lavendel.jpg  ← Häuschen + Baum im Lavendelfeld unter Sternenhimmel (Vorlage nur 800×450 → Lanczos auf 2880×1800, 2026-10-20; weich) – Thema „lila“; ohne Maske
+    ├── lila-lavendel.jpg  ← Häuschen + Baum im Lavendelfeld unter Sternenhimmel (5120×2880 → 2880×1800, 2026-10-20) – Thema „lila“; ohne Maske
     ├── silber-auto.jpg    ← schwarzes Auto, nur Scheinwerfer leuchten (3300×1856, 2026-10-20) – Thema „silber“; ohne Maske
     ├── silber-band.jpg    ← schwarzes Band auf Schwarz (Microsoft Surface, 5120×3200) – Thema „silber“
     ├── silber-goku.jpg    ← Goku mit weisser Aura, fast schwarz (5120×2880) – Thema „silber“
