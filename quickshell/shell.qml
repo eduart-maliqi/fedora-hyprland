@@ -59,6 +59,8 @@ ShellRoot {
 
     WallpaperGallery {}
 
+    WallpaperStudio {}
+
     // qs ipc call wallpaper set /pfad/zum/bild.jpg | animate (lebendiges Wallpaper an/aus)
     IpcHandler {
         target: "wallpaper"
@@ -67,10 +69,12 @@ ShellRoot {
     }
 
     // qs ipc call theme set golden|mond (Farbthema; ruft hypr/scripts/thema.sh beim Wallpaper-Wechsel auf) | get
+    // | reload (themen/*/farben.json neu einlesen – nach dem Speichern in der App „Wallpaper“)
     IpcHandler {
         target: "theme"
         function set(name: string): void { if (Theme.palettes[name]) Theme.name = name }
         function get(): string { return Theme.name }
+        function reload(): void { Theme.reload() }
     }
 
     // qs ipc call music toggle | toggleOn <bildschirm> | open | close

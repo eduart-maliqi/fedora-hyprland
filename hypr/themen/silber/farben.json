@@ -1,0 +1,34 @@
+{
+  "accent": "#cfd6df",
+  "accentSoft": "#eef1f5",
+  "accentDeep": "#6b7684",
+  "cream": "#eceef1",
+  "muted": "#a6abb2",
+  "dim": "#959aa1",
+  "faint": "#70757c",
+  "ink": "#0c0d0f",
+  "onAccentMuted": "#3a414a",
+  "red": "#e0714f",
+  "base": [
+    0.06,
+    0.065,
+    0.075
+  ],
+  "hover": [
+    0.13,
+    0.135,
+    0.145
+  ],
+  "hair": [
+    1,
+    1,
+    1,
+    0.08
+  ],
+  "panel": "#111316",
+  "term": "#101114",
+  "termInk": "#0c0d0f",
+  "termTab": "#1e2024",
+  "rofiHair": "#ffffff17",
+  "lockBrightness": 0.9
+}

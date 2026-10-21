@@ -65,6 +65,7 @@ Musik-Panel/Songtexte: `docs/musik.md` · lebendiges Wallpaper: `docs/wallpaper.
 | TaskView.qml | golden-taskview | Overlay | pro Bildschirm, **immer da** als 1×1 px (klick-durchlässig); Super+Tab / Alt+Tab → auf dem Bildschirm mit Fokus ganzer Bildschirm |
 | KeysHelp.qml | golden-keys | Overlay | Super+I, oben rechts (auch über Vollbild); `Ui.keysOpen` |
 | WallpaperGallery.qml | golden-gallery | Overlay | Super+W (`quickshell:galleryToggle`), ganzer Bildschirm mit Fokus, Tastatur `Exclusive` – siehe `docs/wallpaper.md` |
+| WallpaperStudio.qml | – (`FloatingWindow`, normales App-Fenster, Klasse `org.quickshell`, Titel `wallpaper · 8155`) | – | App „Wallpaper“ (rofi / `qs ipc call studio open`); Fensterregel `float-wallpaper-studio` in `hyprland.lua` – siehe `docs/wallpaper.md` |
 
 ## Gemeinsamer Zustand (`Ui.qml`)
 `wallpaper` (Bild-URL), Musik-Panel (`musicOpen`, `musicScreen`, `musicAuto`, `musicDismissed`, `musicShown`, `toggleMusic(name)`, `openMusic(name)`,
@@ -187,7 +188,8 @@ Fokus auf. Schließen: Super+I, 󰅖, Esc (bei leerer Suche), Klick aufs Wallpap
 |---|---|
 | `wallpaper` | `set <pfad>`, `animate` (lebendig an/aus) |
 | `gallery` | `toggle`, `open`, `close` (Wallpaper-Galerie, Super+W) |
-| `theme` | `set golden\|glut\|kohle\|purpur\|mond` (Farbthema, ruft `scripts/thema.sh` auf), `get` |
+| `theme` | `set <name>` (Farbthema, ruft `scripts/thema.sh` auf), `get`, `reload` (`themen/*/farben.json` neu einlesen) |
+| `studio` | `open`, `close`, `toggle` (App „Wallpaper“, `WallpaperStudio.qml` – siehe `docs/wallpaper.md`) |
 | `music` | `toggle` (holen/zurücklegen auf dem Bildschirm mit Fokus), `toggleOn <bildschirm>` (dasselbe auf z. B. `DVI-I-1`; benutzt Super+M), `open` (über die Fenster), `close` (ausblenden wie ✕) |
 | `lyrics` | `toggle` (Songtext auf dem Desktop), `screenOn <bildschirm>` (Songtext-Bildschirm auf/zu/dorthin wechseln; benutzt Super+Shift+M), `screenClose`, `style seide\|fluss\|flecken` (Hintergrund des Songtext-Bildschirms) |
 | `clock` | `toggle` |

@@ -3,6 +3,7 @@
 Wird **nicht** automatisch geladen – nur lesen, wenn die Geschichte einer Änderung wichtig ist (z. B. Fehlersuche).
 Neueste Einträge oben. Format: `JJJJ-MM-TT – was (Dateien) – warum`, **höchstens 3 Zeilen** (keine Testprotokolle, keine Zitate). Einträge bis 2026-10-08 sind noch ausführlicher.
 
+- **2026-10-21** – App „Wallpaper“ (`WallpaperStudio.qml`, `ThemePreview.qml`, `ColorField.qml`, rofi-Starter): Bilder hinzufügen/löschen/Thema zuordnen, Farbthemen erstellen/bearbeiten mit Mini-Desktop-Vorschau; Themenfarben jetzt nur in `themen/<name>/farben.json`, Rest erzeugt `thema-bauen.py` (Theme.qml, hyprland.lua, seide-standbild.py lesen daraus) – Wunsch des Benutzers, vorher 4 Stellen von Hand.
 - **2026-10-20** – Thema „lila“ = Accenture-Lila (`#a100ff`, deep `#7500c0`, soft `#dcafff`) – Wunsch des Benutzers.
 - **2026-10-20** – Thema „lila“ kräftiger (accent `#a66bff`, Glas violetter) – war dem Benutzer zu blass.
 - **2026-10-20** – neues Farbthema „lila“ (Lavendel; `themen/lila/`, `Theme.qml`, `hyprland.lua`, Galerie, `seide/lila.jpg`) + Bilder `lila-lavendel.jpg`, `silber-auto.jpg` – neue Wallpaper des Benutzers.

@@ -3,7 +3,7 @@
 Kern-Doku des Desktop-Setups (Hyprland + Quickshell + Hilfsprogramme). Diese Datei wird **immer** geladen und enthält
 nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/` und wird **nur bei Bedarf** gelesen.
 
-**Stand:** 2026-10-20
+**Stand:** 2026-10-21
 
 ---
 
@@ -79,8 +79,8 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── monitors.conf, workspaces.conf ← leer bzw. hyprlang-Format, legt nwg-displays an – werden **nicht** benutzt
 ├── hypridle.conf          ← Leerlauf: abdunkeln → sperren → Bildschirm aus → Bereitschaft
 ├── hyprlock.conf          ← Sperrbildschirm (Farben per `source` aus themen/aktiv)
-├── themen/                ← Farbthemen: golden/, glut/, kohle/, purpur/, mond/, silber/ (je hyprlock.conf, mako, rofi.rasi, kitty.conf), `aktiv` = Symlink
-│                            aufs aktive Thema → docs/wallpaper.md
+├── themen/                ← Farbthemen: golden/, glut/, kohle/, purpur/, lila/, mond/, silber/ + eigene; je **farben.json** (die eine Quelle)
+│                            + daraus erzeugt hyprlock.conf, mako, rofi.rasi, kitty.conf, hypr.lua; `aktiv` = Symlink aufs aktive Thema → docs/wallpaper.md
 ├── phantomat.lua          ← Einstellungen fürs Plugin Phantomat (Super+P); `phantomat-tuning.lua` (entsteht beim
 │                            Live-Einstellen mit Strg+, in der Phantom-Ansicht) gewinnt darüber → docs/plugins.md
 ├── grub-ghost/            ← Bootmenü (GRUB) + Ladebildschirm (Plymouth) im Stil von Ghost of Tsushima:
@@ -110,7 +110,9 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 │   ├── spotify-auth.py    ← Spotify-Anmeldung fürs Musik-Panel (PKCE): `login [client-id]`, `token [--refresh]`, `logout`
 │   ├── seide-standbild.py ← Standbilder wallpapers/seide/<thema>.jpg fürs bewegte Wallpaper „seide“ (numpy-Nachbau des Shaders) → docs/wallpaper.md
 │   ├── thema.sh           ← Farbthema umschalten (`<name>`, ohne Argument: aktives zeigen) → Quickshell, Hyprland, mako, kitty
-│   ├── wallpaper.sh       ← Wallpaper wechseln (`next` oder Pfad, `weg <pfad>` = in den Papierkorb) → Symlink + Quickshell-IPC + Verlauf + Farbthema aus dem Dateinamen
+│   ├── thema-bauen.py     ← Themen aus farben.json: `bauen`, `speichern` (stdin), `vorschlag <bild>`, `loeschen`, `liste`, `--test` → docs/wallpaper.md
+│   ├── wallpaper.sh       ← Wallpaper wechseln (`next` oder Pfad, `weg <pfad>` = in den Papierkorb, `neu <bild> <thema>` = zuschneiden + ablegen,
+│   │                        `thema <bild> <thema>` = umbenennen) → Symlink + Quickshell-IPC + Verlauf + Farbthema aus dem Dateinamen
 │   ├── windowshade.sh     ← Plugin HyprWindowShade: `build`, `update`, `load` (Autostart, mit Versions-/Prüfsummen-Check), `unload`
 │   ├── phantomat.sh       ← Plugin Phantomat: `build`, `update`, `an`/`aus` (von Super+P / Super+Strg+P, tauscht dabei
 │   │                        HyprWindowShade aus), `unload` (Notbremse) → docs/plugins.md
@@ -122,7 +124,7 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── AGENTS.md              ← Symlink auf ~/.config/hypr/AGENTS.md
 ├── CLAUDE.md              ← lädt AGENTS.md für Claude Code
 ├── shell.qml              ← Wurzel: erzeugt alle Fenster + IPC-Handler
-├── Theme.qml              ← Singleton: Farben (Paletten golden/glut/kohle/purpur/mond/silber, `Theme.name`), Schriften
+├── Theme.qml              ← Singleton: Farben (Paletten aus hypr/themen/*/farben.json, `Theme.name`, `reload()`), Schriften
 ├── Ui.qml                 ← Singleton: gemeinsamer UI-Zustand (welches Panel offen ist usw.)
 ├── Media.qml              ← Singleton: aktiver MPRIS-Player
 ├── LyricsService.qml      ← Singleton: synchronisierte Songtexte (ruft hypr/scripts/lyrics.py auf)
@@ -158,7 +160,9 @@ nur, was man bei jeder Arbeit am Desktop braucht. Alles Weitere steht in `docs/`
 ├── TaskView.qml           ← Aufgabenansicht mit Live-Vorschau: Super+Tab (wie Windows) und Alt+Tab-Fensterwechsler
 ├── ClaudeSessions.qml     ← Singleton: Claude-Code-Sitzungen, die fertig sind und auf dich warten (Kapsel in der Leiste)
 ├── KeysHelp.qml           ← Super+I: Übersicht aller Tastenkürzel oben rechts (Liste von Hand gepflegt)
-└── WallpaperGallery.qml   ← Super+W: Wallpaper-Galerie (Waben, zuletzt genutzt zuerst) → docs/wallpaper.md
+├── WallpaperGallery.qml   ← Super+W: Wallpaper-Galerie (Waben, zuletzt genutzt zuerst) → docs/wallpaper.md
+├── WallpaperStudio.qml    ← App „Wallpaper“ (rofi): Bilder hinzufügen/löschen/Thema zuordnen, Farbthemen erstellen/bearbeiten
+│                            mit Live-Vorschau (ThemePreview.qml = Mini-Desktop, ColorField.qml = Farbwähler) → docs/wallpaper.md
 
 Weitere Konfigurationen im selben Stil:
 ~/.config/rofi/config.rasi   ← App-Starter/Menüs (Symbolthema WhiteSur-dark; Farben @import themen/aktiv/rofi.rasi)
@@ -201,7 +205,7 @@ wer ein Kürzel neu anlegt, ändert oder entfernt, muss es **auch dort** nachtra
 | Super+Shift+D | **NOA hochfahren** (`scripts/noa-start.sh`): Container `noadb`, Backend + Frontend in kitty-Tabs, IntelliJ |
 | **Super+Shift+A** | **iPhone spiegeln** an/aus (AirPlay-Empfänger UxPlay als User-Dienst, `scripts/iphone.sh`; auch Kachel im Kontrollzentrum). Am iPhone: Kontrollzentrum → Bildschirmsynchronisierung → „8155-Laptop“, Passwort steht in der Meldung beim Einschalten (`iphone.sh passwort`) → docs/system.md |
 | **Super+Alt+A** | **iPhone steuern** an/aus: unsichtbares Fenster übers Spiegelbild – **Klick hinein fängt die Maus ein**, der iPhone-Zeiger folgt, Klick/Tastatur gehen ans iPhone (Bluetooth-LE-HID); **Strg+Alt** gibt frei, Super+Q beendet. Fragt einmal nach dem Passwort (Bluetooth solange nur LE → Kopfhörer getrennt) |
-| Super+Leertaste / Super+D | App-Starter (`rofi -show drun`) |
+| Super+Leertaste / Super+D | App-Starter (`rofi -show drun`); „**wallpaper**“ = App zum Verwalten von Wallpapern + Farbthemen |
 | Super+E | Dateimanager (nautilus) |
 | Super+B | Browser (brave-browser) |
 | Super+Shift+V | Zwischenablage-Verlauf (`scripts/clipboard.sh`): Auswahl wird kopiert **und** per Strg+V ins aktive Fenster eingefügt |
@@ -271,7 +275,8 @@ Medien vor/zurück/Play-Pause. Alle funktionieren auch bei gesperrtem Bildschirm
 - **Quickshell lädt beim Speichern neu**, kein Linter → `qs log` prüfen. Hängt es („Not ready to accept queries yet“) oder bleibt
   ein Fenster nach Änderung von `margins`/Größe an der alten Stelle: `pkill -x qs; hyprctl dispatch 'hl.dsp.exec_cmd("qs")'`.
 - **Farben nie fest eintragen** (es gibt mehrere Farbthemen): in QML `Theme.accent`, `Theme.accentA(0.45)`, `Theme.glassA(…)`,
-  `Theme.alpha(Theme.green, …)`; in hyprland.lua `palettes` + `golden.apply_theme`; sonst `themen/<name>/…`. → docs/wallpaper.md
+  `Theme.alpha(Theme.green, …)`. Themenfarben stehen **nur** in `themen/<name>/farben.json`; die übrigen Dateien dort erzeugt
+  `scripts/thema-bauen.py` (nicht von Hand ändern). → docs/wallpaper.md
 - **Neues Tastenkürzel** → auch in `KeysHelp.qml` (Eigenschaft `columns`) eintragen, die Super+I-Liste ist von Hand gepflegt.
 - **Neues Quickshell-Panel mit Glas-Look** → Namespace in die Layer-Regel `^golden-(…)$` in `hyprland.lua`, sonst kein Blur.
 - **Plugins** (wobbly, Phantomat, HyprWindowShade) nach **jedem Hyprland-Update neu bauen**; eine geladene `.so` nie direkt
@@ -286,8 +291,8 @@ Medien vor/zurück/Play-Pause. Alle funktionieren auch bei gesperrtem Bildschirm
 
 ## Design & Stil
 
-**Farben** (`Theme.qml`, Paletten golden/glut/kohle/purpur/lila/mond/silber; in `hyprland.lua` als `palettes`; übrige Programme in
-`themen/<name>/`). Hier die Werte von **golden**, alle Themen nebeneinander in `docs/wallpaper.md`:
+**Farben** (`themen/<name>/farben.json` für golden/glut/kohle/purpur/lila/mond/silber + eigene, gelesen von `Theme.qml`; daraus erzeugt
+`themen/<name>/{hypr.lua,hyprlock.conf,mako,rofi.rasi,kitty.conf}`). Hier die Werte von **golden**, alle Themen nebeneinander in `docs/wallpaper.md`:
 
 | Name | golden | Verwendung |
 |---|---|---|

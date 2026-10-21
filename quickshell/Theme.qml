@@ -5,10 +5,8 @@ import Quickshell
 import Quickshell.Io
 
 // ★ 8155 – Farben & Schriften an einer Stelle
-// Farbthemen, gewählt über das Wallpaper (Dateiname <thema>-<name>.jpg, siehe hypr/scripts/thema.sh):
-//   golden – Amber/Gold zu den hellen Bildern, mond – Mondlicht-Blau zu Nachtbildern,
-//   glut – Glutrot zu dunklen, rot-schwarzen Bildern (Finsternis), kohle – Sonnengelb auf Anthrazit,
-//   purpur – Neonpink auf Violett, lila – Lavendel auf Nachtviolett, silber – Silberweiß auf Schwarz.
+// Farbthemen, gewählt über das Wallpaper (Dateiname <thema>-<name>.jpg, siehe hypr/scripts/thema.sh),
+// Farben je Thema in hypr/themen/<name>/farben.json (z. B. golden – Amber/Gold, mond – Mondlicht-Blau, glut – Glutrot).
 // Umschalten: `qs ipc call theme set <name>` (macht thema.sh); beim Start gilt ~/.config/hypr/themen/aktiv.
 // Beim Wechsel blenden die Farben weich über (wie das Wallpaper).
 Singleton {
@@ -16,58 +14,17 @@ Singleton {
 
     readonly property string title: "8155"
 
-    readonly property var palettes: ({
+    // Paletten aus ~/.config/hypr/themen/<name>/farben.json (die eine Quelle, bearbeitbar in der App „Wallpaper“);
+    // golden steht hier nur als Rückfall, bis die Dateien gelesen sind. Neu einlesen: reload() (`qs ipc call theme reload`).
+    property var palettes: ({
         golden: {
             accent: "#e3a142", accentSoft: "#f2c57c", accentDeep: "#b8792b",
             cream: "#ede6d6", muted: "#aab0aa", dim: "#98a19b", faint: "#7d8680", ink: "#12181e",
-            onAccentMuted: "#4a3414",                 // Nebentext auf Akzent-Fläche (Interpret in der aktiven Zeile)
-            red: "#e0714f",
+            onAccentMuted: "#4a3414", red: "#e0714f",
             base: [0.07, 0.09, 0.11], hover: [0.12, 0.14, 0.16], hair: [1, 1, 1, 0.08]
-        },
-        mond: {
-            accent: "#8cc0e4", accentSoft: "#cfe3f1", accentDeep: "#4b7aa3",
-            cream: "#e3ebf2", muted: "#a2afbc", dim: "#8f9dab", faint: "#6e7d8c", ink: "#0b1219",
-            onAccentMuted: "#23415a",
-            red: "#e0714f",
-            base: [0.04, 0.07, 0.11], hover: [0.09, 0.13, 0.19], hair: [0.85, 0.92, 1, 0.09]
-        },
-        glut: {
-            accent: "#ef5a50", accentSoft: "#fdb59a", accentDeep: "#9e2f34",
-            cream: "#ece5e3", muted: "#ada4a6", dim: "#9a9092", faint: "#776d70", ink: "#0d0b10",
-            onAccentMuted: "#4a1518",
-            red: "#ffb054",                           // Akzent ist schon rot → Warnungen orange, sonst nicht zu unterscheiden
-            base: [0.07, 0.055, 0.07], hover: [0.14, 0.10, 0.12], hair: [1, 0.9, 0.9, 0.08]
-        },
-        kohle: {
-            accent: "#e8a21c", accentSoft: "#f5c867", accentDeep: "#a8740f",
-            cream: "#e8e6e1", muted: "#a9a8a4", dim: "#969591", faint: "#74736f", ink: "#121212",
-            onAccentMuted: "#4a3306",
-            red: "#e0714f",
-            base: [0.08, 0.08, 0.085], hover: [0.15, 0.15, 0.155], hair: [1, 1, 1, 0.08]
-        },
-        silber: {
-            accent: "#cfd6df", accentSoft: "#eef1f5", accentDeep: "#6b7684",
-            cream: "#eceef1", muted: "#a6abb2", dim: "#959aa1", faint: "#70757c", ink: "#0c0d0f",
-            onAccentMuted: "#3a414a",
-            red: "#e0714f",
-            base: [0.06, 0.065, 0.075], hover: [0.13, 0.135, 0.145], hair: [1, 1, 1, 0.08]
-        },
-        purpur: {
-            accent: "#f2508a", accentSoft: "#f3b0d6", accentDeep: "#8f1f5a",
-            clockDate: "#d6286e",                     // Datum der Desktop-Uhr: kräftiges Pink, lesbar auf hellem Rosa
-            cream: "#f0e6ef", muted: "#b5a3b6", dim: "#a090a3", faint: "#7c6b80", ink: "#12071a",
-            onAccentMuted: "#4d0f2c",
-            red: "#ffb054",
-            base: [0.08, 0.03, 0.11], hover: [0.15, 0.07, 0.19], hair: [1, 0.9, 1, 0.09]
-        },
-        lila: {
-            accent: "#a100ff", accentSoft: "#dcafff", accentDeep: "#7500c0",
-            cream: "#ece6f5", muted: "#aaa3ba", dim: "#978fa9", faint: "#736b85", ink: "#100820",
-            onAccentMuted: "#2a0045",
-            red: "#e0714f",
-            base: [0.09, 0.02, 0.16], hover: [0.17, 0.06, 0.27], hair: [0.95, 0.88, 1, 0.10]
         }
     })
+    readonly property var names: Object.keys(palettes).sort()
 
     property string name: "golden"
     readonly property var p: palettes[name] ?? palettes.golden
@@ -117,8 +74,27 @@ Singleton {
 
     readonly property string home: Quickshell.env("HOME")
 
+    function reload() { loader.running = true }
+
     Process {
+        id: loader
         running: true
+        command: ["python3", theme.home + "/.config/hypr/scripts/thema-bauen.py", "liste"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const all = {}
+                for (const line of text.split("\n")) {
+                    if (!line.trim()) continue
+                    try { const t = JSON.parse(line); all[t.name] = t } catch (e) {}
+                }
+                if (all.golden) theme.palettes = all
+                active.running = true
+            }
+        }
+    }
+
+    Process {
+        id: active
         command: ["readlink", theme.home + "/.config/hypr/themen/aktiv"]
         stdout: StdioCollector {
             onStreamFinished: {

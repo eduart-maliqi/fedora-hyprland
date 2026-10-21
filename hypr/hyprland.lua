@@ -8,17 +8,10 @@
 ---- PALETTE -----
 ------------------
 
--- Farbthemen wie in Quickshell (Theme.qml: golden, mond, glut, kohle, purpur, lila, silber). Welches gilt, zeigt der Symlink themen/aktiv; umgeschaltet wird mit
--- scripts/thema.sh <name> (beim Wallpaper-Wechsel automatisch) → golden.apply_theme weiter unten.
-local palettes = {
-    golden = { accent = "e3a142", accent_soft = "f2c57c", ink = "12181e" },
-    mond   = { accent = "8cc0e4", accent_soft = "cfe3f1", ink = "0b1219" },
-    glut   = { accent = "ef5a50", accent_soft = "fdb59a", ink = "0d0b10" },
-    kohle  = { accent = "e8a21c", accent_soft = "f5c867", ink = "121212" },
-    purpur = { accent = "f2508a", accent_soft = "f3b0d6", ink = "12071a" },
-    lila   = { accent = "a100ff", accent_soft = "dcafff", ink = "100820" },
-    silber = { accent = "cfd6df", accent_soft = "eef1f5", ink = "0c0d0f" },
-}
+-- Farbthemen: je Thema themen/<name>/farben.json (bearbeitbar in der App „Wallpaper“), daraus erzeugt
+-- scripts/thema-bauen.py themen/<name>/hypr.lua mit den paar Farben für Hyprland. Welches gilt, zeigt der Symlink
+-- themen/aktiv; umgeschaltet wird mit scripts/thema.sh <name> (beim Wallpaper-Wechsel automatisch) → golden.apply_theme.
+local golden_palette = { accent = "e3a142", accent_soft = "f2c57c", ink = "12181e" }
 
 ------------------
 ---- MONITORE ----
@@ -360,10 +353,14 @@ hl.bind(mod .. " + mouse_up",      phantom_or("noop", hl.dsp.focus({ workspace =
 
 golden = {}
 
--- Farbthema (siehe palettes oben): Fensterrand, Glühen und Hintergrund. scripts/thema.sh ruft das per hyprctl eval auf;
+-- Farbthema (siehe PALETTE oben): Fensterrand, Glühen und Hintergrund. scripts/thema.sh ruft das per hyprctl eval auf;
 -- beim Start / Neuladen gilt das Thema, auf das themen/aktiv zeigt.
 function golden.apply_theme(name)
-    local c = palettes[name] or palettes.golden
+    local ok, c = false, nil
+    if type(name) == "string" and name:match("^[a-z]+$") then
+        ok, c = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/themen/" .. name .. "/hypr.lua")
+    end
+    if not ok or type(c) ~= "table" then c = golden_palette end
     hl.config({
         general    = { col = { active_border = { colors = { "rgba(" .. c.accent_soft .. "cc)", "rgba(" .. c.accent .. "33)" }, angle = 90 } } },
         decoration = { glow = { color = "rgba(" .. c.accent .. "1c)" } },
@@ -771,6 +768,15 @@ hl.window_rule({
     float = true,
     center = true,
     size  = { "monitor_w*0.5", "monitor_h*0.6" },
+})
+
+-- App „Wallpaper“ (quickshell/WallpaperStudio.qml, ein Quickshell-Fenster): schwebend und mittig
+hl.window_rule({
+    name   = "float-wallpaper-studio",
+    match  = { title = "^(wallpaper · 8155)$" },
+    float  = true,
+    center = true,
+    size   = { "monitor_w*0.82", "monitor_h*0.84" },
 })
 
 -- App „Bildschirme“ (nwg-displays): schwebend und mittig, eigene Fenstergröße

@@ -5,6 +5,9 @@
 #                              wallpapers/seide/<thema>.jpg = bewegte Seide (Standbild für hyprlock, Desktop zeigt den Shader)
 #   wallpaper.sh weg /pfad.jpg → Bild (+ Maske) in den Papierkorb (Strg+Entf in der Galerie); war es aktiv,
 #                              kommt vorher das zuletzt davor genutzte
+#   wallpaper.sh neu <bild> <thema>   → Bild auf 2880×1800 zuschneiden, als wallpapers/<thema>-<name>.jpg ablegen (gibt den Pfad aus)
+#   wallpaper.sh thema <bild> <thema> → anderem Farbthema zuordnen = umbenennen (+ Maske, Verlauf; war es aktiv: neu setzen)
+#   (neu/thema benutzt die App „Wallpaper“, quickshell/WallpaperStudio.qml)
 # Jeder Wechsel kommt oben in ~/.local/state/8155/wallpaper-verlauf → Galerie sortiert „zuletzt genutzt“
 dir="$HOME/.config/hypr/wallpapers"
 current="$(readlink -f "$dir/current" 2>/dev/null)"
@@ -23,6 +26,32 @@ if [[ "${1:-}" == "weg" ]]; then
     gio trash "$weg"
     for m in "$dir/masken/$name.png" "$dir/masken/$name.json"; do [[ -f "$m" ]] && gio trash "$m"; done
     grep -vxF "$weg" "$verlauf" > "$verlauf.neu" 2>/dev/null; mv "$verlauf.neu" "$verlauf"
+    exit 0
+fi
+
+if [[ "${1:-}" == "neu" ]]; then
+    [[ -f "${2:-}" && "${3:-}" =~ ^[a-z]+$ ]] || { echo "aufruf: wallpaper.sh neu <bild> <thema>" >&2; exit 1; }
+    name="$(basename "${2%.*}" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]\+/-/g; s/^-\+//; s/-\+$//')"
+    name="${name:-bild}"; ziel="$dir/$3-$name.jpg"; i=2
+    while [[ -e "$ziel" ]]; do ziel="$dir/$3-$name-$i.jpg"; i=$((i + 1)); done
+    # [0] = erstes Bild bei GIF/mehrseitigen Dateien; 2880×1800 = Bildschirm (16:10)
+    magick "$2[0]" -auto-orient -resize 2880x1800^ -gravity center -extent 2880x1800 -strip -quality 92 "$ziel" || exit 1
+    echo "$ziel"
+    exit 0
+fi
+
+if [[ "${1:-}" == "thema" ]]; then
+    alt="$(readlink -f "${2:-}")"
+    [[ -f "$alt" && "$(dirname "$alt")" == "$dir" && "${3:-}" =~ ^[a-z]+$ ]] || { echo "aufruf: wallpaper.sh thema <bild> <thema>" >&2; exit 1; }
+    name="$(basename "${alt%.*}")"; rest="${name#*-}"; [[ "$rest" == "$name" ]] && rest="$name"
+    neu="$dir/$3-$rest.${alt##*.}"
+    [[ "$neu" == "$alt" ]] && exit 0
+    [[ -e "$neu" ]] && { echo "gibt es schon: $neu" >&2; exit 1; }
+    mv "$alt" "$neu"
+    for e in png json; do [[ -f "$dir/masken/$name.$e" ]] && mv "$dir/masken/$name.$e" "$dir/masken/$3-$rest.$e"; done
+    sed -i "s|^$alt\$|$neu|" "$verlauf" 2>/dev/null
+    [[ "$alt" == "$current" ]] && "$0" "$neu"
+    echo "$neu"
     exit 0
 fi
 

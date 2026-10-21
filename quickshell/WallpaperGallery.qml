@@ -34,8 +34,8 @@ PanelWindow {
     property int sel: 0
     property string activePath: ""
 
-    // Farbauswahl für die Seide
-    readonly property var colors: ["golden", "glut", "kohle", "purpur", "lila", "mond", "silber"]
+    // Farbauswahl für die Seide: Themen, für die es ein Standbild wallpapers/seide/<thema>.jpg gibt (beim Öffnen gelesen)
+    property var colors: []
     property bool picking: false
     property int pickSel: 0
     onShownChanged: picking = false
@@ -103,6 +103,7 @@ PanelWindow {
         })
         // alle Seiden-Standbilder sind eine Wabe: an der Stelle im Verlauf, nie benutzt → gleich nach dem aktiven Bild
         const seiden = sec[3]
+        colors = seiden.map(p => p.split("/").pop().replace(/\.[^.]+$/, "")).filter(t => Theme.palettes[t])
         if (seiden.length > 0) {
             const used = [...sec[0], ...sec[1]].find(p => seiden.includes(p)) ?? ""
             const t = used.split("/").pop().replace(/\.[^.]+$/, "")
@@ -254,7 +255,7 @@ PanelWindow {
                         readonly property bool selected: index === root.sel
                         readonly property bool active: modelData.path === root.activePath
                         readonly property string theme: modelData.seide && root.picking ? root.colors[root.pickSel] : modelData.theme
-                        readonly property var pal: Theme.palettes[theme]
+                        readonly property var pal: Theme.palettes[theme] ?? Theme.p
                         readonly property color tint: pal.accent
                         readonly property var hex: {
                             const w = width, h = height
@@ -388,7 +389,7 @@ PanelWindow {
                             id: swatch
                             required property string modelData
                             required property int index
-                            readonly property var pal: Theme.palettes[modelData]
+                            readonly property var pal: Theme.palettes[modelData] ?? Theme.p
                             readonly property bool chosen: index === root.pickSel
                             spacing: 6
 

@@ -3,7 +3,29 @@
 > Teil der 8155-Doku. Kern (Regeln, Tastenkürzel, Dateistruktur): `~/.config/hypr/AGENTS.md`.
 
 Wechseln: **Super+W = Galerie** (siehe unten) bzw. `scripts/wallpaper.sh next|<pfad>` (Symlink `current` + Quickshell-IPC +
-Verlauf + Farbthema).
+Verlauf + Farbthema). Verwalten (hinzufügen, löschen, Thema zuordnen, Farbthemen erstellen/bearbeiten): **App „Wallpaper“** (unten).
+
+## App „Wallpaper“ (`WallpaperStudio.qml` + `ThemePreview.qml` + `ColorField.qml`)
+Normales Fenster (Quickshell-`FloatingWindow`), gestartet über rofi (Super+Leertaste → „wallpaper“; Starter
+`~/.local/share/applications/8155-wallpaper.desktop` – liegt **nicht** im Git) oder `qs ipc call studio open|close|toggle`.
+Fensterregel `float-wallpaper-studio` (schwebend, mittig, 82 % × 84 %) in `hyprland.lua`, Esc / „schliessen“ / Super+Q schließt.
+- **links „bilder“**: alle Bilder aus `wallpapers/` (ohne Unterordner), Stern = aktiv, Punkt = Akzent des Themas. Klick wählt
+  (und zeigt sein Thema, solange nichts ungespeichert ist), Doppelklick setzt. **hinzufügen** = `zenity`-Dateiauswahl (mehrere)
+  oder Bilder **ins Fenster ziehen** → `wallpaper.sh neu <datei> <thema>` (2880×1800 zugeschnitten, `<thema>-<name>.jpg`,
+  Thema = das rechts gewählte).
+- **mitte „vorschau“**: `ThemePreview.qml` = Mini-Desktop (Leiste, Uhr, Panel, Terminal mit Fensterrand, Meldung) mit dem
+  gewählten Bild und der **gerade bearbeiteten** Palette – der echte Desktop ändert sich erst beim Speichern/Setzen.
+  Knöpfe: **als wallpaper setzen** (`wallpaper.sh <pfad>`), **thema „x“ zuordnen** (`wallpaper.sh thema <pfad> <x>` =
+  umbenennen inkl. Maske + Verlauf; aktives Bild wird neu gesetzt), **bild löschen** (zweiter Klick bestätigt, `wallpaper.sh weg`).
+- **rechts „farbthemen“**: Thema wählen (★ = aktiv), **neu** (Name a–z, Vorlage = gerade gezeigte Farben), **löschen**
+  (zweiter Klick; nicht `golden` = Rückfall und nicht das aktive; Ordner in den Papierkorb, Bilder mit dem Präfix fallen auf golden zurück).
+  Modus **vorschlag**: nur akzent, tinte, glas (oder **aus bild vorschlagen** = `thema-bauen.py vorschlag`, Hauptfarben per
+  `magick -colors 10`) → Rest per `derive()` abgeleitet (soft = 45 % Weiß, deep = 30 % Schwarz, Text-Grautöne mit Hauch Akzent,
+  rötlicher Akzent → `red` orange). Modus **alle farben**: alle 16 Felder einzeln (Farbkreis klappt den Wähler auf, Hex-Feld + Enter).
+  **speichern** → `thema-bauen.py speichern <name>` (prüft Felder + Name, schreibt `farben.json`, baut die Dateien); aktives Thema →
+  `thema.sh <name>` (Desktop färbt um), sonst `qs ipc call theme reload`.
+- Alle Befehle laufen über **einen** `Process` (Ausgabe + `::<rückgabewert>` in der letzten Zeile); die letzte Fehlerzeile steht oben neben dem Titel.
+- Seide: ein neues Thema erscheint erst in der Seide-Farbauswahl der Galerie, wenn `seide-standbild.py <name>` dafür gelaufen ist.
 
 ## Bilder & Masken
 
@@ -80,7 +102,7 @@ passt sich Anzahl und Bildschirm an.
 - Holt sich die Tastatur (`Exclusive`) – beim Testen also nicht öffnen, während jemand tippt (Tasten landen in der Galerie,
   Leertaste übernimmt!). Gefahrlos testen: Kopie mit Stub-`Ui.qml` in einem verschachtelten Hyprland (`docs/testen.md`).
 - **Wabe „seide“** (bewegtes Wallpaper): alle Standbilder aus `wallpapers/seide/` sind **eine** Wabe (Platz laut Verlauf, nie benutzt →
-  gleich nach dem aktiven Bild); Vorschau ist der Shader selbst (bewegt). Enter/Klick → **Farbauswahl** darunter (7 Kreise = Farbthemen,
+  gleich nach dem aktiven Bild); Vorschau ist der Shader selbst (bewegt). Enter/Klick → **Farbauswahl** darunter (Kreise = Themen mit Standbild `seide/<thema>.jpg`,
   ←/→ oder Maus, die Wabe zeigt die Farbe gleich an; Enter/Klick übernimmt → `wallpaper.sh wallpapers/seide/<thema>.jpg`, Esc zurück).
   Nicht löschbar (Strg+Entf tut dort nichts).
 - IPC: `qs ipc call gallery toggle|open|close`. Layer-Regel: Blur + `no_anim` (blendet selbst ein, 180 ms).
@@ -93,11 +115,20 @@ Gleicher Shader wie der Hintergrund des Songtext-Bildschirms (`quickshell/shader
   wechselt per Dateiname mit: `seide/glut.jpg` → glut). In ½ Größe gerechnet; Uhr = `root.time` (30 Bilder/s, Runde 50 s, 2000 s
   ist ein Vielfaches → nahtlos) – absichtlich nicht pro Bildschirmbild, weil die DisplayLink-Monitore jedes neue Bild über USB schicken.
   Bewegt sich **immer** (unabhängig von Super+Shift+W), pausiert nur unter Vollbild-Fenstern. Kostet dauernd etwas Grafik/Akku.
-- **Standbilder neu rechnen** (nach Änderung an `seide.frag` oder den Paletten – `PAL` im Skript nachziehen):
-  `python3 -m venv /tmp/v && /tmp/v/bin/pip install numpy pillow && /tmp/v/bin/python ~/.config/hypr/scripts/seide-standbild.py` (~20 s).
+- **Standbilder neu rechnen** (nach Änderung an `seide.frag` oder an Themenfarben; Farben kommen aus `farben.json`, Argumente = nur diese Themen):
+  `python3 -m venv /tmp/v && /tmp/v/bin/pip install numpy pillow && /tmp/v/bin/python ~/.config/hypr/scripts/seide-standbild.py [name …]` (~20 s).
 - `wallpaper.sh`: Thema = Dateiname bis zum ersten „-“ **und** ohne Endung (`glut.jpg` → glut).
 
-## Farbthemen (golden / glut / kohle / purpur / lila / mond)
+## Farbthemen (golden / glut / kohle / purpur / lila / mond / silber + eigene)
+**Die eine Quelle: `themen/<name>/farben.json`** – Felder `accent, accentSoft, accentDeep, cream, muted, dim, faint, ink,
+onAccentMuted, red` (#rrggbb), `base`/`hover` (Glas, 3 Zahlen 0–1), `hair` (4 Zahlen), optional `clockDate`, dazu für die Programme
+`panel` (mako/rofi), `term`/`termInk`/`termTab` (kitty), `rofiHair` (#rrggbbaa), `lockBrightness` (hyprlock).
+`scripts/thema-bauen.py bauen <name>` erzeugt daraus `hyprlock.conf`, `mako`, `rofi.rasi`, `kitty.conf`, `hypr.lua` (**nicht von Hand
+ändern**, werden überschrieben); `speichern <name>` (JSON von stdin), `vorschlag <bild>`, `loeschen <name>`, `liste`, `--test`
+(Selbsttest: erzeugte Dateien = vorhandene). `Theme.qml` liest alle per `liste` (golden fest als Rückfall bis dahin),
+`hyprland.lua` lädt `themen/<name>/hypr.lua` in `golden.apply_theme`, `seide-standbild.py` liest `farben.json`.
+Bearbeiten am einfachsten in der App „Wallpaper“ (oben).
+
 Zu hellen Bildern passt Amber/Gold, zu rot-schwarzen Glutrot, zu Anthrazit Sonnengelb, zu Neon-Violett Pink, zu blauen
 Nachtbildern Mondlicht-Blau. Das Thema hängt am Wallpaper:
 `wallpaper.sh` nimmt den Dateinamen-Anfang (`golden-castle.jpg` → `golden`, `glut-finsternis.jpg` → `glut`; unbekannt → `golden`)
@@ -106,6 +137,8 @@ und ruft bei einem Wechsel `scripts/thema.sh <name>` auf. Von Hand: `thema.sh gl
 Glas (0.06, 0.065, 0.075)) für schwarz-graue Bilder.
 `lila` (Lavendel auf Nachtviolett: accent `#a100ff`, soft `#dcafff`, deep `#7500c0`, cream `#ece6f5`, muted/faint `#aaa3ba`/`#736b85`,
 ink `#100820`, red `#e0714f`, Glas (0.09, 0.02, 0.16)) für lila-blaue Bilder (Lavendelfeld).
+
+Werte der eingebauten Themen zur Übersicht (Stand 2026-10-21 – massgeblich ist `farben.json`):
 
 | | golden | glut | kohle | purpur | mond |
 |---|---|---|---|---|---|
@@ -120,15 +153,15 @@ ink `#100820`, red `#e0714f`, Glas (0.09, 0.02, 0.16)) für lila-blaue Bilder (L
 
 `red` ist bei glut und purpur orange, weil der Akzent dort schon rot/pink ist.
 
-`thema.sh <name>` schaltet alles um:
+`thema.sh <name>` schaltet alles um (vorher `qs ipc call theme reload`, damit geänderte Farben ankommen):
 - Symlink `~/.config/hypr/themen/aktiv` → `<name>` (Ordner `themen/<name>/` mit `hyprlock.conf`, `mako`, `rofi.rasi`, `kitty.conf`)
-- Quickshell: `qs ipc call theme set <name>` → `Theme.qml` (Paletten dort, Farben blenden 1,1 s über – zusammen mit dem Bild)
-- Hyprland: `hyprctl eval "golden.apply_theme('<name>')"` (Fensterrand, Glühen, Hintergrund; Paletten in `hyprland.lua`)
+- Quickshell: `qs ipc call theme set <name>` → `Theme.qml` (Farben blenden 1,1 s über – zusammen mit dem Bild)
+- Hyprland: `hyprctl eval "golden.apply_theme('<name>')"` (Fensterrand, Glühen, Hintergrund; Farben aus `themen/<name>/hypr.lua`)
 - mako: `makoctl reload` · kitty: `pkill -USR1 -x kitty` (lädt die Konfiguration neu) · rofi und hyprlock lesen `themen/aktiv` bei jedem Start
 - Beim Start der Sitzung lesen alle den Symlink `themen/aktiv` – er muss also zum Bild in `current` passen (macht `wallpaper.sh`).
 
-**Neues Thema** (z. B. für ein weiteres dunkles Bild mit anderer Stimmung): Ordner `themen/<name>/` aus einem vorhandenen kopieren
-und Farben anpassen, Palette in `Theme.qml` (`palettes`) und `hyprland.lua` (`palettes`) ergänzen, Bild `<name>-<bild>.jpg` nennen.
+**Neues Thema**: in der App „Wallpaper“ → farbthemen → name + neu → speichern. Von Hand: `themen/<name>/farben.json` anlegen
+(Vorlage kopieren), `thema-bauen.py bauen <name>`, `qs ipc call theme reload`; Bild `<name>-<bild>.jpg` nennen.
 **Neues Bild in einem vorhandenen Thema:** einfach `glut-<name>.jpg` bzw. `mond-<name>.jpg` nennen.
 
 ## Lebendiges Wallpaper (`Wallpaper.qml` + `WallpaperScene.qml` + `shaders/wallpaper.frag`)
