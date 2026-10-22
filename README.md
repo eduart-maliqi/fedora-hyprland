@@ -23,6 +23,9 @@
     <td width="50%"><img src="screenshots/galerie.jpg" alt="Wallpaper gallery as a honeycomb"><br><sub><b>Wallpaper gallery</b> (Super+W): the color theme changes with the picture</sub></td>
   </tr>
   <tr>
+    <td colspan="2"><img src="screenshots/songtext.jpg" alt="Fullscreen lyrics view"><br><sub><b>Lyrics screen</b> (Super+Shift+M): cover on the left, big synced lyrics on the right, a moving blurred background made from the wallpaper and theme colors</sub></td>
+  </tr>
+  <tr>
     <td colspan="2"><img src="screenshots/wallpaper-app.jpg" alt="Wallpaper app with live preview"><br><sub><b>Wallpaper app</b>: add pictures, create and edit color themes with a live mini-desktop preview</sub></td>
   </tr>
 </table>
@@ -56,6 +59,7 @@
 | `Super+O` | Window mode tiled ↔ free |
 | `Super+P` | Phantom: all windows on one infinite canvas |
 | `Super+M` | Music panel |
+| `Super+Shift+M` | Fullscreen lyrics view |
 | `Super+Shift+V` | Clipboard history |
 | `Super+1…0` | Switch workspace |
 | `Print` | Screenshot (area) |
@@ -80,3 +84,7 @@ This is **my personal setup**, not a ready-made installer. If you want to borrow
 - **Not included**: wallpapers (`hypr/wallpapers/<theme>-<name>.jpg`), built `*.so` files, Spotify/OpenAI credentials (they live locally under `~/.local/state`).
 - Fonts: Cormorant Garamond, JetBrainsMono Nerd Font, Symbols Nerd Font; the clock and lyrics use SF Pro Display (not included).
 - Icons and cursor: WhiteSur.
+
+## Questions
+
+Want to build something similar and need help? Open an [issue](https://github.com/eduart-maliqi/fedora-hyprland/issues), I'm happy to help.
