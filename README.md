@@ -23,7 +23,7 @@
     <td width="50%"><img src="screenshots/galerie.jpg" alt="Wallpaper gallery as a honeycomb"><br><sub><b>Wallpaper gallery</b> (Super+W): the color theme changes with the picture</sub></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="screenshots/tastenkuerzel.jpg" alt="Overview of all keybindings"><br><sub><b>Super+I</b> shows all keybindings as a cheat sheet</sub></td>
+    <td colspan="2"><img src="screenshots/wallpaper-app.jpg" alt="Wallpaper app with live preview"><br><sub><b>Wallpaper app</b>: add pictures, create and edit color themes with a live mini-desktop preview</sub></td>
   </tr>
 </table>
 
@@ -35,7 +35,8 @@
 - **Quickshell UI in QML** (`quickshell/`): top bar with taskbar, control center (Wi-Fi, Bluetooth, sound, night mode, rolling one-month calendar with your Google events), desktop clock, volume OSD.
 - **Task view with live previews** (Super+Tab) and an Alt+Tab window switcher.
 - **Music panel** like a small Spotify (Web API): playlists, search, controls, plus **synced lyrics** on the desktop.
-- **Six color themes** (`golden`, `glut`, `kohle`, `purpur`, `mond`, `silber`): Hyprland, Quickshell, mako, rofi, kitty and hyprlock take their colors from the active theme.
+- **Seven color themes** (`golden`, `glut`, `kohle`, `purpur`, `lila`, `mond`, `silber`) plus your own, made in the **Wallpaper app**: Hyprland, Quickshell, mako, rofi, kitty and hyprlock take their colors from the active theme.
+- **AirDrop** panel (send files to iPhone/Mac) and **iPhone mirroring** (UxPlay).
 - **Living wallpaper**: clouds drift, grass and trees move in the wind, water sparkles (GLSL shaders).
 - **Window mode** tiled ↔ free (Super+O), drop-down terminal, hide windows instead of minimizing.
 - **Plugins**: a custom wobbly-windows plugin in C++ (`hypr/plugins/wobbly`), plus [Phantomat](https://github.com/kaolti/phantomat) (infinite window canvas) and HyprWindowShade (window shaders).
